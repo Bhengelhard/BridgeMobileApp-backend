@@ -1,5 +1,5 @@
 {
-  "name": "parse-server-examle",
+  "name": "parexamlemybridgeapp”,
   "version": "1.4.0",
   "description": "An example Parse API server using the parse-server module",
   "main": "index.js",
