@@ -16,7 +16,7 @@ var api = new ParseServer({
   cloud: process.env.CLOUD_CODE_MAIN || __dirname + '/cloud/main.js',
   appId: process.env.APP_ID || 'mybridgeapp3498735421846jhlkjsdhf23d',
   masterKey: process.env.MASTER_KEY || 'euchnfbe73723ndn77sdkj3763', //Add your master key here. Keep it secret!
-  serverURL: process.env.SERVER_URL || 'https://mybridgeapp.herokuapp.com',  // Don't forget to change to https if needed
+  serverURL: process.env.SERVER_URL || 'https://mybridgeapp.herokuapp.com/parse',  // Don't forget to change to https if needed
   liveQuery: {
     classNames: ["Posts", "Comments"] // List of classes to support for query subscriptions
   }
