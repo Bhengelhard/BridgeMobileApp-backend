@@ -10,15 +10,15 @@
     },
     "APP_ID": {
       "description": "A unique identifier for your app.",
-      "value": ""
+      "value": "mybridgeapp3498735421846jhlkjsdhf23d"
     },
     "MASTER_KEY": {
       "description": "A key that overrides all permissions. Keep this secret.",
-      "value": ""
+      "value": "euchnfbe73723ndn77sdkj3763"
     },
     "DATABASE_URI": {
       "description": "Connection string for your database.",
-      "value": "$SCALINGO_MONGO_URL"
+      "value": "mongodb://heroku_tl77vlq9:ev4kktfeb05jnbtvcmc39ljr68@ds025429.mlab.com:25429/heroku_tl77vlq9"
     }
   },
   "addons": ["scalingo-mongodb"]
