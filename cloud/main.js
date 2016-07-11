@@ -17,27 +17,27 @@ bridgePairing.save(null, {
                     }
                    });
 });
-function haveCommonInterests(userInterestedInBusiness,userInterestedInLove,userInterestedInFriendship) {
-    var currentUser = Parse.User.current();
-    var interestedInBusiness = currentUser.get("interested_in_business");
-    var interestedInLove = currentUser.get("interested_in_love");
-    var interestedInFriendship = currentUser.get("interested_in_friendship");
-    var commonInterest = true;
-    if (userInterestedInBusiness !== 'undefined' && interestedInBusiness !== 'undefined' && userInterestedInBusiness == true && interestedInBusiness == true) {
-        console.log("userInterestedInBusiness");
-        commonInterest = true;
-    }
-    if (userinterestedInLove !== 'undefined' && interestedInLove !== 'undefined' && userinterestedInLove == true && interestedInLove == true) {
-        console.log("userinterestedInLove");
-        commonInterest = true;
-    }
-    if (userinterestedInFriendship !== 'undefined' && interestedInFriendship !== 'undefined' && userinterestedInFriendship == true && interestedInFriendship == true) {
-        console.log("userinterestedInFriendship");
-        commonInterest = true;
-    }
-    console.log("userinterestedInLove");
-    return commonInterest;
-}
+//function haveCommonInterests(userInterestedInBusiness,userInterestedInLove,userInterestedInFriendship) {
+//    var currentUser = Parse.User.current();
+//    var interestedInBusiness = currentUser.get("interested_in_business");
+//    var interestedInLove = currentUser.get("interested_in_love");
+//    var interestedInFriendship = currentUser.get("interested_in_friendship");
+//    var commonInterest = true;
+//    if (userInterestedInBusiness !== 'undefined' && interestedInBusiness !== 'undefined' && userInterestedInBusiness == true && interestedInBusiness == true) {
+//        console.log("userInterestedInBusiness");
+//        commonInterest = true;
+//    }
+//    if (userinterestedInLove !== 'undefined' && interestedInLove !== 'undefined' && userinterestedInLove == true && interestedInLove == true) {
+//        console.log("userinterestedInLove");
+//        commonInterest = true;
+//    }
+//    if (userinterestedInFriendship !== 'undefined' && interestedInFriendship !== 'undefined' && userinterestedInFriendship == true && interestedInFriendship == true) {
+//        console.log("userinterestedInFriendship");
+//        commonInterest = true;
+//    }
+//    console.log("userinterestedInLove");
+//    return commonInterest;
+//}
 //function getStatus(userInterestedInBusiness,userInterestedInLove,userInterestedInFriendship, objectId) {
 //    var currentUser = Parse.User.current();
 //    var interestedInBusiness = currentUser.get("interested_in_business");
@@ -126,7 +126,7 @@ Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
                               //if (haveCommonInterests(interestedInBusiness, interestedInLove, interestedInFriendship) == true) {
                                 var BridgePairingsClass = Parse.Object.extend("BridgePairings");
                                 var bridgePairing = new BridgePairingsClass();
-                                bridgePairing.set("user1_name",Parse.User.current().get("name"))
+                                bridgePairing.set("user1_name",results[i].get("name"))
                                 bridgePairing.set("user2_name",results[i].get("name"))
                                 bridgePairing.set("bridge_type","Business")
                                 bridgePairing.save(null, {
