@@ -17,3 +17,30 @@ bridgePairing.save(null, {
                     }
                    });
 });
+Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
+                   var query = new Parse.Query("_User");
+                   query.containedIn("friend_list",req.params.friendList);
+                   query.find({
+                              success: function(results){
+                              for (var i = 0; i < results.length; ++i) {
+                                var BridgePairingsClass = Parse.Object.extend("BridgePairings");
+                                var bridgePairing = new BridgePairingsClass();
+                                bridgePairing.set("user1_name",results[i].get("name"))
+                                bridgePairing.set("user2_name",results[i].get("name"))
+                                bridgePairing.set("bridge_type","Business")
+                                bridgePairing.save(null, {
+                                                   success: function(bridgePairing){
+                                                 
+                                                   },
+                                                   error: function(bridgePairing, error){
+                                                
+                                                   }
+                                                   });
+                                }
+                              }
+                              error: function() {
+                              
+                              }
+                              });
+                   res.success("Saved")
+});
