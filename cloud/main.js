@@ -22,7 +22,7 @@ function haveCommonInterests(userInterestedInBusiness,userInterestedInLove,userI
     var interestedInBusiness = currentUser.get("interested_in_business");
     var interestedInLove = currentUser.get("interested_in_love");
     var interestedInFriendship = currentUser.get("interested_in_friendship");
-    var commonInterest = false;
+    var commonInterest = true;
     if (userInterestedInBusiness !== 'undefined' && interestedInBusiness !== 'undefined' && userInterestedInBusiness == true && interestedInBusiness == true) {
         console.log("userInterestedInBusiness");
         commonInterest = true;
