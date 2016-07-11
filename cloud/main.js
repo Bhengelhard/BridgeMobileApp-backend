@@ -23,18 +23,18 @@ function haveCommonInterests(userInterestedInBusiness,userInterestedInLove,userI
     var interestedInLove = currentUser.get("interested_in_love");
     var interestedInFriendship = currentUser.get("interested_in_friendship");
     var commonInterest = false;
-//    if userInterestedInBusiness !== 'undefined' && interestedInBusiness !== 'undefined' && userInterestedInBusiness == true && interestedInBusiness == true {
-//        console.log("userInterestedInBusiness");
-//        commonInterest = true;
-//    }
-//    if userinterestedInLove !== 'undefined' && interestedInLove !== 'undefined' && userinterestedInLove == true && interestedInLove == true {
-//        console.log("userinterestedInLove");
-//        commonInterest = true;
-//    }
-//    if userinterestedInFriendship !== 'undefined' && interestedInFriendship !== 'undefined' && userinterestedInFriendship == true && interestedInFriendship == true {
-//        console.log("userinterestedInFriendship");
-//        commonInterest = true;
-//    }
+    if userInterestedInBusiness !== 'undefined' && interestedInBusiness !== 'undefined' && userInterestedInBusiness == true && interestedInBusiness == true {
+        console.log("userInterestedInBusiness");
+        commonInterest = true;
+    }
+    if userinterestedInLove !== 'undefined' && interestedInLove !== 'undefined' && userinterestedInLove == true && interestedInLove == true {
+        console.log("userinterestedInLove");
+        commonInterest = true;
+    }
+    if userinterestedInFriendship !== 'undefined' && interestedInFriendship !== 'undefined' && userinterestedInFriendship == true && interestedInFriendship == true {
+        console.log("userinterestedInFriendship");
+        commonInterest = true;
+    }
     return commonInterest;
 }
 //function getStatus(userInterestedInBusiness,userInterestedInLove,userInterestedInFriendship, objectId) {
