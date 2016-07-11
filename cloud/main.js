@@ -120,9 +120,9 @@ Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
                               count += results.length;
                               res.success(count);
                               for (var i = 0; i < results.length; ++i) {
-                              var interestedInBusiness = results[i].get("interested_in_business");
-                              var interestedInLove = results[i].get("interested_in_love");
-                              var interestedInFriendship = results[i].get("interested_in_friendship");
+//                              var interestedInBusiness = results[i].get("interested_in_business");
+//                              var interestedInLove = results[i].get("interested_in_love");
+//                              var interestedInFriendship = results[i].get("interested_in_friendship");
                               //if (haveCommonInterests(interestedInBusiness, interestedInLove, interestedInFriendship) == true) {
                                 var BridgePairingsClass = Parse.Object.extend("BridgePairings");
                                 var bridgePairing = new BridgePairingsClass();
