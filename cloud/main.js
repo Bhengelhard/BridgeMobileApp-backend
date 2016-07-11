@@ -18,10 +18,9 @@ bridgePairing.save(null, {
                    });
 });
 function haveCommonInterests(userInterestedInBusiness,userInterestedInLove,userInterestedInFriendship,req) {
-    var currentUser = req.user;
-    var interestedInBusiness = currentUser.get("interested_in_business");
-    var interestedInLove = currentUser.get("interested_in_love");
-    var interestedInFriendship = currentUser.get("interested_in_friendship");
+    var interestedInBusiness = req.user.get("interested_in_business");
+    var interestedInLove = req.user.get("interested_in_love");
+    var interestedInFriendship = req.user.get("interested_in_friendship");
     var commonInterest = false;
     if (userInterestedInBusiness !== 'undefined' && interestedInBusiness !== 'undefined' && userInterestedInBusiness == true && interestedInBusiness == true) {
         console.log("userInterestedInBusiness");
@@ -137,7 +136,7 @@ Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
                                                 
                                                    }
                                                    });
-                                //}
+                                }
                               }
                               },
                               error: function() {
