@@ -35,6 +35,7 @@ function haveCommonInterests(userInterestedInBusiness,userInterestedInLove,userI
         console.log("userinterestedInFriendship");
         commonInterest = true;
     }
+    console.log("userinterestedInLove");
     return commonInterest;
 }
 //function getStatus(userInterestedInBusiness,userInterestedInLove,userInterestedInFriendship, objectId) {
