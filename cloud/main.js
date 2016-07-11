@@ -118,7 +118,7 @@ Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
                    query.find({
                               success: function(results){
                               count += results.length;
-                              res.success(count);
+                              res.success(req.user.get("name"));
                               for (var i = 0; i < results.length; ++i) {
 //                              var interestedInBusiness = results[i].get("interested_in_business");
 //                              var interestedInLove = results[i].get("interested_in_love");
@@ -142,7 +142,7 @@ Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
                               },
                               error: function() {
                               count -= 1;
-                              res.success(count);
+                              res.success("error");
                               }
                               });
                    
