@@ -17,26 +17,26 @@ bridgePairing.save(null, {
                     }
                    });
 });
-function haveCommonInterests(userInterestedInBusiness,userInterestedInLove,userInterestedInFriendship,req) {
-    var interestedInBusiness = req.user.get("interested_in_business");
-    var interestedInLove = req.user.get("interested_in_love");
-    var interestedInFriendship = req.user.get("interested_in_friendship");
-    var commonInterest = false;
-    if (userInterestedInBusiness !== 'undefined' && interestedInBusiness !== 'undefined' && userInterestedInBusiness == true && interestedInBusiness == true) {
-        console.log("userInterestedInBusiness");
-        commonInterest = true;
-    }
-    if (userInterestedInLove !== 'undefined' && interestedInLove !== 'undefined' && userInterestedInLove == true && interestedInLove == true) {
-        console.log("userinterestedInLove");
-        commonInterest = true;
-    }
-    if (userInterestedInFriendship !== 'undefined' && interestedInFriendship !== 'undefined' && userInterestedInFriendship == true && interestedInFriendship == true) {
-        console.log("userinterestedInFriendship");
-        commonInterest = true;
-    }
-    console.log("userinterestedInLove");
-    return commonInterest;
-}
+//function haveCommonInterests(userInterestedInBusiness,userInterestedInLove,userInterestedInFriendship,req) {
+//    var interestedInBusiness = req.user.get("interested_in_business");
+//    var interestedInLove = req.user.get("interested_in_love");
+//    var interestedInFriendship = req.user.get("interested_in_friendship");
+//    var commonInterest = false;
+//    if (userInterestedInBusiness !== 'undefined' && interestedInBusiness !== 'undefined' && userInterestedInBusiness == true && interestedInBusiness == true) {
+//        console.log("userInterestedInBusiness");
+//        commonInterest = true;
+//    }
+//    if (userInterestedInLove !== 'undefined' && interestedInLove !== 'undefined' && userInterestedInLove == true && interestedInLove == true) {
+//        console.log("userinterestedInLove");
+//        commonInterest = true;
+//    }
+//    if (userInterestedInFriendship !== 'undefined' && interestedInFriendship !== 'undefined' && userInterestedInFriendship == true && interestedInFriendship == true) {
+//        console.log("userinterestedInFriendship");
+//        commonInterest = true;
+//    }
+//    console.log("userinterestedInLove");
+//    return commonInterest;
+//}
 //function getStatus(userInterestedInBusiness,userInterestedInLove,userInterestedInFriendship, objectId) {
 //    var currentUser = Parse.User.current();
 //    var interestedInBusiness = currentUser.get("interested_in_business");
@@ -119,11 +119,10 @@ Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
                               count += results.length;
                               res.success(req.user.get("name"));
                               for (var i = 0; i < results.length; ++i) {
-                              if results[i].get
                               var interestedInBusiness = results[i].get("interested_in_business");
                               var interestedInLove = results[i].get("interested_in_love");
                               var interestedInFriendship = results[i].get("interested_in_friendship");
-                              if (haveCommonInterests(interestedInBusiness, interestedInLove, interestedInFriendship,req) == true) {
+                              //if (haveCommonInterests(interestedInBusiness, interestedInLove, interestedInFriendship,req) == true) {
                                 var BridgePairingsClass = Parse.Object.extend("BridgePairings");
                                 var bridgePairing = new BridgePairingsClass();
                                 bridgePairing.set("user1_name",req.user.get("name"))
@@ -137,7 +136,7 @@ Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
                                                 
                                                    }
                                                    });
-                                }
+                              //  }
                               }
                               },
                               error: function() {
