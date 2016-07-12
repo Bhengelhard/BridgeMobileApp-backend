@@ -38,73 +38,72 @@ function haveCommonInterests(userInterestedInBusiness,userInterestedInLove,userI
     return commonInterest;
 }
 function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,userInterestedInFriendship, req) {
-    var currentUser = req.user;
-    var interestedInBusiness = currentUser.get("interested_in_business");
-    var interestedInLove = currentUser.get("interested_in_love");
-    var interestedInFriendship = currentUser.get("interested_in_friendship");
+    var interestedInBusiness = req.user.get("interested_in_business");
+    var interestedInLove = req.user.get("interested_in_love");
+    var interestedInFriendship = req.user.get("interested_in_friendship");
     var noOfQueries = 0;
     var bridgeStatus = "No Bridge Status";
     var bridgeType = "";
-    if (userInterestedInBusiness !== 'undefined' && interestedInBusiness !== 'undefined' && userInterestedInBusiness == true && interestedInBusiness == true) {
-        var query = new Parse.Query("BridgeStatus");
-        query.descending("createdAt");
-        query.equalTo("bridge_type","Business");
-        query.count({
-                    success: function(count) {
-                    if (count > noOfQueries) {
-                        bridgeType = "Business"
-                    }
-                    },
-                    error: function(error) {
-                    
-                    }
-
-                    });
-        }
-    if (userinterestedInLove !== 'undefined' && interestedInLove !== 'undefined' && userinterestedInLove == true && interestedInLove == true) {
-        var query = new Parse.Query("BridgeStatus");
-        query.descending("createdAt");
-        query.equalTo("bridge_type","Love");
-        query.count({
-                    success: function(count) {
-                    if (count > noOfQueries) {
-                    bridgeType = "Love"
-                    }
-                    },
-                    error: function(error) {
-                    
-                    }
-                    });
-    }
-    if (userinterestedInFriendship !== 'undefined' && interestedInFriendship !== 'undefined' && userinterestedInFriendship == true && interestedInFriendship == true) {
-        var query = new Parse.Query("BridgeStatus");
-        query.descending("createdAt");
-        query.equalTo("bridge_type","Friendship");
-        query.count({
-                    success: function(count) {
-                    if (count > noOfQueries) {
-                    bridgeType = "Friendship"
-                    }
-                    },
-                    error: function(error) {
-                    
-                    }
-                    });
-    }
-    if bridgeType != "" {
-        var query = new Parse.Query("BridgeStatus");
-        query.descending("createdAt");
-        query.equalTo("bridge_type",bridgeType)
-        query.first({
-                    success: function(result) {
-                        bridgeStatus = result["bridge_status"]
-                    },
-                    error: function(error) {
-                    
-                    }
-                    });
-        
-    }
+//    if (userInterestedInBusiness !== 'undefined' && interestedInBusiness !== 'undefined' && userInterestedInBusiness == true && interestedInBusiness == true) {
+//        var query = new Parse.Query("BridgeStatus");
+//        query.descending("createdAt");
+//        query.equalTo("bridge_type","Business");
+//        query.count({
+//                    success: function(count) {
+//                    if (count > noOfQueries) {
+//                        bridgeType = "Business"
+//                    }
+//                    },
+//                    error: function(error) {
+//                    
+//                    }
+//
+//                    });
+//        }
+//    if (userinterestedInLove !== 'undefined' && interestedInLove !== 'undefined' && userinterestedInLove == true && interestedInLove == true) {
+//        var query = new Parse.Query("BridgeStatus");
+//        query.descending("createdAt");
+//        query.equalTo("bridge_type","Love");
+//        query.count({
+//                    success: function(count) {
+//                    if (count > noOfQueries) {
+//                    bridgeType = "Love"
+//                    }
+//                    },
+//                    error: function(error) {
+//                    
+//                    }
+//                    });
+//    }
+//    if (userinterestedInFriendship !== 'undefined' && interestedInFriendship !== 'undefined' && userinterestedInFriendship == true && interestedInFriendship == true) {
+//        var query = new Parse.Query("BridgeStatus");
+//        query.descending("createdAt");
+//        query.equalTo("bridge_type","Friendship");
+//        query.count({
+//                    success: function(count) {
+//                    if (count > noOfQueries) {
+//                    bridgeType = "Friendship"
+//                    }
+//                    },
+//                    error: function(error) {
+//                    
+//                    }
+//                    });
+//    }
+//    if bridgeType != "" {
+//        var query = new Parse.Query("BridgeStatus");
+//        query.descending("createdAt");
+//        query.equalTo("bridge_type",bridgeType)
+//        query.first({
+//                    success: function(result) {
+//                        bridgeStatus = result["bridge_status"]
+//                    },
+//                    error: function(error) {
+//                    
+//                    }
+//                    });
+//        
+//    }
     return [bridgeStatus, bridgeType];
 
 }
