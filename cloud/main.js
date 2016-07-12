@@ -128,8 +128,8 @@ Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
                                 bridgePairing.set("user1_name",req.user.get("name"));
                                 bridgePairing.set("user2_name",results[i].get("name"));
                                 //var bridgeStatusAndType = getBridgeStatusAndType(interestedInBusiness, interestedInLove, interestedInFriendship,req);
-                                bridgePairing.set("bridge_type","a");
-                                bridgePairing.set("bridge_status","b");
+//                                bridgePairing.set("bridge_type","a");
+//                                bridgePairing.set("bridge_status","b");
                                 bridgePairing.save(null, {
                                                    success: function(bridgePairing){
                                                  
