@@ -43,7 +43,7 @@ function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,us
     var interestedInFriendship = req.user.get("interested_in_friendship");
     var noOfQueries = 0;
     var bridgeStatus = "No Bridge Status";
-    var bridgeType = "Love";
+    var bridgeType = "";
     if (userInterestedInBusiness !== 'undefined' && interestedInBusiness !== 'undefined' && userInterestedInBusiness == true && interestedInBusiness == true) {
         var query = new Parse.Query("BridgeStatus");
         query.descending("createdAt");
@@ -123,12 +123,21 @@ Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
                               var interestedInFriendship = results[i].get("interested_in_friendship");
                               if (haveCommonInterests(interestedInBusiness, interestedInLove, interestedInFriendship,req) == true) {
                               var BridgePairingsClass = Parse.Object.extend("BridgePairings");
+                              var bridgeStatusAndType = getBridgeStatusAndType(interestedInBusiness, interestedInLove, interestedInFriendship,req);
+                              
                               var bridgePairing = new BridgePairingsClass();
                               bridgePairing.set("user1_name",req.user.get("name"));
                               bridgePairing.set("user2_name",results[i].get("name"));
-                              var bridgeStatusAndType = getBridgeStatusAndType(interestedInBusiness, interestedInLove, interestedInFriendship,req);
+                              
                               bridgePairing.set("bridge_type",bridgeStatusAndType[1]);
-                              bridgePairing.set("bridge_status",bridgeStatusAndType[0]);
+                              
+                              bridgePairing.set("user2_bridge_status",bridgeStatusAndType[0]);
+                              
+                              bridgePairing.set("user_locations",[req.user.get("location"),results[i].get("location")]);
+                              
+                              bridgePairing.set("user1_profile_picture",req.user.get("fb_profile_picture"));
+                              bridgePairing.set("user2_profile_picture",results[i].get("fb_profile_picture"));
+                              
                               bridgePairing.save(null, {
                                                  success: function(bridgePairing){
                                                  
