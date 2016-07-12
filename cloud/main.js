@@ -60,7 +60,7 @@ function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,us
 
                     });
         }
-    if (userinterestedInLove !== 'undefined' && interestedInLove !== 'undefined' && userinterestedInLove == true && interestedInLove == true) {
+    if (userInterestedInLove !== 'undefined' && interestedInLove !== 'undefined' && userInterestedInLove == true && interestedInLove == true) {
         var query = new Parse.Query("BridgeStatus");
         query.descending("createdAt");
         query.equalTo("bridge_type","Love");
@@ -75,7 +75,7 @@ function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,us
                     }
                     });
     }
-    if (userinterestedInFriendship !== 'undefined' && interestedInFriendship !== 'undefined' && userinterestedInFriendship == true && interestedInFriendship == true) {
+    if (userInterestedInFriendship !== 'undefined' && interestedInFriendship !== 'undefined' && userInterestedInFriendship == true && interestedInFriendship == true) {
         var query = new Parse.Query("BridgeStatus");
         query.descending("createdAt");
         query.equalTo("bridge_type","Friendship");
