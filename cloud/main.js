@@ -107,6 +107,12 @@ function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,us
     return [bridgeStatus, bridgeType];
 
 }
+function getDsitanceScore(distance1, distance2) {
+    var geoPoint1 = new GeoPoint(distance1["latitude"], distance1["longitude"]);
+    var geoPoint2 = new GeoPoint(distance2["latitude"], distance2["longitude"]);
+    return 1.0/(geoPoint1.milesTo(geoPoint2));
+    
+}
 
 Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
                    var query = new Parse.Query("_User");
@@ -129,14 +135,20 @@ Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
                               bridgePairing.set("user1_name",req.user.get("name"));
                               bridgePairing.set("user2_name",results[i].get("name"));
                               
-                              bridgePairing.set("bridge_type",bridgeStatusAndType[1]);
                               
                               bridgePairing.set("user2_bridge_status",bridgeStatusAndType[0]);
-                              
-                              bridgePairing.set("user_locations",[req.user.get("location"),results[i].get("location")]);
+                              bridgePairing.set("user1_bridge_status","");
                               
                               bridgePairing.set("user1_profile_picture",req.user.get("fb_profile_picture"));
                               bridgePairing.set("user2_profile_picture",results[i].get("fb_profile_picture"));
+                              
+                              bridgePairing.set("bridge_type",bridgeStatusAndType[1]);
+                              bridgePairing.set("user_locations",[req.user.get("location"),results[i].get("location")]);
+                              bridgePairing.set("user_objectIds",[req.user.id,results[i].id]);
+                              bridgePairing.set("score",0);
+                              bridgePairing.set("checkedOut",false);
+                              
+
                               
                               bridgePairing.save(null, {
                                                  success: function(bridgePairing){
