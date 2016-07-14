@@ -121,9 +121,10 @@ function areCompatible(user1, user2) {
     
 }
 function getDsitanceScore(distance1, distance2) {
-    var geoPoint1 = new GeoPoint(distance1["latitude"], distance1["longitude"]);
-    var geoPoint2 = new GeoPoint(distance2["latitude"], distance2["longitude"]);
-    return 1.0/(geoPoint1.milesTo(geoPoint2));
+      return (distance1["latitude"] - distance2["latitude"] )
+//    var geoPoint1 = new GeoPoint(distance1["latitude"], distance1["longitude"]);
+//    var geoPoint2 = new GeoPoint(distance2["latitude"], distance2["longitude"]);
+//    return 1.0/(geoPoint1.milesTo(geoPoint2));
     
 }
 
