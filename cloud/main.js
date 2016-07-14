@@ -125,7 +125,7 @@ function getDistanceScore(distance1, distance2) {
 //    var geoPoint1 = new GeoPoint({latitude: distance1["latitude"], longitude: distance1["longitude"]});
 //    var geoPoint2 = new GeoPoint({latitude: distance2["latitude"], longitude: distance2["longitude"]});
     var geoPoint1 = new GeoPoint({latitude: 30, longitude: 30});
-    var geoPoint2 = new GeoPoint({latitude: 10, longitude: 40});
+    var geoPoint2 = new GeoPoint({latitude: 30, longitude: 30});
     return (geoPoint1.milesTo(geoPoint2));
     
 }
