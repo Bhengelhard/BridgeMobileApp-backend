@@ -123,7 +123,7 @@ function areCompatible(user1, user2) {
 function getDistanceScore(distance1, distance2) {
     var x = distance1["latitude"] - distance2["latitude"]
     var y = distance1["longitude"] - distance2["longitude"]
-    return (x*x + y*y )
+    return (Math.sqrt(x*x + y*y) )
 //    var geoPoint1 = new GeoPoint({latitude: distance1["latitude"], longitude: distance1["longitude"]});
 //    var geoPoint2 = new GeoPoint({latitude: distance2["latitude"], longitude: distance2["longitude"]});
 //    var geoPoint1 = new GeoPoint({latitude: 30, longitude: 30});
