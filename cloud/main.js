@@ -158,7 +158,7 @@ Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
                               bridgePairing.set("bridge_type",bridgeStatusAndType[1]);
                               bridgePairing.set("user_locations",[req.user.get("location"),results[i].get("location")]);
                               bridgePairing.set("user_objectIds",[req.user.id,results[i].id]);
-                              bridgePairing.set("score", 0)//getDsitanceScore(req.user.get("location"), results[i].get("location") ));
+                              bridgePairing.set("score", getDsitanceScore(req.user.get("location"), results[i].get("location") ));
                               bridgePairing.set("checked_out",false);
                               
 
