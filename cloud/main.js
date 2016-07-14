@@ -17,7 +17,7 @@ Parse.Cloud.define('addBridgePairing', function(req, res) {
                                       }
                                       });
                    });
-function haveCommonInterests(userInterestedInBusiness,userInterestedInLove,userInterestedInFriendship,req) {
+function haveCommonInterests(userInterestedInBusiness,userInterestedInLove,userInterestedInFriendship,req, user) {
     var interestedInBusiness = req.user.get("interested_in_business");
     var interestedInLove = req.user.get("interested_in_love");
     var interestedInFriendship = req.user.get("interested_in_friendship");
@@ -141,7 +141,7 @@ Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
                               var interestedInBusiness = results[i].get("interested_in_business");
                               var interestedInLove = results[i].get("interested_in_love");
                               var interestedInFriendship = results[i].get("interested_in_friendship");
-                              if (haveCommonInterests(interestedInBusiness, interestedInLove, interestedInFriendship,req) == true) {
+                              if (haveCommonInterests(interestedInBusiness, interestedInLove, interestedInFriendship,req, results[i] ) == true) {
                               var BridgePairingsClass = Parse.Object.extend("BridgePairings");
                               var bridgeStatusAndType = getBridgeStatusAndType(interestedInBusiness, interestedInLove, interestedInFriendship,req, results[i]);
                               
