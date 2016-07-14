@@ -28,7 +28,9 @@ function haveCommonInterests(userInterestedInBusiness,userInterestedInLove,userI
     }
     if (userInterestedInLove !== 'undefined' && interestedInLove !== 'undefined' && userInterestedInLove == true && interestedInLove == true) {
         console.log("userinterestedInLove");
+        if (areCompatible(req.user, user)) {
         commonInterest = true;
+        }
     }
     if (userInterestedInFriendship !== 'undefined' && interestedInFriendship !== 'undefined' && userInterestedInFriendship == true && interestedInFriendship == true) {
         console.log("userinterestedInFriendship");
@@ -37,7 +39,7 @@ function haveCommonInterests(userInterestedInBusiness,userInterestedInLove,userI
     console.log("userinterestedInLove");
     return commonInterest;
 }
-function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,userInterestedInFriendship, req) {
+function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,userInterestedInFriendship, req, user) {
     var interestedInBusiness = req.user.get("interested_in_business");
     var interestedInLove = req.user.get("interested_in_love");
     var interestedInFriendship = req.user.get("interested_in_friendship");
@@ -66,7 +68,7 @@ function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,us
         query.equalTo("bridge_type","Love");
         query.count({
                     success: function(count) {
-                    if (count > noOfQueries) {
+                    if ( (count > noOfQueries) && areCompatible(req.user, user)) {
                     bridgeType = "Love"
                     }
                     },
@@ -107,6 +109,17 @@ function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,us
     return [bridgeStatus, bridgeType];
 
 }
+function areCompatible(user1, user2) {
+    var lovePreference1 = user1.get("interested_in")
+    var lovePreference2 = user2.get("gender")
+    if (lovePreference1 == lovePreference2) {
+        return true
+    }
+    else {
+        return false
+    }
+    
+}
 function getDsitanceScore(distance1, distance2) {
     var geoPoint1 = new GeoPoint(distance1["latitude"], distance1["longitude"]);
     var geoPoint2 = new GeoPoint(distance2["latitude"], distance2["longitude"]);
@@ -129,7 +142,7 @@ Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
                               var interestedInFriendship = results[i].get("interested_in_friendship");
                               if (haveCommonInterests(interestedInBusiness, interestedInLove, interestedInFriendship,req) == true) {
                               var BridgePairingsClass = Parse.Object.extend("BridgePairings");
-                              var bridgeStatusAndType = getBridgeStatusAndType(interestedInBusiness, interestedInLove, interestedInFriendship,req);
+                              var bridgeStatusAndType = getBridgeStatusAndType(interestedInBusiness, interestedInLove, interestedInFriendship,req, results[i]);
                               
                               var bridgePairing = new BridgePairingsClass();
                               bridgePairing.set("user1_name",req.user.get("name"));
@@ -145,8 +158,8 @@ Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
                               bridgePairing.set("bridge_type",bridgeStatusAndType[1]);
                               bridgePairing.set("user_locations",[req.user.get("location"),results[i].get("location")]);
                               bridgePairing.set("user_objectIds",[req.user.id,results[i].id]);
-                              bridgePairing.set("score",0);
-                              bridgePairing.set("checkedOut",false);
+                              bridgePairing.set("score",getDsitanceScore(req.user.get("location"), results[i].get("location") ));
+                              bridgePairing.set("checked_out",false);
                               
 
                               
