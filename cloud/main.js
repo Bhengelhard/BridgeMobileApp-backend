@@ -110,15 +110,14 @@ function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,us
 
 }
 function areCompatible(user1, user2) {
-//    var lovePreference1 = user1.get("interested_in")
-//    var lovePreference2 = user2.get("gender")
-//    if (lovePreference1 == lovePreference2) {
-//        return true
-//    }
-//    else {
-//        return false
-//    }
-    return true
+    var lovePreference1 = user1.get("interested_in")
+    var lovePreference2 = user2.get("gender")
+    if (lovePreference1 == lovePreference2) {
+        return true
+    }
+    else {
+        return false
+    }
     
 }
 function getDsitanceScore(distance1, distance2) {
