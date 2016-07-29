@@ -2,6 +2,27 @@
 Parse.Cloud.define('hello', function(req, res) {
                    res.success('helrlo');
                    });
+Parse.Cloud.define('pushNotification', function(req, res) {
+                   var query = new Parse.Query(Parse.Installation);
+                   query.equalTo('userObjectId', req.params.userObjectId);
+                   Parse.Push.send({
+                                   where: query,
+                                   data: {
+                                   alert: req.params.alert
+                                   badge : req.params.badge,
+                                   messageType : req.params.messageType
+                                   }
+                                   }, {
+                                   success: function() {
+                                   console.log("success: Parse.Push.send did send push");
+                                   },
+                                   error: function(e) {
+                                   console.log("error: Parse.Push.send code: " + e.code + " msg: " + e.message);
+                                   }
+                                   });
+
+                   res.success('helrlo');
+                   });
 Parse.Cloud.define('addBridgePairing', function(req, res) {
                    var BridgePairingsClass = Parse.Object.extend("BridgePairings");
                    var bridgePairing = new BridgePairingsClass();
