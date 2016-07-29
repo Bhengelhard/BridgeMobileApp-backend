@@ -9,8 +9,8 @@ Parse.Cloud.define('pushNotification', function(req, res) {
                                    where: query,
                                    data: {
                                    alert: req.params.alert
-                                   badge : req.params.badge,
-                                   messageType : req.params.messageType
+                                   badge: req.params.badge,
+                                   messageType: req.params.messageType
                                    }
                                    }, {
                                    success: function() {
