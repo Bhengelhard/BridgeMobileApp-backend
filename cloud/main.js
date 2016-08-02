@@ -15,7 +15,7 @@ Parse.Cloud.define('pushNotification', function(req, res) {
                                    }
                                    }, {
                                    success: function() {
-                                   console.log("success: Parse.Push.send did send push");
+                                   console.log("success: Parse.Push.send did send push "+ req.params.messageId);
                                    },
                                    error: function(e) {
                                    console.log("error: Parse.Push.send code: " + e.code + " msg: " + e.message);
