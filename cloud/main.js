@@ -59,7 +59,7 @@ function haveCommonInterests(userInterestedInBusiness,userInterestedInLove,userI
         console.log("userinterestedInFriendship");
         commonInterest = true;
     }
-    console.log("userinterestedInLove");
+    //console.log("userinterestedInLove");
     return commonInterest;
 }
 function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,userInterestedInFriendship, req, user) {
@@ -165,8 +165,8 @@ Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
                               success: function(results){
                               count += results.length;
                               res.success(req.user.get("name"));
-                              console.log("inside query.find")
                               for (var i = 0; i < results.length; ++i) {
+                              console.log("inside query.find")
                               var interestedInBusiness = results[i].get("interested_in_business");
                               var interestedInLove = results[i].get("interested_in_love");
                               var interestedInFriendship = results[i].get("interested_in_friendship");
