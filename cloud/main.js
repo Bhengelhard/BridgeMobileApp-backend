@@ -66,6 +66,7 @@ function haveCommonInterests(userInterestedInBusiness,userInterestedInLove,userI
     return commonInterest;
 }
 function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,userInterestedInFriendship, req, user) {
+    console.log(" inside getBridgeStatusAndType");
     var interestedInBusiness = req.user.get("interested_in_business");
     var interestedInLove = req.user.get("interested_in_love");
     var interestedInFriendship = req.user.get("interested_in_friendship");
@@ -132,6 +133,7 @@ function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,us
                     });
 
     }
+    console.log(" getting out of getBridgeStatusAndType");
     return [bridgeStatus, bridgeType];
 
 }
@@ -189,11 +191,13 @@ Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
                               
                               bridgePairing.set("user1_profile_picture",req.user.get("fb_profile_picture"));
                               bridgePairing.set("user2_profile_picture",results[i].get("fb_profile_picture"));
-                              
+                              console.log("after profile picture is set");
                               bridgePairing.set("bridge_type",bridgeStatusAndType[1]);
                               bridgePairing.set("user_locations",[req.user.get("location"),results[i].get("location")]);
                               bridgePairing.set("user_objectIds",[req.user.id,results[i].id]);
+                              console.log("after user_objectIds is set");
                               bridgePairing.set("score", getDistanceScore(req.user.get("location"), results[i].get("location") ));
+                              console.log("after score is set");
                               bridgePairing.set("checked_out",false);
                               bridgePairing.set("shown_to",[]);
                               
@@ -205,7 +209,7 @@ Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
                                                  
                                                  },
                                                  error: function(bridgePairing, error){
-                                                 
+                                                 console.log("could not save a pairing");
                                                  }
                                                  });
                               }
