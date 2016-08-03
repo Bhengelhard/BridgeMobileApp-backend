@@ -157,6 +157,7 @@ function getDistanceScore(distance1, distance2) {
 
 Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
                    var query = new Parse.Query("_User");
+                   console.log("updateBridgePairingsTable was called")
                    // get only those user who are not friends
                    query.notContainedIn("objectId",req.params.friendList);
                    var count = 0;
@@ -164,6 +165,7 @@ Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
                               success: function(results){
                               count += results.length;
                               res.success(req.user.get("name"));
+                              console.log("inside query.find")
                               for (var i = 0; i < results.length; ++i) {
                               var interestedInBusiness = results[i].get("interested_in_business");
                               var interestedInLove = results[i].get("interested_in_love");
