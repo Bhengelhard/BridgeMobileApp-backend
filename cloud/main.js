@@ -44,6 +44,9 @@ function haveCommonInterests(userInterestedInBusiness,userInterestedInLove,userI
     var interestedInBusiness = req.user.get("interested_in_business");
     var interestedInLove = req.user.get("interested_in_love");
     var interestedInFriendship = req.user.get("interested_in_friendship");
+    console.log("interestedInBusiness - "+interestedInBusiness);
+    console.log("interestedInLove - "+interestedInLove);
+    console.log("interestedInFriendship - "+interestedInFriendship);
     var commonInterest = false;
     if (userInterestedInBusiness !== 'undefined' && interestedInBusiness !== 'undefined' && userInterestedInBusiness == true && interestedInBusiness == true) {
         console.log("userInterestedInBusiness");
@@ -157,20 +160,22 @@ function getDistanceScore(distance1, distance2) {
 
 Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
                    var query = new Parse.Query("_User");
-                   console.log("updateBridgePairingsTable was called")
+                   console.log("updateBridgePairingsTable was called");
                    // get only those user who are not friends
                    query.notContainedIn("objectId",req.params.friendList);
                    var count = 0;
                    query.find({
                               success: function(results){
                               count += results.length;
+                              console.log("query.find "+count);
                               res.success(req.user.get("name"));
                               for (var i = 0; i < results.length; ++i) {
-                              console.log("inside query.find")
+                              
                               var interestedInBusiness = results[i].get("interested_in_business");
                               var interestedInLove = results[i].get("interested_in_love");
                               var interestedInFriendship = results[i].get("interested_in_friendship");
                               if (haveCommonInterests(interestedInBusiness, interestedInLove, interestedInFriendship,req, results[i] ) == true) {
+                              console.log("haveCommonInterests");
                               var BridgePairingsClass = Parse.Object.extend("BridgePairings");
                               var bridgeStatusAndType = getBridgeStatusAndType(interestedInBusiness, interestedInLove, interestedInFriendship,req, results[i]);
                               
@@ -196,6 +201,7 @@ Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
                               
                               bridgePairing.save(null, {
                                                  success: function(bridgePairing){
+                                                 console.log("saved a pairing");
                                                  
                                                  },
                                                  error: function(bridgePairing, error){
