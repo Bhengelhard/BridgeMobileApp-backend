@@ -4,6 +4,7 @@ Parse.Cloud.define("deleteBridgePairings", function(request, status) {
                 var BridgePairingsClass = Parse.Object.extend("BridgePairings");
                 var query = new Parse.Query(BridgePairingsClass);
                 query.notEqualTo("user1_name","Blake Takita");
+                query.limit = 1000
                 query.find({
                            success:function(results) {
                            for (var i = 0, len = results.length; i < len; i++) {
