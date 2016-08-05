@@ -1,4 +1,24 @@
 // Cloud code
+Parse.Cloud.define("deleteBridgePairings", function(request, status) {
+                
+                var BridgePairingsClass = Parse.Object.extend("BridgePairings");
+                var query = new Parse.Query(BridgePairingsClass);
+                query.notEqualTo("user1_name","Blake Takita");
+                query.find({
+                           success:function(results) {
+                           for (var i = 0, len = results.length; i < len; i++) {
+                           var result = results[i];
+                           result.destroy({});
+                           console.log("Destroy: "+result);
+                           
+                           }
+                           },
+                           error: function(error) {
+                           console.log("Failed!");         
+                           }
+                           })
+                
+                });
 Parse.Cloud.define('hello', function(req, res) {
                    res.success('helrlo');
                    });
