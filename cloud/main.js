@@ -33,8 +33,8 @@ Parse.Cloud.define('changeBridgePairingsOnStatusUpdate', function(req, res) {
                              if (result["bridge_type"] == req.params.bridgeType) {
                              console.log(result["bridge_type"]+ "  matched");
                              var userObjectIds = result["user_objectIds"];
-                             if( Object.prototype.toString.call(userObjectIds) === '[object Array]' ){
-
+                             if( userObjectIds.length > 0 ){
+                            
                              if userObjectIds[0] == req.user.id {
                                 result["user1_bridge_status"] = req.params.status;
                                 console.log("1");
