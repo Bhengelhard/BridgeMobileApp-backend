@@ -102,6 +102,41 @@ Parse.Cloud.define('changeBridgePairingsOnInterestedInUpdate', function(req, res
                               }
                               });
                    });
+Parse.Cloud.define('revitalizeMyPairs', function(req, res) {
+                   var BridgePairingsClass = Parse.Object.extend("BridgePairings");
+                   var query = new Parse.Query(BridgePairingsClass);
+                   query.equalTo("shown_to",req.user.id);
+                   query.notEqualTo("checked_out",false);
+                   query.limit = 10000;
+                   query.find({
+                              success:function(results) {
+                              for (var i = 0, len = results.length; i < len; i++) {
+                              var result = results[i];
+                              var shownTo = result["shown_to"];
+                              var i = shownTo.indexOf(req.user.id);
+                              if (i > -1) {
+                                shownTo.splice(i,1);
+                              }
+                              result["shown_to"] = shownTo;
+                              result.save(null, {
+                                          success: function(bridgePairing){
+                                          console.log("Saved after revitalizing")
+                                          },
+                                          error: function(bridgePairing, error){
+                                          console.log(" Not Saved after revitalizing")
+                                          }
+                                          });
+                              }
+
+                              },
+                              error: function(error) {
+                              console.log("Failed!");
+                              }
+                              });
+
+
+                   
+                   });
 
 function recreatePairings(req, usersNotToPairWith, shownToForPairsNotCheckedOut){
     var query = new Parse.Query("_User");
@@ -211,9 +246,9 @@ Parse.Cloud.define('addBridgePairing', function(req, res) {
                                       }
                                       });
                    });
-function get_type(thing){
-    if(thing===null)return "[object Null]"; // special case
-    return Object.prototype.toString.call(thing);
+function getType(obj){
+    if(obj===null)return "[object Null]"; // special case
+    return Object.prototype.toString.call(obj);
 }
 
 function haveCommonInterests(userInterestedInBusiness,userInterestedInLove,userInterestedInFriendship,req, user) {
