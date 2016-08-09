@@ -74,7 +74,7 @@ Parse.Cloud.define('changeBridgePairingsOnInterestedInUpdate', function(req, res
                               console.log(results.length + " entries have the current user as a better half");
                               for (var i = 0, len = results.length; i < len; i++) {
                               var result = results[i];
-                              if result["checked_out"] == true {
+                              if (result["checked_out"] == true) {
                               var userObjectIds = result["user_objectIds"];
                               if (userObjectIds[0] == req.user.id) {
                               usersNotToPairWith.push(userObjectIds[1])
