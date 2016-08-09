@@ -20,47 +20,47 @@ Parse.Cloud.define("deleteBridgePairings", function(request, status) {
                            });
                 
                 });
-Parse.Cloud.define('changeBridgePairingsOnStatusUpdate', function(req, res) {
-                   
-                   var BridgePairingsClass = Parse.Object.extend("BridgePairings");
-                   var query = new Parse.Query(BridgePairingsClass);
-                   query.equalTo("user_objectIds",req.user.id);
-                   query.limit = 10000;
-                   query.find({
-                             success:function(results) {
-                             for (var i = 0, len = results.length; i < len; i++) {
-                             var result = results[i];
-                             if (result["bridge_type"] == req.params.bridgeType) {
-                             console.log(result["bridge_type"]+ "  matched");
-                             var userObjectIds = result["user_objectIds"];
-                             if( userObjectIds.length > 0 ){
-                            
-                             if userObjectIds[0] == req.user.id {
-                                result["user1_bridge_status"] = req.params.status;
-                                console.log("1");
-                             }
-                             else {
-                                result["user2_bridge_status"] = req.params.status;
-                                console.log("2");
-                             }
-                             result.save(null, {
-                                                success: function(bridgePairing){
-                                                console.log("Saved after changinging status")
-                                                },
-                                                error: function(bridgePairing, error){
-                                                console.log(" Not Saved after changinging status")
-                                                }
-                                         });
-                             }
-                             }
-                             }
-                             },
-                             error: function(error) {
-                             console.log("Failed!");
-                             }
-                             });
-                   
-                   });
+//Parse.Cloud.define('changeBridgePairingsOnStatusUpdate', function(req, res) {
+//                   
+//                   var BridgePairingsClass = Parse.Object.extend("BridgePairings");
+//                   var query = new Parse.Query(BridgePairingsClass);
+//                   query.equalTo("user_objectIds",req.user.id);
+//                   query.limit = 10000;
+//                   query.find({
+//                             success:function(results) {
+//                             for (var i = 0, len = results.length; i < len; i++) {
+//                             var result = results[i];
+//                             if (result["bridge_type"] == req.params.bridgeType) {
+//                             console.log(result["bridge_type"]+ "  matched");
+//                             var userObjectIds = result["user_objectIds"];
+//                             if( userObjectIds.length > 0 ){
+//                            
+//                             if userObjectIds[0] == req.user.id {
+//                                result["user1_bridge_status"] = req.params.status;
+//                                console.log("1");
+//                             }
+//                             else {
+//                                result["user2_bridge_status"] = req.params.status;
+//                                console.log("2");
+//                             }
+//                             result.save(null, {
+//                                                success: function(bridgePairing){
+//                                                console.log("Saved after changinging status")
+//                                                },
+//                                                error: function(bridgePairing, error){
+//                                                console.log(" Not Saved after changinging status")
+//                                                }
+//                                         });
+//                             }
+//                             }
+//                             }
+//                             },
+//                             error: function(error) {
+//                             console.log("Failed!");
+//                             }
+//                             });
+//                   
+//                   });
 Parse.Cloud.define('changeBridgePairingsOnInterestedInUpdate', function(req, res) {
                    
                    var BridgePairingsClass = Parse.Object.extend("BridgePairings");
