@@ -20,7 +20,7 @@ Parse.Cloud.define("deleteBridgePairings", function(request, status) {
                            });
                 
                 });
-Parse.Cloud.define('changeBridgePairingsOnStatusUpdate', function(req, res) {
+Parse.Cloud.define('changeBridgePairingsOnStatusUpdate', function(req) {
                    console.log("changeBridgePairingsOnStatusUpdate was called");
                    var BridgePairingsClass = Parse.Object.extend("BridgePairings");
                    var query = new Parse.Query(BridgePairingsClass);
