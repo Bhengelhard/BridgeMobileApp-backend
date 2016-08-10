@@ -29,11 +29,8 @@ Parse.Cloud.define('changeBridgePairingsOnStatusUpdate', function(req, res) {
                    query.limit = 10000;
                    query.find({
                              success:function(results) {
-//                             console.log("length " + results.length);
-//                             console.log(results);
                              for (var i = 0, len = results.length; i < len; i++) {
                              var result = results[i];
-                             console.log(result.get("user_objectIds"));
                              var userObjectIds = result.get("user_objectIds");
                              console.log("result = "+ result + "userObjectIds[0]="+userObjectIds[0] + " & userObjectIds[1]= "+userObjectIds[1]);
                              if( userObjectIds.length > 0 ){
@@ -77,8 +74,8 @@ Parse.Cloud.define('changeBridgePairingsOnInterestedInUpdate', function(req, res
                               console.log(results.length + " entries have the current user as a better half");
                               for (var i = 0, len = results.length; i < len; i++) {
                               var result = results[i];
-                              if (result["checked_out"] == true) {
-                              var userObjectIds = result["user_objectIds"];
+                              if (result.get("checked_out") == true) {
+                              var userObjectIds = result.get("user_objectIds");
                               if (userObjectIds[0] == req.user.id) {
                               usersNotToPairWith.push(userObjectIds[1])
                               }
@@ -87,12 +84,12 @@ Parse.Cloud.define('changeBridgePairingsOnInterestedInUpdate', function(req, res
                               }
                               }
                               else {
-                              var userObjectIds = result["user_objectIds"];
+                              var userObjectIds = result.get("user_objectIds");
                               if (userObjectIds[0] == req.user.id) {
-                              shownToForPairsNotCheckedOut.userObjectIds[1] = result["shown_to"];
+                              shownToForPairsNotCheckedOut.userObjectIds[1] = result.get("shown_to");
                               }
                               else {
-                              shownToForPairsNotCheckedOut.userObjectIds[0] = result["shown_to"];
+                              shownToForPairsNotCheckedOut.userObjectIds[0] = result.get("shown_to");
                               }
                               result.destroy({});
                               }
@@ -115,12 +112,12 @@ Parse.Cloud.define('revitalizeMyPairs', function(req, res) {
                               success:function(results) {
                               for (var i = 0, len = results.length; i < len; i++) {
                               var result = results[i];
-                              var shownTo = result["shown_to"];
+                              var shownTo = result.get("shown_to");
                               var i = shownTo.indexOf(req.user.id);
                               if (i > -1) {
                                 shownTo.splice(i,1);
                               }
-                              result["shown_to"] = shownTo;
+                              result.set("shown_to", shownTo);
                               result.save(null, {
                                           success: function(bridgePairing){
                                           console.log("Saved after revitalizing")
