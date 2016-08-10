@@ -291,14 +291,12 @@ function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,us
     //if (userInterestedInBusiness !== 'undefined' && interestedInBusiness !== 'undefined' && userInterestedInBusiness == true && interestedInBusiness == true) {
         var query = new Parse.Query("BridgeStatus");
         query.descending("createdAt");
-        //query.equalTo("userId",user.id);
-        query.equalTo("userId",req.user.id);
-        query.equalTo("bridge_type","Friendship1");
-        //query.equalTo("bridge_type","Business");
+        query.equalTo("userId",user.id);
+        query.equalTo("bridge_type","Business");
         query.count({
                     success: function(count1) {
                     allDone += 1;
-                    console.log("count1 success");
+                    console.log("count1 "+ count1);
                     //allDone += 1;
 //                    var query2 = new Parse.Query("BridgeStatus");
 //                    query2.descending("createdAt");
