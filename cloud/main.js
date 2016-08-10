@@ -295,12 +295,14 @@ function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,us
         query.equalTo("bridge_type","Business");
         query.count({
                     success: function(count1) {
+                    console.log("count1 success");
                     var query2 = new Parse.Query("BridgeStatus");
                     query2.descending("createdAt");
                     query2.equalTo("userId",req.user.id);
                     query2.equalTo("bridge_type","Business");
                     query2.count({
                                 success: function(count2) {
+                                console.log("count2 success");
                                 if (count1 + count2 > maxQueriesReturned) {
                                 bridgeType = "Business";
                                 maxQueriesReturned = count1 + count2;
@@ -323,82 +325,83 @@ function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,us
 
                     });
         }
-    if (userInterestedInLove !== 'undefined' && interestedInLove !== 'undefined' && userInterestedInLove == true && interestedInLove == true) {
-        if (areCompatible(req.user, user)) {
-        var query = new Parse.Query("BridgeStatus");
-        query.descending("createdAt");
-        query.equalTo("bridge_type","Love");
-        query.equalTo("userId",user.id);
-        query.count({
-                    success: function(count1) {
-                    var query2 = new Parse.Query("BridgeStatus");
-                    query2.descending("createdAt");
-                    query2.equalTo("userId",req.user.id);
-                    query2.equalTo("bridge_type","Love");
-                    query2.count({
-                                 success: function(count2) {
-                                 if (count1 + count2 > maxQueriesReturned) {
-                                 bridgeType = "Love";
-                                 maxQueriesReturned = count1 + count2;
-                                 }
-                                 allDone += 1;
-                                 console.log("4");
-                                 },
-                                 error: function(error) {
-                                    allDone += 1;
-                                    console.log("5");
-                                 }
-                                 
-                                 });
-                    },
-                    error: function(error) {
-                        allDone += 1;
-                    console.log("6");
-                    }
-                    });
-        }
-        else {
-            allDone += 1;
-            console.log("7");
-        }
-    }
-    if (userInterestedInFriendship !== 'undefined' && interestedInFriendship !== 'undefined' && userInterestedInFriendship == true && interestedInFriendship == true) {
-        var query = new Parse.Query("BridgeStatus");
-        query.descending("createdAt");
-        query.equalTo("userId",user.id);
-        query.equalTo("bridge_type","Friendship");
-        query.count({
-                    success: function(count1) {
-                    var query2 = new Parse.Query("BridgeStatus");
-                    query2.descending("createdAt");
-                    query2.equalTo("userId",req.user.id);
-                    query2.equalTo("bridge_type","Friendship");
-                    query2.count({
-                                 success: function(count2) {
-                                 if (count1 + count2 > maxQueriesReturned) {
-                                 bridgeType = "Friendship";
-                                 maxQueriesReturned = count1 + count2;
-                                 }
-                                 allDone += 1;
-                                 console.log("8");
-                                 },
-                                 error: function(error) {
-                                    allDone += 1;
-                                    console.log("9");
-                                 }
-                                 
-                                 });
-                    },
-                    error: function(error) {
-                        allDone += 1;
-                        console.log("10");
-                    }
-                    });
+//    if (userInterestedInLove !== 'undefined' && interestedInLove !== 'undefined' && userInterestedInLove == true && interestedInLove == true) {
+//        if (areCompatible(req.user, user)) {
+//        var query = new Parse.Query("BridgeStatus");
+//        query.descending("createdAt");
+//        query.equalTo("bridge_type","Love");
+//        query.equalTo("userId",user.id);
+//        query.count({
+//                    success: function(count1) {
+//                    var query2 = new Parse.Query("BridgeStatus");
+//                    query2.descending("createdAt");
+//                    query2.equalTo("userId",req.user.id);
+//                    query2.equalTo("bridge_type","Love");
+//                    query2.count({
+//                                 success: function(count2) {
+//                                 if (count1 + count2 > maxQueriesReturned) {
+//                                 bridgeType = "Love";
+//                                 maxQueriesReturned = count1 + count2;
+//                                 }
+//                                 allDone += 1;
+//                                 console.log("4");
+//                                 },
+//                                 error: function(error) {
+//                                    allDone += 1;
+//                                    console.log("5");
+//                                 }
+//                                 
+//                                 });
+//                    },
+//                    error: function(error) {
+//                        allDone += 1;
+//                    console.log("6");
+//                    }
+//                    });
+//        }
+//        else {
+//            allDone += 1;
+//            console.log("7");
+//        }
+//    }
+//    if (userInterestedInFriendship !== 'undefined' && interestedInFriendship !== 'undefined' && userInterestedInFriendship == true && interestedInFriendship == true) {
+//        var query = new Parse.Query("BridgeStatus");
+//        query.descending("createdAt");
+//        query.equalTo("userId",user.id);
+//        query.equalTo("bridge_type","Friendship");
+//        query.count({
+//                    success: function(count1) {
+//                    var query2 = new Parse.Query("BridgeStatus");
+//                    query2.descending("createdAt");
+//                    query2.equalTo("userId",req.user.id);
+//                    query2.equalTo("bridge_type","Friendship");
+//                    query2.count({
+//                                 success: function(count2) {
+//                                 if (count1 + count2 > maxQueriesReturned) {
+//                                 bridgeType = "Friendship";
+//                                 maxQueriesReturned = count1 + count2;
+//                                 }
+//                                 allDone += 1;
+//                                 console.log("8");
+//                                 },
+//                                 error: function(error) {
+//                                    allDone += 1;
+//                                    console.log("9");
+//                                 }
+//                                 
+//                                 });
+//                    },
+//                    error: function(error) {
+//                        allDone += 1;
+//                        console.log("10");
+//                    }
+//                    });
+//    }
+    
+    while (allDone < 1) {
+        console.log(" stuck at allDone < 1");
     }
     console.log(" getting out of getBridgeStatusAndType");
-    while (allDone < 3) {
-        
-    }
     if (bridgeType != "" && maxQueriesReturned > 0 ) {
         var query = new Parse.Query("BridgeStatus");
         query.descending("createdAt");
@@ -428,7 +431,7 @@ function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,us
                     allDone += 1;
                     }
                     });
-        while (allDone < 4) {
+        while (allDone < 2) {
             
         }
         return [bridgeStatus1,bridgeStatus2, bridgeType];
