@@ -90,6 +90,7 @@ Parse.Cloud.define('changeBridgePairingsOnInterestedInUpdate', function(req, res
                               shownToForPairsNotCheckedOut.userObjectIds[1] = result.get("shown_to");
                               }
                               else {
+                              console.log("before shown_to copied!");
                               shownToForPairsNotCheckedOut.userObjectIds[0] = result.get("shown_to");
                               console.log("shown_to copied!");
                               }
