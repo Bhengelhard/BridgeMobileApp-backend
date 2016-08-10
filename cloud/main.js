@@ -1,4 +1,5 @@
 // Cloud code
+
 Parse.Cloud.define("deleteBridgePairings", function(request, status) {
                 
                 var BridgePairingsClass = Parse.Object.extend("BridgePairings");
@@ -139,7 +140,46 @@ Parse.Cloud.define('revitalizeMyPairs', function(req, res) {
 
                    
                    });
+function createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut){
+    var BridgePairingsClass = Parse.Object.extend("BridgePairings");
+    var bridgeStatusAndType = getBridgeStatusAndType(interestedInBusiness, interestedInLove, interestedInFriendship,req, results[i]);
+    
+    var bridgePairing = new BridgePairingsClass();
+    bridgePairing.set("user1_name",req.user.get("name"));
+    bridgePairing.set("user2_name",user.get("name"));
+    
+    bridgePairing.set("user1_bridge_status",status1);
+    bridgePairing.set("user2_bridge_status",status2);
+    
+    bridgePairing.set("user1_profile_picture",req.user.get("profile_picture"));
+    bridgePairing.set("user2_profile_picture",user.get("profile_picture"));
+    
+    console.log("after profile picture is set");
+    
+    bridgePairing.set("bridge_type",bridgeType);
+    bridgePairing.set("user_locations",[req.user.get("location"), user.get("location")]);
+    bridgePairing.set("user_objectIds",[req.user.id, user.id]);
+    console.log("after user_objectIds is set");
+    bridgePairing.set("score", getDistanceScore(req.user.get("location"), user.get("location") ));
+    console.log("after score is set");
+    bridgePairing.set("checked_out",false);
+    if (user.id in shownToForPairsNotCheckedOut) {
+        bridgePairing.set("shown_to",shownToForPairsNotCheckedOut[user.id]);
+    }
+    else {
+        bridgePairing.set("shown_to",[]);
+    }
+    bridgePairing.save(null, {
+                       success: function(bridgePairing){
+                       console.log("saved a pairing");
+                       
+                       },
+                       error: function(bridgePairing, error){
+                       console.log("could not save a pairing");
+                       }
+                       });
 
+}
 function recreatePairings(req, usersNotToPairWith, shownToForPairsNotCheckedOut){
     var query = new Parse.Query("_User");
     console.log("recreatePairings was called");
@@ -158,44 +198,8 @@ function recreatePairings(req, usersNotToPairWith, shownToForPairsNotCheckedOut)
                var interestedInFriendship = results[i].get("interested_in_friendship");
                if (haveCommonInterests(interestedInBusiness, interestedInLove, interestedInFriendship,req, results[i] ) == true) {
                console.log("haveCommonInterests");
-               var BridgePairingsClass = Parse.Object.extend("BridgePairings");
-               var bridgeStatusAndType = getBridgeStatusAndType(interestedInBusiness, interestedInLove, interestedInFriendship,req, results[i]);
+               decideBridgeStatusAndTypeAndCreatePairing(interestedInBusiness, interestedInLove, interestedInFriendship,req, results[i], shownToForPairsNotCheckedOut);
                
-               var bridgePairing = new BridgePairingsClass();
-               bridgePairing.set("user1_name",req.user.get("name"));
-               bridgePairing.set("user2_name",results[i].get("name"));
-               
-               
-               bridgePairing.set("user2_bridge_status",bridgeStatusAndType[0]);
-               bridgePairing.set("user1_bridge_status",bridgeStatusAndType[1]);
-               
-               bridgePairing.set("user1_profile_picture",req.user.get("profile_picture"));
-               bridgePairing.set("user2_profile_picture",results[i].get("profile_picture"));
-               
-               console.log("after profile picture is set");
-               
-               bridgePairing.set("bridge_type",bridgeStatusAndType[2]);
-               bridgePairing.set("user_locations",[req.user.get("location"),results[i].get("location")]);
-               bridgePairing.set("user_objectIds",[req.user.id,results[i].id]);
-               console.log("after user_objectIds is set");
-               bridgePairing.set("score", getDistanceScore(req.user.get("location"), results[i].get("location") ));
-               console.log("after score is set");
-               bridgePairing.set("checked_out",false);
-               if (results[i].id in shownToForPairsNotCheckedOut) {
-               bridgePairing.set("shown_to",shownToForPairsNotCheckedOut.results[i].id);
-               }
-               else {
-               bridgePairing.set("shown_to",[]);
-               }
-               bridgePairing.save(null, {
-                                  success: function(bridgePairing){
-                                  console.log("saved a pairing");
-                                  
-                                  },
-                                  error: function(bridgePairing, error){
-                                  console.log("could not save a pairing");
-                                  }
-                                  });
                }
                }
                },
@@ -278,7 +282,55 @@ function haveCommonInterests(userInterestedInBusiness,userInterestedInLove,userI
     //console.log("userinterestedInLove");
     return commonInterest;
 }
-function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,userInterestedInFriendship, req, user) {
+function callBack(noOfBusinessStatuses, noOfLoveStatuses, noOfFriendshipStatuses, allDone, req, user, shownToForPairsNotCheckedOut){
+    if allDone == 3 {
+        var bridgeType = "Business";
+        var status1 = "";
+        var status2 = "";
+        var maxStatuses = noOfBusinessStatuses;
+        if noOfLoveStatuses > maxStatuses {
+            bridgeType = "Love";
+        }
+        if noOfFriendshipStatuses > maxStatuses {
+            bridgeType = "Friendship";
+        }
+        var query = new Parse.Query("BridgeStatus");
+        query.descending("createdAt");
+        query.limit = 1;
+        query.equalTo("userId",user.id);
+        query.equalTo("bridge_type",bridgeType);
+        query.first({
+                    success: function(result1) {
+                    status1 = result1.get("bridge_status");
+                    var query2 = new Parse.Query("BridgeStatus");
+                    query2.descending("createdAt");
+                    query2.limit = 1;
+                    query2.equalTo("userId",req.user.id);
+                    query2.equalTo("bridge_type",bridgeType);
+                    query2.first({
+                                success: function(result2) {
+                                status2 = result2.get("bridge_status");
+                                console.log("call Back success query 2");
+                                createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut);
+                                },
+                                error: function(error) {
+                                console.log("call Back error query 2");
+                                createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut);
+                                
+                                }
+                                });
+
+                    },
+                    error: function(error) {
+                    console.log("call Back error query 1");
+                    createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut);
+                    
+                    }
+                    });
+        
+    }
+}
+function decideBridgeStatusAndTypeAndCreatePairing(userInterestedInBusiness,userInterestedInLove,userInterestedInFriendship, req, user, shownToForPairsNotCheckedOut) {
     console.log(" inside getBridgeStatusAndType");
     var interestedInBusiness = req.user.get("interested_in_business");
     var interestedInLove = req.user.get("interested_in_love");
@@ -287,118 +339,137 @@ function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,us
     var bridgeStatus1 = "No Bridge Status";
     var bridgeStatus2 = "No Bridge Status";
     var bridgeType = "";
+    
+    var noOfBusinessStatuses = 0;
+    var noOfLoveStatuses = 0;
+    var noOfFriendshipStatuses = 0;
     var allDone = 0;
-    //if (userInterestedInBusiness !== 'undefined' && interestedInBusiness !== 'undefined' && userInterestedInBusiness == true && interestedInBusiness == true) {
+    if (userInterestedInBusiness !== 'undefined' && interestedInBusiness !== 'undefined' && userInterestedInBusiness == true && interestedInBusiness == true) {
         var query = new Parse.Query("BridgeStatus");
         query.descending("createdAt");
         query.equalTo("userId",user.id);
         query.equalTo("bridge_type","Business");
         query.count({
                     success: function(count1) {
-                    allDone += 1;
                     console.log("count1 "+ count1);
-                    //allDone += 1;
-//                    var query2 = new Parse.Query("BridgeStatus");
-//                    query2.descending("createdAt");
-//                    query2.equalTo("userId",req.user.id);
-//                    query2.equalTo("bridge_type","Business");
-//                    query2.count({
-//                                success: function(count2) {
-//                                console.log("count2 success");
-//                                if (count1 + count2 > maxQueriesReturned) {
-//                                bridgeType = "Business";
-//                                maxQueriesReturned = count1 + count2;
-//                                }
-//                                allDone += 1;
-//                                console.log("1");
-//                                },
-//                                error: function(error) {
-//                                 allDone += 1;
-//                                 console.log("2");
-//                                }
-//                                
-//                                });
+                    noOfBusinessStatuses += count1;
+                    var query2 = new Parse.Query("BridgeStatus");
+                    query2.descending("createdAt");
+                    query2.equalTo("userId",req.user.id);
+                    query2.equalTo("bridge_type","Business");
+                    query2.count({
+                                success: function(count2) {
+                                console.log("count2 success");
+                                noOfBusinessStatuses += count2;
+                                allDone += 1;
+                                console.log("1");
+                                callBack(noOfBusinessStatuses, noOfLoveStatuses, noOfFriendshipStatuses, allDone, req, user, shownToForPairsNotCheckedOut);
+                                },
+                                error: function(error) {
+                                 allDone += 1;
+                                 console.log("2");
+                                 callBack(noOfBusinessStatuses, noOfLoveStatuses, noOfFriendshipStatuses, allDone, req, user, shownToForPairsNotCheckedOut);
+                                }
+                                
+                                });
                     },
                     error: function(error) {
+                    allDone += 1;
                     console.log("3");
-                    //allDone += 1;
+                    callBack(noOfBusinessStatuses, noOfLoveStatuses, noOfFriendshipStatuses, allDone, req, user, shownToForPairsNotCheckedOut);
 
                     }
 
                     });
-       // }
-//    if (userInterestedInLove !== 'undefined' && interestedInLove !== 'undefined' && userInterestedInLove == true && interestedInLove == true) {
-//        if (areCompatible(req.user, user)) {
-//        var query = new Parse.Query("BridgeStatus");
-//        query.descending("createdAt");
-//        query.equalTo("bridge_type","Love");
-//        query.equalTo("userId",user.id);
-//        query.count({
-//                    success: function(count1) {
-//                    var query2 = new Parse.Query("BridgeStatus");
-//                    query2.descending("createdAt");
-//                    query2.equalTo("userId",req.user.id);
-//                    query2.equalTo("bridge_type","Love");
-//                    query2.count({
-//                                 success: function(count2) {
-//                                 if (count1 + count2 > maxQueriesReturned) {
-//                                 bridgeType = "Love";
-//                                 maxQueriesReturned = count1 + count2;
-//                                 }
-//                                 allDone += 1;
-//                                 console.log("4");
-//                                 },
-//                                 error: function(error) {
-//                                    allDone += 1;
-//                                    console.log("5");
-//                                 }
-//                                 
-//                                 });
-//                    },
-//                    error: function(error) {
-//                        allDone += 1;
-//                    console.log("6");
-//                    }
-//                    });
-//        }
-//        else {
-//            allDone += 1;
-//            console.log("7");
-//        }
-//    }
-//    if (userInterestedInFriendship !== 'undefined' && interestedInFriendship !== 'undefined' && userInterestedInFriendship == true && interestedInFriendship == true) {
-//        var query = new Parse.Query("BridgeStatus");
-//        query.descending("createdAt");
-//        query.equalTo("userId",user.id);
-//        query.equalTo("bridge_type","Friendship");
-//        query.count({
-//                    success: function(count1) {
-//                    var query2 = new Parse.Query("BridgeStatus");
-//                    query2.descending("createdAt");
-//                    query2.equalTo("userId",req.user.id);
-//                    query2.equalTo("bridge_type","Friendship");
-//                    query2.count({
-//                                 success: function(count2) {
-//                                 if (count1 + count2 > maxQueriesReturned) {
-//                                 bridgeType = "Friendship";
-//                                 maxQueriesReturned = count1 + count2;
-//                                 }
-//                                 allDone += 1;
-//                                 console.log("8");
-//                                 },
-//                                 error: function(error) {
-//                                    allDone += 1;
-//                                    console.log("9");
-//                                 }
-//                                 
-//                                 });
-//                    },
-//                    error: function(error) {
-//                        allDone += 1;
-//                        console.log("10");
-//                    }
-//                    });
-//    }
+        }
+    else {
+        allDone += 1;
+        console.log("Both not interested in business");
+        callBack(noOfBusinessStatuses, noOfLoveStatuses, noOfFriendshipStatuses, allDone, req, user, shownToForPairsNotCheckedOut);
+        
+    }
+    if (userInterestedInLove !== 'undefined' && interestedInLove !== 'undefined' && userInterestedInLove == true && interestedInLove == true && areCompatible(req.user, user)) {
+        var query = new Parse.Query("BridgeStatus");
+        query.descending("createdAt");
+        query.equalTo("bridge_type","Love");
+        query.equalTo("userId",user.id);
+        query.count({
+                    success: function(count1) {
+                    noOfLoveStatuses += count1;
+                    var query2 = new Parse.Query("BridgeStatus");
+                    query2.descending("createdAt");
+                    query2.equalTo("userId",req.user.id);
+                    query2.equalTo("bridge_type","Love");
+                    query2.count({
+                                 success: function(count2) {
+                                 noOfLoveStatuses += count2;
+                                 allDone += 1;
+                                 console.log("4");
+                                 callBack(noOfBusinessStatuses, noOfLoveStatuses, noOfFriendshipStatuses, allDone, req, user, shownToForPairsNotCheckedOut);
+                                 },
+                                 error: function(error) {
+                                    allDone += 1;
+                                    console.log("5");
+                                    callBack(noOfBusinessStatuses, noOfLoveStatuses, noOfFriendshipStatuses, allDone, req, user, shownToForPairsNotCheckedOut);
+                                 }
+                                 
+                                 });
+                    },
+                    error: function(error) {
+                        allDone += 1;
+                        console.log("6");
+                        callBack(noOfBusinessStatuses, noOfLoveStatuses, noOfFriendshipStatuses, allDone, req, user, shownToForPairsNotCheckedOut);
+                    }
+                    });
+    }
+    else {
+        allDone += 1;
+        console.log("Both not interested in Love");
+        callBack(noOfBusinessStatuses, noOfLoveStatuses, noOfFriendshipStatuses, allDone, req, user, shownToForPairsNotCheckedOut);
+        
+    }
+
+    if (userInterestedInFriendship !== 'undefined' && interestedInFriendship !== 'undefined' && userInterestedInFriendship == true && interestedInFriendship == true) {
+        var query = new Parse.Query("BridgeStatus");
+        query.descending("createdAt");
+        query.equalTo("userId",user.id);
+        query.equalTo("bridge_type","Friendship");
+        query.count({
+                    success: function(count1) {
+                    noOfFriendshipStatuses = count1;
+                    var query2 = new Parse.Query("BridgeStatus");
+                    query2.descending("createdAt");
+                    query2.equalTo("userId",req.user.id);
+                    query2.equalTo("bridge_type","Friendship");
+                    query2.count({
+                                 success: function(count2) {
+                                 noOfFriendshipStatuses = count2;
+                                 allDone += 1;
+                                 console.log("7");
+                                 callBack(noOfBusinessStatuses, noOfLoveStatuses, noOfFriendshipStatuses, allDone, req, user, shownToForPairsNotCheckedOut);
+                                 },
+                                 error: function(error) {
+                                    allDone += 1;
+                                    console.log("8");
+                                    callBack(noOfBusinessStatuses, noOfLoveStatuses, noOfFriendshipStatuses, allDone, req, user, shownToForPairsNotCheckedOut);
+                                 }
+                                 
+                                 });
+                    },
+                    error: function(error) {
+                        allDone += 1;
+                        console.log("9");
+                        callBack(noOfBusinessStatuses, noOfLoveStatuses, noOfFriendshipStatuses, allDone, req, user, shownToForPairsNotCheckedOut);
+                    }
+                    });
+    }
+    else {
+        allDone += 1;
+        console.log("Both not interested in Friendship");
+        callBack(noOfBusinessStatuses, noOfLoveStatuses, noOfFriendshipStatuses, allDone, req, user, shownToForPairsNotCheckedOut);
+        
+    }
+
     
 //    while (allDone < 1) {
 //        //console.log(" stuck at allDone < 1");
@@ -439,7 +510,7 @@ function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,us
 //        return [bridgeStatus1,bridgeStatus2, bridgeType];
 //    }
 //    else{
-    return [bridgeStatus1,bridgeStatus2, bridgeType];
+//    return [bridgeStatus1,bridgeStatus2, bridgeType];
  //   }
 
 }
@@ -489,40 +560,41 @@ Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
                               var interestedInFriendship = results[i].get("interested_in_friendship");
                               if (haveCommonInterests(interestedInBusiness, interestedInLove, interestedInFriendship,req, results[i] ) == true) {
                               console.log("haveCommonInterests");
-                              var BridgePairingsClass = Parse.Object.extend("BridgePairings");
-                              var bridgeStatusAndType = getBridgeStatusAndType(interestedInBusiness, interestedInLove, interestedInFriendship,req, results[i]);
-                              
-                              var bridgePairing = new BridgePairingsClass();
-                              bridgePairing.set("user1_name",req.user.get("name"));
-                              bridgePairing.set("user2_name",results[i].get("name"));
-                              
-                              
-                              bridgePairing.set("user2_bridge_status",bridgeStatusAndType[0]);
-                              bridgePairing.set("user1_bridge_status","");
-                              
-                              bridgePairing.set("user1_profile_picture",req.user.get("fb_profile_picture"));
-                              bridgePairing.set("user2_profile_picture",results[i].get("fb_profile_picture"));
-                              console.log("after profile picture is set");
-                              bridgePairing.set("bridge_type",bridgeStatusAndType[2]);
-                              bridgePairing.set("user_locations",[req.user.get("location"),results[i].get("location")]);
-                              bridgePairing.set("user_objectIds",[req.user.id,results[i].id]);
-                              console.log("after user_objectIds is set");
-                              bridgePairing.set("score", getDistanceScore(req.user.get("location"), results[i].get("location") ));
-                              console.log("after score is set");
-                              bridgePairing.set("checked_out",false);
-                              bridgePairing.set("shown_to",[]);
-                              
-
-                              
-                              bridgePairing.save(null, {
-                                                 success: function(bridgePairing){
-                                                 console.log("saved a pairing");
-                                                 
-                                                 },
-                                                 error: function(bridgePairing, error){
-                                                 console.log("could not save a pairing");
-                                                 }
-                                                 });
+                              decideBridgeStatusAndTypeAndCreatePairing(interestedInBusiness, interestedInLove, interestedInFriendship,req, results[i], {});
+//                              var BridgePairingsClass = Parse.Object.extend("BridgePairings");
+//                              var bridgeStatusAndType = getBridgeStatusAndType(interestedInBusiness, interestedInLove, interestedInFriendship,req, results[i]);
+//                              
+//                              var bridgePairing = new BridgePairingsClass();
+//                              bridgePairing.set("user1_name",req.user.get("name"));
+//                              bridgePairing.set("user2_name",results[i].get("name"));
+//                              
+//                              
+//                              bridgePairing.set("user2_bridge_status",bridgeStatusAndType[0]);
+//                              bridgePairing.set("user1_bridge_status","");
+//                              
+//                              bridgePairing.set("user1_profile_picture",req.user.get("fb_profile_picture"));
+//                              bridgePairing.set("user2_profile_picture",results[i].get("fb_profile_picture"));
+//                              console.log("after profile picture is set");
+//                              bridgePairing.set("bridge_type",bridgeStatusAndType[2]);
+//                              bridgePairing.set("user_locations",[req.user.get("location"),results[i].get("location")]);
+//                              bridgePairing.set("user_objectIds",[req.user.id,results[i].id]);
+//                              console.log("after user_objectIds is set");
+//                              bridgePairing.set("score", getDistanceScore(req.user.get("location"), results[i].get("location") ));
+//                              console.log("after score is set");
+//                              bridgePairing.set("checked_out",false);
+//                              bridgePairing.set("shown_to",[]);
+//                              
+//
+//                              
+//                              bridgePairing.save(null, {
+//                                                 success: function(bridgePairing){
+//                                                 console.log("saved a pairing");
+//                                                 
+//                                                 },
+//                                                 error: function(bridgePairing, error){
+//                                                 console.log("could not save a pairing");
+//                                                 }
+//                                                 });
                               }
                               }
                               },
