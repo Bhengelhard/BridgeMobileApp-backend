@@ -288,10 +288,10 @@ function callBack(noOfBusinessStatuses, noOfLoveStatuses, noOfFriendshipStatuses
         var status1 = "";
         var status2 = "";
         var maxStatuses = noOfBusinessStatuses;
-        if noOfLoveStatuses > maxStatuses {
+        if (noOfLoveStatuses > maxStatuses) {
             bridgeType = "Love";
         }
-        if noOfFriendshipStatuses > maxStatuses {
+        if (noOfFriendshipStatuses > maxStatuses) {
             bridgeType = "Friendship";
         }
         var query = new Parse.Query("BridgeStatus");
