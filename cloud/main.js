@@ -20,7 +20,7 @@ Parse.Cloud.define("deleteBridgePairings", function(request, status) {
                            });
                 
                 });
-Parse.Cloud.define('changeBridgePairingsOnStatusUpdate', function(req) {
+Parse.Cloud.define('changeBridgePairingsOnStatusUpdate', function(req, res) {
                    console.log("changeBridgePairingsOnStatusUpdate was called");
                    var BridgePairingsClass = Parse.Object.extend("BridgePairings");
                    var query = new Parse.Query(BridgePairingsClass);
@@ -54,9 +54,11 @@ Parse.Cloud.define('changeBridgePairingsOnStatusUpdate', function(req) {
                              }
                              }
                              }
+                             res.success("Saved")
                              },
                              error: function(error) {
                              console.log("Failed!");
+                             res.success("Not saved")
                              }
                              });
                    
