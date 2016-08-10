@@ -84,17 +84,14 @@ Parse.Cloud.define('changeBridgePairingsOnInterestedInUpdate', function(req, res
                               }
                               }
                               else {
-                              console.log("checked_out is false!");
                               var userObjectIds = result.get("user_objectIds");
                               if (userObjectIds[0] == req.user.id) {
                               shownToForPairsNotCheckedOut[userObjectIds[1]] = result.get("shown_to");
                               }
                               else {
-                              console.log(result.get("shown_to"));
                               shownToForPairsNotCheckedOut[userObjectIds[0]] = result.get("shown_to");
-                              console.log("shown_to copied!");
                               }
-                              result.destroy({});
+                              //result.destroy({});
                               }
                               }
                               console.log("Done creating usersNotToPairWith, shownToForPairsNotCheckedOut");
@@ -309,14 +306,17 @@ function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,us
                                 maxQueriesReturned = count1 + count2;
                                 }
                                 allDone += 1;
+                                console.log("1");
                                 },
                                 error: function(error) {
                                  allDone += 1;
+                                 console.log("2");
                                 }
                                 
                                 });
                     },
                     error: function(error) {
+                    console.log("3");
                         allDone += 1;
 
                     }
@@ -342,20 +342,24 @@ function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,us
                                  maxQueriesReturned = count1 + count2;
                                  }
                                  allDone += 1;
+                                 console.log("4");
                                  },
                                  error: function(error) {
                                     allDone += 1;
+                                    console.log("5");
                                  }
                                  
                                  });
                     },
                     error: function(error) {
                         allDone += 1;
+                    console.log("6");
                     }
                     });
         }
         else {
             allDone += 1;
+            console.log("7");
         }
     }
     if (userInterestedInFriendship !== 'undefined' && interestedInFriendship !== 'undefined' && userInterestedInFriendship == true && interestedInFriendship == true) {
@@ -376,15 +380,18 @@ function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,us
                                  maxQueriesReturned = count1 + count2;
                                  }
                                  allDone += 1;
+                                 console.log("8");
                                  },
                                  error: function(error) {
                                     allDone += 1;
+                                    console.log("9");
                                  }
                                  
                                  });
                     },
                     error: function(error) {
                         allDone += 1;
+                        console.log("10");
                     }
                     });
     }
@@ -406,11 +413,13 @@ function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,us
                         query2.equalTo("bridge_type",bridgeType);
                         query2.first({
                                 success: function(result) {
-                                bridgeStatus2 = result["bridge_status"]
+                                bridgeStatus2 = result["bridge_status"];
                                 allDone += 1;
+                                console.log("11");
                                 },
                                 error: function(error) {
                                 allDone += 1;
+                                console.log("12");
                                 }
                                 });
 
