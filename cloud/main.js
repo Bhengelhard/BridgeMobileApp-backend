@@ -56,7 +56,7 @@ Parse.Cloud.define('changeBridgePairingsOnStatusUpdate', function(req, res) {
                              },
                              error: function(error) {
                              console.log("Failed!");
-                             res.success("Not saved");
+                             res.error("Not saved");
                              }
                              });
                    
@@ -96,9 +96,11 @@ Parse.Cloud.define('changeBridgePairingsOnInterestedInUpdate', function(req, res
                               }
                               console.log("Done creating usersNotToPairWith, shownToForPairsNotCheckedOut");
                               recreatePairings(req, usersNotToPairWith, shownToForPairsNotCheckedOut);
+                              res.success("Saved");
                               },
                               error: function(error) {
                               console.log("Failed!");
+                              res.error("Not Saved");
                               }
                               });
                    });
