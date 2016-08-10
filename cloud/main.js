@@ -30,7 +30,7 @@ Parse.Cloud.define('changeBridgePairingsOnStatusUpdate', function(req, res) {
                    query.find({
                              success:function(results) {
                              console.log("length " + results.length);
-                             console.log(results.toSource());
+                             console.log(results);
                              for (var i = 0, len = results.length; i < len; i++) {
                              var result = results[i];
                              var userObjectIds = result["user_objectIds"];
