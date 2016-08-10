@@ -293,12 +293,12 @@ function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,us
         query.descending("createdAt");
         //query.equalTo("userId",user.id);
         query.equalTo("userId",req.user.id);
-        query.equalTo("bridge_type","Friendship");
+        //query.equalTo("bridge_type","Friendship");
         //query.equalTo("bridge_type","Business");
         query.count({
                     success: function(count1) {
                     console.log("count1 success");
-                    allDone += 1;
+                    //allDone += 1;
 //                    var query2 = new Parse.Query("BridgeStatus");
 //                    query2.descending("createdAt");
 //                    query2.equalTo("userId",req.user.id);
@@ -322,7 +322,7 @@ function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,us
                     },
                     error: function(error) {
                     console.log("3");
-                        allDone += 1;
+                    //allDone += 1;
 
                     }
 
@@ -401,47 +401,47 @@ function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,us
 //                    });
 //    }
     
-    while (allDone < 1) {
-        //console.log(" stuck at allDone < 1");
-    }
-    console.log(" getting out of getBridgeStatusAndType");
-    if (bridgeType != "" && maxQueriesReturned > 0 ) {
-        var query = new Parse.Query("BridgeStatus");
-        query.descending("createdAt");
-        query.equalTo("userId",user.id);
-        query.equalTo("bridge_type",bridgeType);
-        query.first({
-                    success: function(result) {
-                        bridgeStatus1 = result["bridge_status"]
-                        var query2 = new Parse.Query("BridgeStatus");
-                        query2.descending("createdAt");
-                        query2.equalTo("userId",req.user.id);
-                        query2.equalTo("bridge_type",bridgeType);
-                        query2.first({
-                                success: function(result) {
-                                bridgeStatus2 = result["bridge_status"];
-                                allDone += 1;
-                                console.log("11");
-                                },
-                                error: function(error) {
-                                allDone += 1;
-                                console.log("12");
-                                }
-                                });
-
-                    },
-                    error: function(error) {
-                    allDone += 1;
-                    }
-                    });
-        while (allDone < 2) {
-            
-        }
-        return [bridgeStatus1,bridgeStatus2, bridgeType];
-    }
-    else{
+//    while (allDone < 1) {
+//        //console.log(" stuck at allDone < 1");
+//    }
+//    console.log(" getting out of getBridgeStatusAndType");
+//    if (bridgeType != "" && maxQueriesReturned > 0 ) {
+//        var query = new Parse.Query("BridgeStatus");
+//        query.descending("createdAt");
+//        query.equalTo("userId",user.id);
+//        query.equalTo("bridge_type",bridgeType);
+//        query.first({
+//                    success: function(result) {
+//                        bridgeStatus1 = result["bridge_status"]
+//                        var query2 = new Parse.Query("BridgeStatus");
+//                        query2.descending("createdAt");
+//                        query2.equalTo("userId",req.user.id);
+//                        query2.equalTo("bridge_type",bridgeType);
+//                        query2.first({
+//                                success: function(result) {
+//                                bridgeStatus2 = result["bridge_status"];
+//                                allDone += 1;
+//                                console.log("11");
+//                                },
+//                                error: function(error) {
+//                                allDone += 1;
+//                                console.log("12");
+//                                }
+//                                });
+//
+//                    },
+//                    error: function(error) {
+//                    allDone += 1;
+//                    }
+//                    });
+//        while (allDone < 2) {
+//            
+//        }
+//        return [bridgeStatus1,bridgeStatus2, bridgeType];
+//    }
+//    else{
     return [bridgeStatus1,bridgeStatus2, bridgeType];
-    }
+ //   }
 
 }
 function areCompatible(user1, user2) {
