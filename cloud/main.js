@@ -293,7 +293,8 @@ function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,us
         query.descending("createdAt");
         //query.equalTo("userId",user.id);
         query.equalTo("userId",req.user.id);
-        query.equalTo("bridge_type","Business");
+        query.equalTo("bridge_type","Friendship");
+        //query.equalTo("bridge_type","Business");
         query.count({
                     success: function(count1) {
                     console.log("count1 success");
