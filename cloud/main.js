@@ -288,7 +288,7 @@ function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,us
     var bridgeStatus2 = "No Bridge Status";
     var bridgeType = "";
     var allDone = 0;
-    if (userInterestedInBusiness !== 'undefined' && interestedInBusiness !== 'undefined' && userInterestedInBusiness == true && interestedInBusiness == true) {
+    //if (userInterestedInBusiness !== 'undefined' && interestedInBusiness !== 'undefined' && userInterestedInBusiness == true && interestedInBusiness == true) {
         var query = new Parse.Query("BridgeStatus");
         query.descending("createdAt");
         query.equalTo("userId",user.id);
@@ -324,7 +324,7 @@ function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,us
                     }
 
                     });
-        }
+       // }
 //    if (userInterestedInLove !== 'undefined' && interestedInLove !== 'undefined' && userInterestedInLove == true && interestedInLove == true) {
 //        if (areCompatible(req.user, user)) {
 //        var query = new Parse.Query("BridgeStatus");
