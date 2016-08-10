@@ -283,7 +283,7 @@ function haveCommonInterests(userInterestedInBusiness,userInterestedInLove,userI
     return commonInterest;
 }
 function callBack(noOfBusinessStatuses, noOfLoveStatuses, noOfFriendshipStatuses, allDone, req, user, shownToForPairsNotCheckedOut){
-    if allDone == 3 {
+    if (allDone == 3) {
         var bridgeType = "Business";
         var status1 = "";
         var status2 = "";
