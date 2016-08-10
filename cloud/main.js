@@ -291,31 +291,33 @@ function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,us
     //if (userInterestedInBusiness !== 'undefined' && interestedInBusiness !== 'undefined' && userInterestedInBusiness == true && interestedInBusiness == true) {
         var query = new Parse.Query("BridgeStatus");
         query.descending("createdAt");
-        query.equalTo("userId",user.id);
+        //query.equalTo("userId",user.id);
+        query.equalTo("userId",req.user.id);
         query.equalTo("bridge_type","Business");
         query.count({
                     success: function(count1) {
                     console.log("count1 success");
-                    var query2 = new Parse.Query("BridgeStatus");
-                    query2.descending("createdAt");
-                    query2.equalTo("userId",req.user.id);
-                    query2.equalTo("bridge_type","Business");
-                    query2.count({
-                                success: function(count2) {
-                                console.log("count2 success");
-                                if (count1 + count2 > maxQueriesReturned) {
-                                bridgeType = "Business";
-                                maxQueriesReturned = count1 + count2;
-                                }
-                                allDone += 1;
-                                console.log("1");
-                                },
-                                error: function(error) {
-                                 allDone += 1;
-                                 console.log("2");
-                                }
-                                
-                                });
+                    allDone += 1;
+//                    var query2 = new Parse.Query("BridgeStatus");
+//                    query2.descending("createdAt");
+//                    query2.equalTo("userId",req.user.id);
+//                    query2.equalTo("bridge_type","Business");
+//                    query2.count({
+//                                success: function(count2) {
+//                                console.log("count2 success");
+//                                if (count1 + count2 > maxQueriesReturned) {
+//                                bridgeType = "Business";
+//                                maxQueriesReturned = count1 + count2;
+//                                }
+//                                allDone += 1;
+//                                console.log("1");
+//                                },
+//                                error: function(error) {
+//                                 allDone += 1;
+//                                 console.log("2");
+//                                }
+//                                
+//                                });
                     },
                     error: function(error) {
                     console.log("3");
