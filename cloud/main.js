@@ -21,11 +21,11 @@ Parse.Cloud.define("deleteBridgePairings", function(request, status) {
                 
                 });
 Parse.Cloud.define('changeBridgePairingsOnStatusUpdate', function(req, res) {
-                   
+                   console.log("changeBridgePairingsOnStatusUpdate was called");
                    var BridgePairingsClass = Parse.Object.extend("BridgePairings");
                    var query = new Parse.Query(BridgePairingsClass);
                    query.equalTo("user_objectIds",req.user.id);
-                   query.limit = 10000;
+                   query.limit = 1000;
                    query.find({
                              success:function(results) {
                              for (var i = 0, len = results.length; i < len; i++) {
