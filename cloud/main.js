@@ -293,7 +293,7 @@ function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,us
         query.descending("createdAt");
         //query.equalTo("userId",user.id);
         query.equalTo("userId",req.user.id);
-        //query.equalTo("bridge_type","Friendship");
+        query.equalTo("bridge_type","Friendship");
         //query.equalTo("bridge_type","Business");
         query.count({
                     success: function(count1) {
@@ -402,9 +402,9 @@ function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,us
 //                    });
 //    }
     
-    while (allDone < 1) {
-        //console.log(" stuck at allDone < 1");
-    }
+//    while (allDone < 1) {
+//        //console.log(" stuck at allDone < 1");
+//    }
 //    console.log(" getting out of getBridgeStatusAndType");
 //    if (bridgeType != "" && maxQueriesReturned > 0 ) {
 //        var query = new Parse.Query("BridgeStatus");
