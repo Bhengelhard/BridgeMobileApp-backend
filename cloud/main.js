@@ -399,7 +399,7 @@ function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,us
 //    }
     
     while (allDone < 1) {
-        console.log(" stuck at allDone < 1");
+        //console.log(" stuck at allDone < 1");
     }
     console.log(" getting out of getBridgeStatusAndType");
     if (bridgeType != "" && maxQueriesReturned > 0 ) {
