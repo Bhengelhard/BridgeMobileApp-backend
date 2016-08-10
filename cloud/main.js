@@ -38,11 +38,11 @@ Parse.Cloud.define('changeBridgePairingsOnStatusUpdate', function(req, res) {
                              console.log("result = "+ result + "userObjectIds[0]="+userObjectIds[0] + " & userObjectIds[1]= "+userObjectIds[1]);
                              if( userObjectIds.length > 0 ){
                              if (userObjectIds[0] == req.user.id) {
-                                result.set("user1_bridge_status") = req.params.status;
+                              result.set("user1_bridge_status", req.params.status);
                                 console.log("1");
                              }
                              else {
-                                result.set("user2_bridge_status") = req.params.status;
+                              result.set("user2_bridge_status",req.params.status);
                                 console.log("2");
                              }
                              result.save(null, {
