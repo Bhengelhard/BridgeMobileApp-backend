@@ -29,20 +29,20 @@ Parse.Cloud.define('changeBridgePairingsOnStatusUpdate', function(req, res) {
                    query.limit = 10000;
                    query.find({
                              success:function(results) {
-                             console.log("length " + results.length);
-                             console.log(results);
+//                             console.log("length " + results.length);
+//                             console.log(results);
                              for (var i = 0, len = results.length; i < len; i++) {
                              var result = results[i];
                              console.log(result.get("user_objectIds"));
-                             var userObjectIds = result["user_objectIds"];
+                             var userObjectIds = result.get("user_objectIds"]);
                              console.log("result = "+ result + "userObjectIds[0]="+userObjectIds[0] + " & userObjectIds[1]= "+userObjectIds[1]);
                              if( userObjectIds.length > 0 ){
                              if (userObjectIds[0] == req.user.id) {
-                                result["user1_bridge_status"] = req.params.status;
+                                result.set("user1_bridge_status") = req.params.status;
                                 console.log("1");
                              }
                              else {
-                                result["user2_bridge_status"] = req.params.status;
+                                result.set("user2_bridge_status") = req.params.status;
                                 console.log("2");
                              }
                              result.save(null, {
