@@ -25,19 +25,16 @@ Parse.Cloud.define('changeBridgePairingsOnStatusUpdate', function(req, res) {
                    var BridgePairingsClass = Parse.Object.extend("BridgePairings");
                    var query = new Parse.Query(BridgePairingsClass);
                    query.equalTo("user_objectIds",req.user.id);
+                   query.equalTo("bridge_type",req.params.bridgeType);
                    query.limit = 10000;
                    query.find({
                              success:function(results) {
                              console.log("length " + results.length);
                              for (var i = 0, len = results.length; i < len; i++) {
                              var result = results[i];
-                             console.log(result["bridge_type"]+ ", "+ req.params.bridgeType);
-                             if (result["bridge_type"] == req.params.bridgeType) {
-                             
                              var userObjectIds = result["user_objectIds"];
                              console.log("userObjectIds[0]="+userObjectIds[0] + " & userObjectIds[1]= "+userObjectIds[1]);
                              if( userObjectIds.length > 0 ){
-                            
                              if (userObjectIds[0] == req.user.id) {
                                 result["user1_bridge_status"] = req.params.status;
                                 console.log("1");
@@ -54,7 +51,6 @@ Parse.Cloud.define('changeBridgePairingsOnStatusUpdate', function(req, res) {
                                                 console.log(" Not Saved after changinging status")
                                                 }
                                          });
-                             }
                              }
                              }
                              res.success("Saved");
