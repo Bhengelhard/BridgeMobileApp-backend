@@ -297,6 +297,7 @@ function getBridgeStatusAndType(userInterestedInBusiness,userInterestedInLove,us
         //query.equalTo("bridge_type","Business");
         query.count({
                     success: function(count1) {
+                    allDone += 1;
                     console.log("count1 success");
                     //allDone += 1;
 //                    var query2 = new Parse.Query("BridgeStatus");
