@@ -142,9 +142,10 @@ Parse.Cloud.define('revitalizeMyPairs', function(req, res) {
                    });
 function createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut){
     console.log("createNewPairing stepped in with "+status1+", "+status2+", "+bridgeType);
+    console.log(req);
     var BridgePairingsClass = Parse.Object.extend("BridgePairings");
     var bridgeStatusAndType = getBridgeStatusAndType(interestedInBusiness, interestedInLove, interestedInFriendship,req, results[i]);
-    console.log(user);
+    
     var bridgePairing = new BridgePairingsClass();
     for (var x in user) {
         console.log(x);
