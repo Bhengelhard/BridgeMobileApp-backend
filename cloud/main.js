@@ -141,7 +141,7 @@ Parse.Cloud.define('revitalizeMyPairs', function(req, res) {
                    
                    });
 function createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut){
-    console.log("createNewPairing stepped in");
+    console.log("createNewPairing stepped in with "+status1+", "+status2+", "+bridgeType);
     var BridgePairingsClass = Parse.Object.extend("BridgePairings");
     var bridgeStatusAndType = getBridgeStatusAndType(interestedInBusiness, interestedInLove, interestedInFriendship,req, results[i]);
     
@@ -151,6 +151,7 @@ function createNewPairing(req, user, status1, status2, bridgeType, shownToForPai
     
     bridgePairing.set("user1_bridge_status",status1);
     bridgePairing.set("user2_bridge_status",status2);
+    console.log("after bridge_status is set");
     
     bridgePairing.set("user1_profile_picture",req.user.get("profile_picture"));
     bridgePairing.set("user2_profile_picture",user.get("profile_picture"));
