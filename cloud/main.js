@@ -185,9 +185,7 @@ function createNewPairing(req, user, status1, status2, bridgeType, shownToForPai
 function recreatePairings(req, usersNotToPairWith, shownToForPairsNotCheckedOut){
     var query = new Parse.Query("_User");
     console.log("recreatePairings was called");
-    var skipIds = usersNotToPairWith.concat(req.params.friendList);
-    skipIds = skipIds.concat(req.user.get("friend_list"));
-    console.log("skipIds - "+skipIds);
+    var skipIds = usersNotToPairWith.concat(req.user.get("friend_list"));
     query.notContainedIn("objectId",skipIds);
     query.limit = 10000;
     var count = 0;
