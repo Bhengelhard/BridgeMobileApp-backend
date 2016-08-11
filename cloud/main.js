@@ -146,17 +146,18 @@ function createNewPairing(req, user, status1, status2, bridgeType, shownToForPai
     var bridgeStatusAndType = getBridgeStatusAndType(interestedInBusiness, interestedInLove, interestedInFriendship,req, results[i]);
     
     var bridgePairing = new BridgePairingsClass();
+    console.log( "name"+req.user.get("name"));
+    console.log( "name"+user.get("name"));
     bridgePairing.set("user1_name",req.user.get("name"));
     bridgePairing.set("user2_name",user.get("name"));
     
     bridgePairing.set("user1_bridge_status",status1);
     bridgePairing.set("user2_bridge_status",status2);
-    console.log("after bridge_status is set");
     
     bridgePairing.set("user1_profile_picture",req.user.get("profile_picture"));
     bridgePairing.set("user2_profile_picture",user.get("profile_picture"));
     
-    console.log("after profile picture is set");
+    
     
     bridgePairing.set("bridge_type",bridgeType);
     bridgePairing.set("user_locations",[req.user.get("location"), user.get("location")]);
