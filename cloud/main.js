@@ -524,20 +524,22 @@ function decideBridgeStatusAndTypeAndCreatePairing(userInterestedInBusiness,user
 
 }
 function areCompatible(user1, user2) {
-    var lovePreference1 = user1.get("interested_in")
-    var lovePreference2 = user2.get("gender")
+    var lovePreference1 = user1.get("interested_in");
+    var lovePreference2 = user2.get("gender");
     if (lovePreference1 == lovePreference2) {
-        return true
+        return true;
     }
     else {
-        return false
+        return false;
     }
     
 }
 function getDistanceScore(distance1, distance2) {
-    if (("latitude" in distance1) && ("latitude" in distance2) && ("longitude" in distance1) && ("longitude" in distance1)) {
+    if (("latitude" in distance1) && ("latitude" in distance2) && ("longitude" in distance1) && ("longitude" in distance2)) {
+        console.log(distance1["latitude"]+","+distance1["longitude"]+","+distance2["latitude"]+","+distance2["longitude"]);
         var x = distance1["latitude"] - distance2["latitude"];
         var y = distance1["longitude"] - distance2["longitude"];
+        console.log(x+","+y);
         return (Math.sqrt(x*x + y*y) );
     }
     else {
