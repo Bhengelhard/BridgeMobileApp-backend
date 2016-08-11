@@ -146,7 +146,7 @@ function createNewPairing(req, user, status1, status2, bridgeType, shownToForPai
     var bridgeStatusAndType = getBridgeStatusAndType(interestedInBusiness, interestedInLove, interestedInFriendship,req, results[i]);
     console.log(user);
     var bridgePairing = new BridgePairingsClass();
-    for var x in user {
+    for (var x in user) {
         console.log(x);
     }
     console.log( "name"+req.user.get("name"));
