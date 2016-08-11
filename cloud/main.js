@@ -197,7 +197,7 @@ function recreatePairings(req, usersNotToPairWith, shownToForPairsNotCheckedOut)
                var interestedInLove = results[i].get("interested_in_love");
                var interestedInFriendship = results[i].get("interested_in_friendship");
                if (haveCommonInterests(interestedInBusiness, interestedInLove, interestedInFriendship,req, results[i] ) == true) {
-               console.log(req.user.id + "  "+ results[i] +" haveCommonInterests");
+               console.log(req.user.id + "  "+ results[i].id +" haveCommonInterests");
                decideBridgeStatusAndTypeAndCreatePairing(interestedInBusiness, interestedInLove, interestedInFriendship,req, results[i], shownToForPairsNotCheckedOut);
                
                }
@@ -285,7 +285,7 @@ function haveCommonInterests(userInterestedInBusiness,userInterestedInLove,userI
 function callBack(noOfBusinessStatuses, noOfLoveStatuses, noOfFriendshipStatuses, allDone, req, user, shownToForPairsNotCheckedOut){
     console.log("callBack stepped in");
     if (allDone == 3) {
-        console.log("callBack stepped in and allDone is 3");
+        console.log("callBack stepped in and allDone is 3 "+ noOfBusinessStatuses +", "+noOfLoveStatuses+", "+noOfFriendshipStatuses);
         var bridgeType = "Business";
         var status1 = "";
         var status2 = "";
