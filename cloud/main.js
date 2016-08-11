@@ -70,7 +70,7 @@ Parse.Cloud.define('changeBridgePairingsOnInterestedInUpdate', function(req, res
                    query.limit = 10000;
                    query.find({
                               success:function(results) {
-                              var usersNotToPairWith = [];
+                              var usersNotToPairWith = [req.user.id];
                               var shownToForPairsNotCheckedOut = {};
                               console.log(results.length + " entries have the current user as a better half");
                               for (var i = 0, len = results.length; i < len; i++) {
@@ -78,10 +78,10 @@ Parse.Cloud.define('changeBridgePairingsOnInterestedInUpdate', function(req, res
                               if (result.get("checked_out") == true) {
                               var userObjectIds = result.get("user_objectIds");
                               if (userObjectIds[0] == req.user.id) {
-                              usersNotToPairWith.push(userObjectIds[1])
+                              usersNotToPairWith.push(userObjectIds[1]);
                               }
                               else {
-                              usersNotToPairWith.push(userObjectIds[0])
+                              usersNotToPairWith.push(userObjectIds[0]);
                               }
                               }
                               else {
@@ -141,6 +141,7 @@ Parse.Cloud.define('revitalizeMyPairs', function(req, res) {
                    
                    });
 function createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut){
+    console.log("createNewPairing stepped in");
     var BridgePairingsClass = Parse.Object.extend("BridgePairings");
     var bridgeStatusAndType = getBridgeStatusAndType(interestedInBusiness, interestedInLove, interestedInFriendship,req, results[i]);
     
@@ -291,9 +292,11 @@ function callBack(noOfBusinessStatuses, noOfLoveStatuses, noOfFriendshipStatuses
         var status2 = "";
         var maxStatuses = noOfBusinessStatuses;
         if (noOfLoveStatuses > maxStatuses) {
+            maxStatuses = noOfLoveStatuses;
             bridgeType = "Love";
         }
         if (noOfFriendshipStatuses > maxStatuses) {
+            maxStatuses = noOfFriendshipStatuses;
             bridgeType = "Friendship";
         }
         if (maxStatuses == 0) {
