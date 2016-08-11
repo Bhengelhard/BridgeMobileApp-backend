@@ -144,12 +144,7 @@ function createNewPairing(req, user, status1, status2, bridgeType, shownToForPai
     console.log("createNewPairing stepped in with "+status1+", "+status2+", "+bridgeType);
     console.log(user);
     var BridgePairingsClass = Parse.Object.extend("BridgePairings");
-    var bridgeStatusAndType = getBridgeStatusAndType(interestedInBusiness, interestedInLove, interestedInFriendship,req, results[i]);
-    
     var bridgePairing = new BridgePairingsClass();
-    for (var x in user) {
-        console.log(x);
-    }
     console.log( "name"+req.user.get("name"));
     console.log( "name"+user.get("name"));
     bridgePairing.set("user1_name",req.user.get("name"));
