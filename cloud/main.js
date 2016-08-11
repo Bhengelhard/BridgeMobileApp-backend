@@ -296,6 +296,10 @@ function callBack(noOfBusinessStatuses, noOfLoveStatuses, noOfFriendshipStatuses
         if (noOfFriendshipStatuses > maxStatuses) {
             bridgeType = "Friendship";
         }
+        if (maxStatuses == 0) {
+            console.log("maxStatuses is 0");
+            createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut);
+        }
         var query = new Parse.Query("BridgeStatus");
         query.descending("createdAt");
         query.limit = 1;
@@ -405,6 +409,7 @@ function decideBridgeStatusAndTypeAndCreatePairing(userInterestedInBusiness,user
                                  noOfLoveStatuses += count2;
                                  allDone += 1;
                                  console.log("4");
+                                 console.log("No. of love statuses =" + noOfLoveStatuses );
                                  callBack(noOfBusinessStatuses, noOfLoveStatuses, noOfFriendshipStatuses, allDone, req, user, shownToForPairsNotCheckedOut);
                                  },
                                  error: function(error) {
