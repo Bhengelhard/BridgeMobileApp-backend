@@ -197,7 +197,7 @@ function recreatePairings(req, usersNotToPairWith, shownToForPairsNotCheckedOut)
                var interestedInLove = results[i].get("interested_in_love");
                var interestedInFriendship = results[i].get("interested_in_friendship");
                if (haveCommonInterests(interestedInBusiness, interestedInLove, interestedInFriendship,req, results[i] ) == true) {
-               console.log("haveCommonInterests");
+               console.log(req.user.id + "  "+ results[i] +" haveCommonInterests");
                decideBridgeStatusAndTypeAndCreatePairing(interestedInBusiness, interestedInLove, interestedInFriendship,req, results[i], shownToForPairsNotCheckedOut);
                
                }
@@ -261,29 +261,31 @@ function haveCommonInterests(userInterestedInBusiness,userInterestedInLove,userI
     var interestedInBusiness = req.user.get("interested_in_business");
     var interestedInLove = req.user.get("interested_in_love");
     var interestedInFriendship = req.user.get("interested_in_friendship");
-    console.log("interestedInBusiness - "+interestedInBusiness);
-    console.log("interestedInLove - "+interestedInLove);
-    console.log("interestedInFriendship - "+interestedInFriendship);
+//    console.log("interestedInBusiness - "+interestedInBusiness);
+//    console.log("interestedInLove - "+interestedInLove);
+//    console.log("interestedInFriendship - "+interestedInFriendship);
     var commonInterest = false;
     if (userInterestedInBusiness !== 'undefined' && interestedInBusiness !== 'undefined' && userInterestedInBusiness == true && interestedInBusiness == true) {
-        console.log("userInterestedInBusiness");
+//        console.log("userInterestedInBusiness");
         commonInterest = true;
     }
     if (userInterestedInLove !== 'undefined' && interestedInLove !== 'undefined' && userInterestedInLove == true && interestedInLove == true) {
-        console.log("userinterestedInLove");
+//        console.log("userinterestedInLove");
         if (areCompatible(req.user, user)) {
         commonInterest = true;
         }
     }
     if (userInterestedInFriendship !== 'undefined' && interestedInFriendship !== 'undefined' && userInterestedInFriendship == true && interestedInFriendship == true) {
-        console.log("userinterestedInFriendship");
+//        console.log("userinterestedInFriendship");
         commonInterest = true;
     }
     //console.log("userinterestedInLove");
     return commonInterest;
 }
 function callBack(noOfBusinessStatuses, noOfLoveStatuses, noOfFriendshipStatuses, allDone, req, user, shownToForPairsNotCheckedOut){
+    console.log("callBack stepped in");
     if (allDone == 3) {
+        console.log("callBack stepped in and allDone is 3");
         var bridgeType = "Business";
         var status1 = "";
         var status2 = "";
@@ -351,7 +353,6 @@ function decideBridgeStatusAndTypeAndCreatePairing(userInterestedInBusiness,user
         query.equalTo("bridge_type","Business");
         query.count({
                     success: function(count1) {
-                    console.log("count1 "+ count1);
                     noOfBusinessStatuses += count1;
                     var query2 = new Parse.Query("BridgeStatus");
                     query2.descending("createdAt");
@@ -359,7 +360,6 @@ function decideBridgeStatusAndTypeAndCreatePairing(userInterestedInBusiness,user
                     query2.equalTo("bridge_type","Business");
                     query2.count({
                                 success: function(count2) {
-                                console.log("count2 success");
                                 noOfBusinessStatuses += count2;
                                 allDone += 1;
                                 console.log("1");
