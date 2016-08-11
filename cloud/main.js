@@ -186,6 +186,8 @@ function recreatePairings(req, usersNotToPairWith, shownToForPairsNotCheckedOut)
     var query = new Parse.Query("_User");
     console.log("recreatePairings was called");
     var skipIds = usersNotToPairWith.concat(req.params.friendList);
+    skipIds = skipIds.concat(req.user.get("friend_list"));
+    console.log("skipIds - "+skipIds);
     query.notContainedIn("objectId",skipIds);
     query.limit = 10000;
     var count = 0;
@@ -535,11 +537,12 @@ function areCompatible(user1, user2) {
     
 }
 function getDistanceScore(distance1, distance2) {
+    //console.log("getDistanceScore stepped in");
     if (("latitude" in distance1) && ("latitude" in distance2) && ("longitude" in distance1) && ("longitude" in distance2)) {
         console.log(distance1["latitude"]+","+distance1["longitude"]+","+distance2["latitude"]+","+distance2["longitude"]);
         var x = distance1["latitude"] - distance2["latitude"];
         var y = distance1["longitude"] - distance2["longitude"];
-        console.log(x+","+y);
+        //console.log(x+","+y);
         return (Math.sqrt(x*x + y*y) );
     }
     else {
@@ -572,40 +575,6 @@ Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
                               if (haveCommonInterests(interestedInBusiness, interestedInLove, interestedInFriendship,req, results[i] ) == true) {
                               console.log("haveCommonInterests");
                               decideBridgeStatusAndTypeAndCreatePairing(interestedInBusiness, interestedInLove, interestedInFriendship,req, results[i], {});
-//                              var BridgePairingsClass = Parse.Object.extend("BridgePairings");
-//                              var bridgeStatusAndType = getBridgeStatusAndType(interestedInBusiness, interestedInLove, interestedInFriendship,req, results[i]);
-//                              
-//                              var bridgePairing = new BridgePairingsClass();
-//                              bridgePairing.set("user1_name",req.user.get("name"));
-//                              bridgePairing.set("user2_name",results[i].get("name"));
-//                              
-//                              
-//                              bridgePairing.set("user2_bridge_status",bridgeStatusAndType[0]);
-//                              bridgePairing.set("user1_bridge_status","");
-//                              
-//                              bridgePairing.set("user1_profile_picture",req.user.get("fb_profile_picture"));
-//                              bridgePairing.set("user2_profile_picture",results[i].get("fb_profile_picture"));
-//                              console.log("after profile picture is set");
-//                              bridgePairing.set("bridge_type",bridgeStatusAndType[2]);
-//                              bridgePairing.set("user_locations",[req.user.get("location"),results[i].get("location")]);
-//                              bridgePairing.set("user_objectIds",[req.user.id,results[i].id]);
-//                              console.log("after user_objectIds is set");
-//                              bridgePairing.set("score", getDistanceScore(req.user.get("location"), results[i].get("location") ));
-//                              console.log("after score is set");
-//                              bridgePairing.set("checked_out",false);
-//                              bridgePairing.set("shown_to",[]);
-//                              
-//
-//                              
-//                              bridgePairing.save(null, {
-//                                                 success: function(bridgePairing){
-//                                                 console.log("saved a pairing");
-//                                                 
-//                                                 },
-//                                                 error: function(bridgePairing, error){
-//                                                 console.log("could not save a pairing");
-//                                                 }
-//                                                 });
                               }
                               }
                               },
