@@ -119,7 +119,7 @@ Parse.Cloud.define('revitalizeMyPairs', function(req, res) {
                               var shownTo = result.get("shown_to");
                               var shownToWithoutCurrentUser = []
                               for (x in shownTo) {
-                                if x != req.user.id {
+                                if (x != req.user.id) {
                                     shownToWithoutCurrentUser.push(x);
                                 }
                               }
