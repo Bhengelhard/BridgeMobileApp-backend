@@ -117,13 +117,13 @@ Parse.Cloud.define('revitalizeMyPairs', function(req, res) {
                               for (var i = 0, len = results.length; i < len; i++) {
                               var result = results[i];
                               var shownTo = result.get("shown_to");
-                              var i = shownTo.indexOf(req.user.id);
-                              if (i > -1) {
-                                console.log("before splice");
-                                shownTo.splice(i,1);
-                                console.log("after splice");
-                              }
-                              result.set("shown_to", shownTo);
+//                              var i = shownTo.indexOf(req.user.id);
+//                              if (i > -1) {
+//                                console.log("before splice");
+//                                shownTo.splice(i,1);
+//                                console.log("after splice");
+//                              }
+                              result.set("shown_to", []);
                               result.save(null, {
                                           success: function(bridgePairing){
                                           console.log("Saved after revitalizing")
