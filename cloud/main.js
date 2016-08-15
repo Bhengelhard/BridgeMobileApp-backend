@@ -109,7 +109,7 @@ Parse.Cloud.define('revitalizeMyPairs', function(req, res) {
                    var BridgePairingsClass = Parse.Object.extend("BridgePairings");
                    var query = new Parse.Query(BridgePairingsClass);
                    query.equalTo("shown_to",req.user.id);
-                   query.notEqualTo("checked_out",false);
+                   query.equalTo("checked_out",false);
                    query.limit = 10000;
                    query.find({
                               success:function(results) {
