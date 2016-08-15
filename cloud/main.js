@@ -113,12 +113,15 @@ Parse.Cloud.define('revitalizeMyPairs', function(req, res) {
                    query.limit = 10000;
                    query.find({
                               success:function(results) {
+                              console.log("revitalizeMyPairs "+ results.length)
                               for (var i = 0, len = results.length; i < len; i++) {
                               var result = results[i];
                               var shownTo = result.get("shown_to");
                               var i = shownTo.indexOf(req.user.id);
                               if (i > -1) {
+                                console.log("before splice")
                                 shownTo.splice(i,1);
+                                console.log("after splice")
                               }
                               result.set("shown_to", shownTo);
                               result.save(null, {
