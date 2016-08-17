@@ -170,6 +170,9 @@ function createNewPairing(req, user, status1, status2, bridgeType, shownToForPai
     
     
     bridgePairing.set("bridge_type",bridgeType);
+    bridgePairing.set("user1_city",req.user.get("city"));
+    bridgePairing.set("user2_city",user.get("city"));
+    
     bridgePairing.set("user_locations",[req.user.get("location"), user.get("location")]);
     bridgePairing.set("user_objectIds",[req.user.id, user.id]);
     console.log("after user_objectIds is set");
