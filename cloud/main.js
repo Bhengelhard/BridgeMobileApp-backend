@@ -92,7 +92,7 @@ Parse.Cloud.define('changeBridgePairingsOnInterestedInUpdate', function(req, res
                               else {
                               shownToForPairsNotCheckedOut[userObjectIds[0]] = result.get("shown_to");
                               }
-                              //result.destroy({});
+                              result.destroy({});
                               }
                               }
                               console.log("Done creating usersNotToPairWith, shownToForPairsNotCheckedOut");
