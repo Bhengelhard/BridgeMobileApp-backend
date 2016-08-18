@@ -298,26 +298,80 @@ function haveCommonInterests(req, user) {
     //console.log("userinterestedInLove");
     return commonInterest;
 }
-function callBack(noOfBusinessStatuses, noOfLoveStatuses, noOfFriendshipStatuses, allDone, req, user, shownToForPairsNotCheckedOut){
+function callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut){
     console.log("callBack stepped in");
     if (allDone == 3) {
-        console.log("callBack stepped in and allDone is 3 "+ noOfBusinessStatuses +", "+noOfLoveStatuses+", "+noOfFriendshipStatuses);
+        console.log("callBack stepped in and allDone is 3 "+ noOfBusinessStatuses1 +", "+noOfLoveStatuses1+", "+noOfFriendshipStatuses1+ ", "+ noOfBusinessStatuses2 +", "+noOfLoveStatuses2+", "+noOfFriendshipStatuses2);
         var bridgeType = "Business";
         var status1 = "";
         var status2 = "";
+        var noOfBusinessStatuses = noOfBusinessStatuses1+noOfBusinessStatuses2
+        var noOfLoveStatuses = noOfLoveStatuses1+noOfLoveStatuses2
+        var noOfFriendshipStatuses = noOfFriendshipStatuses1+noOfFriendshipStatuses2
+        
         var maxStatuses = noOfBusinessStatuses;
-        if (noOfLoveStatuses > maxStatuses) {
+        var maxStatuses1 = noOfBusinessStatuses1;
+        var maxStatuses2 = noOfBusinessStatuses2;
+         if (noOfLoveStatuses > maxStatuses) {
             maxStatuses = noOfLoveStatuses;
+            maxStatuses1 = noOfLoveStatuses1;
+            maxStatuses2 = noOfLoveStatuses2;
             bridgeType = "Love";
         }
         if (noOfFriendshipStatuses > maxStatuses) {
             maxStatuses = noOfFriendshipStatuses;
+            maxStatuses1 = noOfFriendshipStatuses1;
+            maxStatuses2 = noOfFriendshipStatuses2;
             bridgeType = "Friendship";
         }
         if (maxStatuses == 0) {
             console.log("maxStatuses is 0");
             createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut);
         }
+        else if (maxStatuses1 == 0) {
+            console.log("maxStatuses1 is 0");
+            var query = new Parse.Query("BridgeStatus");
+            query.descending("createdAt");
+            query.limit = 1;
+            query.equalTo("userId",user.id);
+            query.equalTo("bridge_type",bridgeType);
+            query.first({
+                         success: function(result) {
+                         status1 = result.get("bridge_status");
+                         console.log("call Back success query 0");
+                         createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut);
+                         },
+                         error: function(error) {
+                         console.log("call Back error query 0");
+                         createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut);
+                         
+                         }
+                         });
+
+            
+        }
+        else if (maxStatuses2 == 0) {
+            console.log("maxStatuses2 is 0");
+            query.descending("createdAt");
+            query.limit = 1;
+            query.equalTo("userId",req.user.id);
+            query.equalTo("bridge_type",bridgeType);
+            query.first({
+                        success: function(result) {
+                        status2 = result.get("bridge_status");
+                        console.log("call Back success query 00");
+                        createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut);
+                        },
+                        error: function(error) {
+                        console.log("call Back error query 00");
+                        createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut);
+                        
+                        }
+                        });
+
+            
+        }
+        else {
         var query = new Parse.Query("BridgeStatus");
         query.descending("createdAt");
         query.limit = 1;
@@ -351,6 +405,7 @@ function callBack(noOfBusinessStatuses, noOfLoveStatuses, noOfFriendshipStatuses
                     
                     }
                     });
+    }
         
     }
 }
@@ -368,9 +423,12 @@ function decideBridgeStatusAndTypeAndCreatePairing(req, user, shownToForPairsNot
     var bridgeStatus2 = "No Bridge Status";
     var bridgeType = "";
     
-    var noOfBusinessStatuses = 0;
-    var noOfLoveStatuses = 0;
-    var noOfFriendshipStatuses = 0;
+    var noOfBusinessStatuses1 = 0;
+    var noOfLoveStatuses1 = 0;
+    var noOfFriendshipStatuses1 = 0;
+    var noOfBusinessStatuses2 = 0;
+    var noOfLoveStatuses2 = 0;
+    var noOfFriendshipStatuses2 = 0;
     var allDone = 0;
     if (userInterestedInBusiness !== 'undefined' && meInterestedInBusiness !== 'undefined' && userInterestedInBusiness == true && meInterestedInBusiness == true) {
         var query = new Parse.Query("BridgeStatus");
@@ -379,22 +437,22 @@ function decideBridgeStatusAndTypeAndCreatePairing(req, user, shownToForPairsNot
         query.equalTo("bridge_type","Business");
         query.count({
                     success: function(count1) {
-                    noOfBusinessStatuses += count1;
+                    noOfBusinessStatuses1 = count1;
                     var query2 = new Parse.Query("BridgeStatus");
                     query2.descending("createdAt");
                     query2.equalTo("userId",req.user.id);
                     query2.equalTo("bridge_type","Business");
                     query2.count({
                                 success: function(count2) {
-                                noOfBusinessStatuses += count2;
+                                noOfBusinessStatuses2 = count2;
                                 allDone += 1;
                                 console.log("1");
-                                callBack(noOfBusinessStatuses, noOfLoveStatuses, noOfFriendshipStatuses, allDone, req, user, shownToForPairsNotCheckedOut);
+                                callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut);
                                 },
                                 error: function(error) {
                                  allDone += 1;
                                  console.log("2");
-                                 callBack(noOfBusinessStatuses, noOfLoveStatuses, noOfFriendshipStatuses, allDone, req, user, shownToForPairsNotCheckedOut);
+                                 callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut);
                                 }
                                 
                                 });
@@ -402,7 +460,7 @@ function decideBridgeStatusAndTypeAndCreatePairing(req, user, shownToForPairsNot
                     error: function(error) {
                     allDone += 1;
                     console.log("3");
-                    callBack(noOfBusinessStatuses, noOfLoveStatuses, noOfFriendshipStatuses, allDone, req, user, shownToForPairsNotCheckedOut);
+                    callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut);
 
                     }
 
@@ -411,7 +469,7 @@ function decideBridgeStatusAndTypeAndCreatePairing(req, user, shownToForPairsNot
     else {
         allDone += 1;
         console.log("Both not interested in business");
-        callBack(noOfBusinessStatuses, noOfLoveStatuses, noOfFriendshipStatuses, allDone, req, user, shownToForPairsNotCheckedOut);
+        callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut);
         
     }
     if (userInterestedInLove !== 'undefined' && meInterestedInLove !== 'undefined' && userInterestedInLove == true && meInterestedInLove == true && areCompatible(req.user, user)) {
@@ -421,23 +479,23 @@ function decideBridgeStatusAndTypeAndCreatePairing(req, user, shownToForPairsNot
         query.equalTo("userId",user.id);
         query.count({
                     success: function(count1) {
-                    noOfLoveStatuses += count1;
+                    noOfLoveStatuses1 = count1;
                     var query2 = new Parse.Query("BridgeStatus");
                     query2.descending("createdAt");
                     query2.equalTo("userId",req.user.id);
                     query2.equalTo("bridge_type","Love");
                     query2.count({
                                  success: function(count2) {
-                                 noOfLoveStatuses += count2;
+                                 noOfLoveStatuses2 = count2;
                                  allDone += 1;
                                  console.log("4");
                                  console.log("No. of love statuses =" + noOfLoveStatuses );
-                                 callBack(noOfBusinessStatuses, noOfLoveStatuses, noOfFriendshipStatuses, allDone, req, user, shownToForPairsNotCheckedOut);
+                                 callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut);
                                  },
                                  error: function(error) {
                                     allDone += 1;
                                     console.log("5");
-                                    callBack(noOfBusinessStatuses, noOfLoveStatuses, noOfFriendshipStatuses, allDone, req, user, shownToForPairsNotCheckedOut);
+                                    callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut);
                                  }
                                  
                                  });
@@ -445,14 +503,14 @@ function decideBridgeStatusAndTypeAndCreatePairing(req, user, shownToForPairsNot
                     error: function(error) {
                         allDone += 1;
                         console.log("6");
-                        callBack(noOfBusinessStatuses, noOfLoveStatuses, noOfFriendshipStatuses, allDone, req, user, shownToForPairsNotCheckedOut);
+                        callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut);
                     }
                     });
     }
     else {
         allDone += 1;
         console.log("Both not interested in Love");
-        callBack(noOfBusinessStatuses, noOfLoveStatuses, noOfFriendshipStatuses, allDone, req, user, shownToForPairsNotCheckedOut);
+        callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut);
         
     }
 
@@ -463,22 +521,22 @@ function decideBridgeStatusAndTypeAndCreatePairing(req, user, shownToForPairsNot
         query.equalTo("bridge_type","Friendship");
         query.count({
                     success: function(count1) {
-                    noOfFriendshipStatuses = count1;
+                    noOfFriendshipStatuses1 = count1;
                     var query2 = new Parse.Query("BridgeStatus");
                     query2.descending("createdAt");
                     query2.equalTo("userId",req.user.id);
                     query2.equalTo("bridge_type","Friendship");
                     query2.count({
                                  success: function(count2) {
-                                 noOfFriendshipStatuses = count2;
+                                 noOfFriendshipStatuses2 = count2;
                                  allDone += 1;
                                  console.log("7");
-                                 callBack(noOfBusinessStatuses, noOfLoveStatuses, noOfFriendshipStatuses, allDone, req, user, shownToForPairsNotCheckedOut);
+                                 callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut);
                                  },
                                  error: function(error) {
                                     allDone += 1;
                                     console.log("8");
-                                    callBack(noOfBusinessStatuses, noOfLoveStatuses, noOfFriendshipStatuses, allDone, req, user, shownToForPairsNotCheckedOut);
+                                    callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut);
                                  }
                                  
                                  });
@@ -486,14 +544,14 @@ function decideBridgeStatusAndTypeAndCreatePairing(req, user, shownToForPairsNot
                     error: function(error) {
                         allDone += 1;
                         console.log("9");
-                        callBack(noOfBusinessStatuses, noOfLoveStatuses, noOfFriendshipStatuses, allDone, req, user, shownToForPairsNotCheckedOut);
+                        callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut);
                     }
                     });
     }
     else {
         allDone += 1;
         console.log("Both not interested in Friendship");
-        callBack(noOfBusinessStatuses, noOfLoveStatuses, noOfFriendshipStatuses, allDone, req, user, shownToForPairsNotCheckedOut);
+        callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut);
         
     }
 
