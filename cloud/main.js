@@ -140,11 +140,13 @@ Parse.Cloud.define('revitalizeMyPairs', function(req, res) {
                                           console.log(" Not Saved after revitalizing")
                                           }
                                           });
+                              res.success(" revitalizing started");
                               }
 
                               },
                               error: function(error) {
                               console.log("Failed!");
+                              res.error("Failed");
                               }
                               });
 
