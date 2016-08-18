@@ -333,11 +333,11 @@ function callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatus
             var query = new Parse.Query("BridgeStatus");
             query.descending("createdAt");
             query.limit = 1;
-            query.equalTo("userId",user.id);
+            query.equalTo("userId",req.user.id);
             query.equalTo("bridge_type",bridgeType);
             query.first({
                          success: function(result) {
-                         status1 = result.get("bridge_status");
+                         status2 = result.get("bridge_status");
                          console.log("call Back success query 0");
                          createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut);
                          },
@@ -354,11 +354,11 @@ function callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatus
             console.log("maxStatuses2 is 0");
             query.descending("createdAt");
             query.limit = 1;
-            query.equalTo("userId",req.user.id);
+            query.equalTo("userId",user.id);
             query.equalTo("bridge_type",bridgeType);
             query.first({
                         success: function(result) {
-                        status2 = result.get("bridge_status");
+                        status1 = result.get("bridge_status");
                         console.log("call Back success query 00");
                         createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut);
                         },
