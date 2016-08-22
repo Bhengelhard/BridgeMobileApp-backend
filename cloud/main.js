@@ -622,6 +622,7 @@ function getDistanceScore(distance1, distance2) {
         return (Math.sqrt(x*x + y*y) );
     }
     else {
+        console.log("Locations have no latitude and longitude");
         return 0;
     }
 //    var geoPoint1 = new GeoPoint({latitude: distance1["latitude"], longitude: distance1["longitude"]});
