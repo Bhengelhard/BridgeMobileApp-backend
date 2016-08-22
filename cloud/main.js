@@ -189,7 +189,7 @@ function createNewPairing(req, user, status1, status2, bridgeType, shownToForPai
     }
     bridgePairing.save(null, {
                        success: function(bridgePairing){
-                       console.log(req.user.get("name") +"  "+user.get("name") " saved a pairing");
+                       console.log(req.user.get("name") +"  "+user.get("name") +" saved a pairing");
                        
                        },
                        error: function(bridgePairing, error){
