@@ -28,8 +28,8 @@ var api = new ParseServer({
     ios: {
         pfx: 'Parse_Push_Development_Certificate.p12',
         passphrase: '', // optional password to your p12/PFX
-        bundleId: 'com.Bridge.Beta',
-        production: false
+        bundleId: 'com.Bridge.Beta'
+        //production: false
     }
  }
                         

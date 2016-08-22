@@ -358,7 +358,7 @@ function callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatus
             query.equalTo("bridge_type",bridgeType);
             query.first({
                         success: function(result) {
-                        status1 = result.get("bridge_status");
+                        status1     = result.get("bridge_status");
                         console.log("call Back success query 00");
                         createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut);
                         },
