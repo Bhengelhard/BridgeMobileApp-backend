@@ -491,7 +491,7 @@ function decideBridgeStatusAndTypeAndCreatePairing(req, user, shownToForPairsNot
                                  noOfLoveStatuses2 = count2;
                                  allDone += 1;
                                  console.log("4");
-                                 console.log("No. of love statuses =" + noOfLoveStatuses );
+                                 console.log("No. of love statuses =" + noOfLoveStatuses1+noOfLoveStatuses2 );
                                  callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut);
                                  },
                                  error: function(error) {
