@@ -241,14 +241,16 @@ Parse.Cloud.define('pushNotification', function(req, res) {
                                    }, {
                                    success: function() {
                                    console.log("success: Parse.Push.send did send push "+ req.params.messageId + "  " + req.params.messageType );
+                                   res.success('Push success');
                                    },
                                    error: function(e) {
                                    console.log("error: Parse.Push.send code: " + e.code + " msg: " + e.message);
+                                   res.error("Push failed");
                                    },
                                    useMasterKey: true
                                    });
 
-                   res.success('helrlo');
+                   
                    });
 Parse.Cloud.define('addBridgePairing', function(req, res) {
                    var BridgePairingsClass = Parse.Object.extend("BridgePairings");
