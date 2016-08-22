@@ -433,6 +433,9 @@ function decideBridgeStatusAndTypeAndCreatePairing(req, user, shownToForPairsNot
     var noOfFriendshipStatuses2 = 0;
     var allDone = 0;
     if (userInterestedInBusiness !== 'undefined' && meInterestedInBusiness !== 'undefined' && userInterestedInBusiness == true && meInterestedInBusiness == true) {
+        noOfBusinessStatuses1 = 1;
+        noOfBusinessStatuses2 = 1;
+        // adding 1 to indicate to callback that they are interested in Business incase of no statuses
         var query = new Parse.Query("BridgeStatus");
         query.descending("createdAt");
         query.equalTo("userId",user.id);
@@ -475,6 +478,9 @@ function decideBridgeStatusAndTypeAndCreatePairing(req, user, shownToForPairsNot
         
     }
     if (userInterestedInLove !== 'undefined' && meInterestedInLove !== 'undefined' && userInterestedInLove == true && meInterestedInLove == true && areCompatible(req.user, user)) {
+        noOfLoveStatuses1 = 1;
+        noOfLoveStatuses2 = 1;
+        // adding 1 to indicate to callback that they are interested in Love incase of no statuses
         var query = new Parse.Query("BridgeStatus");
         query.descending("createdAt");
         query.equalTo("bridge_type","Love");
@@ -517,6 +523,9 @@ function decideBridgeStatusAndTypeAndCreatePairing(req, user, shownToForPairsNot
     }
 
     if (userInterestedInFriendship !== 'undefined' && meInterestedInFriendship !== 'undefined' && userInterestedInFriendship == true && meInterestedInFriendship == true) {
+        noOfFriendshipStatuses1 = 1;
+        noOfFriendshipStatuses2 = 1;
+        // adding 1 to indicate to callback that they are interested in Friendship incase of no statuses
         var query = new Parse.Query("BridgeStatus");
         query.descending("createdAt");
         query.equalTo("userId",user.id);
