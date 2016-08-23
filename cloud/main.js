@@ -35,7 +35,7 @@ Parse.Cloud.define('changeBridgePairingsOnStatusUpdate', function(req, res) {
                              var result = results[i];
                              var userObjectIds = result.get("user_objectIds");
                              console.log("result = "+ result + "userObjectIds[0]="+userObjectIds[0] + " & userObjectIds[1]= "+userObjectIds[1]);
-                             if( userObjectIds.length > 0 ){
+                             //if( userObjectIds.length > 0 ){
                              if (userObjectIds[0] == req.user.id) {
                               result.set("user1_bridge_status", req.params.status);
                                 console.log("1");
@@ -64,7 +64,7 @@ Parse.Cloud.define('changeBridgePairingsOnStatusUpdate', function(req, res) {
 
                                                 }
                                          });
-                             }
+                             //}
                              }
                              },
                              error: function(error) {
