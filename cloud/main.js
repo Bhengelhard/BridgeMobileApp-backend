@@ -30,6 +30,7 @@ Parse.Cloud.define('changeBridgePairingsOnStatusUpdate', function(req, res) {
                    query.limit = 10000;
                    query.find({
                              success:function(results) {
+                             var incrementWhenDone = {count : 0};
                              for (var i = 0, len = results.length; i < len; i++) {
                              var result = results[i];
                              var userObjectIds = result.get("user_objectIds");
@@ -46,14 +47,25 @@ Parse.Cloud.define('changeBridgePairingsOnStatusUpdate', function(req, res) {
                              result.save(null, {
                                                 success: function(bridgePairing){
                                                 console.log("Saved after changinging status")
+                                                incrementWhenDone.count += 1;
+                                                if (incrementWhenDone.count == results.length) {
+                                                console.log(" Saved "+ results.length +" pairings");
+                                                res.success(" Saved all pairings");
+                                                }
+
                                                 },
                                                 error: function(bridgePairing, error){
                                                 console.log(" Not Saved after changinging status")
+                                                incrementWhenDone.count += 1;
+                                                if (incrementWhenDone.count == results.length) {
+                                                console.log(" Not all of  "+ results.length +" pairings were saved");
+                                                res.error(" Not all the pairings were saved");
+                                                }
+
                                                 }
                                          });
                              }
                              }
-                             res.success("Saved");
                              },
                              error: function(error) {
                              console.log("Failed!");
@@ -96,8 +108,7 @@ Parse.Cloud.define('changeBridgePairingsOnInterestedInUpdate', function(req, res
                               }
                               }
                               console.log("Done creating usersNotToPairWith, shownToForPairsNotCheckedOut");
-                              recreatePairings(req, usersNotToPairWith, shownToForPairsNotCheckedOut);
-                              res.success("Saved");
+                              recreatePairings(req, usersNotToPairWith, shownToForPairsNotCheckedOut, res);
                               },
                               error: function(error) {
                               console.log("Failed!");
@@ -113,6 +124,7 @@ Parse.Cloud.define('revitalizeMyPairs', function(req, res) {
                    query.limit = 10000;
                    query.find({
                               success:function(results) {
+                              var incrementWhenDone = {count : 0};
                               console.log("revitalizeMyPairs "+ results.length)
                               for (var i = 0, len = results.length; i < len; i++) {
                               var result = results[i];
@@ -135,12 +147,23 @@ Parse.Cloud.define('revitalizeMyPairs', function(req, res) {
                               result.save(null, {
                                           success: function(bridgePairing){
                                           console.log("Saved after revitalizing")
+                                          incrementWhenDone.count += 1;
+                                          if (incrementWhenDone.count == results.length) {
+                                          console.log(" Saved "+ results.length +" pairings after revitalizing");
+                                          res.success(" Saved all pairings after revitalizing");
+                                          }
+                                          
                                           },
                                           error: function(bridgePairing, error){
                                           console.log(" Not Saved after revitalizing")
+                                          incrementWhenDone.count += 1;
+                                          if (incrementWhenDone.count == results.length) {
+                                          console.log(" Not all of  "+ results.length +" pairings were saved after revitalizing");
+                                          res.error(" Not all the pairings were saved after revitalizing");
+                                          }
+
                                           }
                                           });
-                              res.success(" revitalizing started");
                               }
 
                               },
@@ -153,7 +176,7 @@ Parse.Cloud.define('revitalizeMyPairs', function(req, res) {
 
                    
                    });
-function createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut){
+function createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res){
     console.log("createNewPairing stepped in with "+status1+", "+status2+", "+bridgeType);
     console.log(user);
     var BridgePairingsClass = Parse.Object.extend("BridgePairings");
@@ -177,6 +200,8 @@ function createNewPairing(req, user, status1, status2, bridgeType, shownToForPai
     
     bridgePairing.set("user_locations",[req.user.get("location"), user.get("location")]);
     bridgePairing.set("user_objectIds",[req.user.id, user.id]);
+    bridgePairing.set("user_objectId1",req.user.id);
+    bridgePairing.set("user_objectId2",user.id);
     console.log("after user_objectIds is set");
     bridgePairing.set("score", getDistanceScore(req.user.get("location"), user.get("location") ));
     console.log("after score is set");
@@ -190,15 +215,26 @@ function createNewPairing(req, user, status1, status2, bridgeType, shownToForPai
     bridgePairing.save(null, {
                        success: function(bridgePairing){
                        console.log(req.user.get("name") +"  "+user.get("name") +" saved a pairing");
+                       incrementWhenDone.count += 1;
+                       if (incrementWhenDone.count == noOfPairsWithCommonInterests) {
+                       console.log("Saved "+ noOfPairsWithCommonInterests +"pairings");
+                       res.success("Saved all pairings");
+                       }
                        
                        },
                        error: function(bridgePairing, error){
                        console.log("could not save a pairing");
+                       incrementWhenDone.count += 1;
+                       if (incrementWhenDone.count == noOfPairsWithCommonInterests) {
+                       console.log("Not Saved all of "+ noOfPairsWithCommonInterests +" pairings");
+                       res.error("Did not save all pairings");
+                       }
+
                        }
                        });
 
 }
-function recreatePairings(req, usersNotToPairWith, shownToForPairsNotCheckedOut){
+function recreatePairings(req, usersNotToPairWith, shownToForPairsNotCheckedOut, res){
     var query = new Parse.Query("_User");
     console.log("recreatePairings was called");
     var skipIds = usersNotToPairWith.concat(req.user.get("friend_list"));
@@ -209,10 +245,20 @@ function recreatePairings(req, usersNotToPairWith, shownToForPairsNotCheckedOut)
                success: function(results){
                count += results.length;
                console.log("query.find "+count);
+               
+               var incrementWhenDone = {count : 0};
+               var noOfPairsWithCommonInterests = 0;
+               
+               for (var j = 0; j < results.length; ++j) {
+               if (haveCommonInterests(req, results[j] ) == true) {
+               noOfPairsWithCommonInterests += 1;
+               }
+               }
+
                for (var i = 0; i < results.length; ++i) {
                if (haveCommonInterests(req, results[i] ) == true) {
                console.log(req.user.id + "  "+ results[i].id +" haveCommonInterests");
-               decideBridgeStatusAndTypeAndCreatePairing(req, results[i], shownToForPairsNotCheckedOut);
+               decideBridgeStatusAndTypeAndCreatePairing(req, results[i], shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res);
                }
                }
                },
@@ -300,7 +346,7 @@ function haveCommonInterests(req, user) {
     //console.log("userinterestedInLove");
     return commonInterest;
 }
-function callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut){
+function callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res){
     console.log("callBack stepped in");
     if (allDone == 3) {
         console.log("callBack stepped in and allDone is 3 "+ noOfBusinessStatuses1 +", "+noOfLoveStatuses1+", "+noOfFriendshipStatuses1+ ", "+ noOfBusinessStatuses2 +", "+noOfLoveStatuses2+", "+noOfFriendshipStatuses2);
@@ -328,7 +374,7 @@ function callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatus
         }
         if (maxStatuses == 0) {
             console.log("maxStatuses is 0");
-            createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut);
+            createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res);
         }
         else if (maxStatuses1 == 0) {
             console.log("maxStatuses1 is 0");
@@ -341,11 +387,11 @@ function callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatus
                          success: function(result) {
                          status2 = result.get("bridge_status");
                          console.log("call Back success query 0");
-                         createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut);
+                         createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res);
                          },
                          error: function(error) {
                          console.log("call Back error query 0");
-                         createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut);
+                         createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res);
                          
                          }
                          });
@@ -362,11 +408,11 @@ function callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatus
                         success: function(result) {
                         status1     = result.get("bridge_status");
                         console.log("call Back success query 00");
-                        createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut);
+                        createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res);
                         },
                         error: function(error) {
                         console.log("call Back error query 00");
-                        createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut);
+                        createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res);
                         
                         }
                         });
@@ -391,11 +437,11 @@ function callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatus
                                 success: function(result2) {
                                 status2 = result2.get("bridge_status");
                                 console.log("call Back success query 2");
-                                createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut);
+                                createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res);
                                 },
                                 error: function(error) {
                                 console.log("call Back error query 2");
-                                createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut);
+                                createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res);
                                 
                                 }
                                 });
@@ -403,7 +449,7 @@ function callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatus
                     },
                     error: function(error) {
                     console.log("call Back error query 1");
-                    createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut);
+                    createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res);
                     
                     }
                     });
@@ -411,7 +457,7 @@ function callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatus
         
     }
 }
-function decideBridgeStatusAndTypeAndCreatePairing(req, user, shownToForPairsNotCheckedOut) {
+function decideBridgeStatusAndTypeAndCreatePairing(req, user, shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res) {
     console.log(" inside getBridgeStatusAndType");
     
     var userInterestedInBusiness = user.get("interested_in_business");
@@ -452,12 +498,12 @@ function decideBridgeStatusAndTypeAndCreatePairing(req, user, shownToForPairsNot
                                 noOfBusinessStatuses2 = count2;
                                 allDone += 1;
                                 console.log("1");
-                                callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut);
+                                callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res);
                                 },
                                 error: function(error) {
                                  allDone += 1;
                                  console.log("2");
-                                 callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut);
+                                 callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res);
                                 }
                                 
                                 });
@@ -465,7 +511,7 @@ function decideBridgeStatusAndTypeAndCreatePairing(req, user, shownToForPairsNot
                     error: function(error) {
                     allDone += 1;
                     console.log("3");
-                    callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut);
+                    callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res);
 
                     }
 
@@ -474,7 +520,7 @@ function decideBridgeStatusAndTypeAndCreatePairing(req, user, shownToForPairsNot
     else {
         allDone += 1;
         console.log("Both not interested in business");
-        callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut);
+        callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res);
         
     }
     if (userInterestedInLove !== 'undefined' && meInterestedInLove !== 'undefined' && userInterestedInLove == true && meInterestedInLove == true && areCompatible(req.user, user)) {
@@ -498,12 +544,12 @@ function decideBridgeStatusAndTypeAndCreatePairing(req, user, shownToForPairsNot
                                  allDone += 1;
                                  console.log("4");
                                  console.log("No. of love statuses =" + noOfLoveStatuses1+noOfLoveStatuses2 );
-                                 callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut);
+                                 callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res);
                                  },
                                  error: function(error) {
                                     allDone += 1;
                                     console.log("5");
-                                    callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut);
+                                    callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res);
                                  }
                                  
                                  });
@@ -511,14 +557,14 @@ function decideBridgeStatusAndTypeAndCreatePairing(req, user, shownToForPairsNot
                     error: function(error) {
                         allDone += 1;
                         console.log("6");
-                        callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut);
+                        callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res);
                     }
                     });
     }
     else {
         allDone += 1;
         console.log("Both not interested in Love");
-        callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut);
+        callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res);
         
     }
 
@@ -542,12 +588,12 @@ function decideBridgeStatusAndTypeAndCreatePairing(req, user, shownToForPairsNot
                                  noOfFriendshipStatuses2 = count2;
                                  allDone += 1;
                                  console.log("7");
-                                 callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut);
+                                 callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res);
                                  },
                                  error: function(error) {
                                     allDone += 1;
                                     console.log("8");
-                                    callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut);
+                                    callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res);
                                  }
                                  
                                  });
@@ -555,14 +601,14 @@ function decideBridgeStatusAndTypeAndCreatePairing(req, user, shownToForPairsNot
                     error: function(error) {
                         allDone += 1;
                         console.log("9");
-                        callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut);
+                        callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res);
                     }
                     });
     }
     else {
         allDone += 1;
         console.log("Both not interested in Friendship");
-        callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut);
+        callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res);
         
     }
 
@@ -652,17 +698,26 @@ Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
                               success: function(results){
                               count += results.length;
                               console.log("query.find "+count);
-                              res.success(req.user.get("name"));
+                              
+                              var incrementWhenDone = {count : 0};
+                              var noOfPairsWithCommonInterests = 0;
+                              
+                              for (var j = 0; j < results.length; ++j) {
+                              if (haveCommonInterests(req, results[j] ) == true) {
+                              noOfPairsWithCommonInterests += 1;
+                              }
+                              }
+                              
                               for (var i = 0; i < results.length; ++i) {
                               if (haveCommonInterests(req, results[i] ) == true) {
                               console.log("haveCommonInterests");
-                              decideBridgeStatusAndTypeAndCreatePairing(req, results[i], {});
+                              decideBridgeStatusAndTypeAndCreatePairing(req, results[i], {}, incrementWhenDone, noOfPairsWithCommonInterests, res);
                               }
                               }
                               },
                               error: function() {
                               count -= 1;
-                              res.success("error");
+                              res.error("error");
                               }
                               });
                    
