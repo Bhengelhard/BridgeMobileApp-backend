@@ -183,25 +183,26 @@ function createNewPairing(req, user, status1, status2, bridgeType, shownToForPai
     var bridgePairing = new BridgePairingsClass();
     console.log( "name"+req.user.get("name"));
     console.log( "name"+user.get("name"));
-    bridgePairing.set("user1_name",req.user.get("name"));
-    bridgePairing.set("user2_name",user.get("name"));
+    bridgePairing.set("user1_name",user.get("name"));
+    bridgePairing.set("user2_name",req.user.get("name"));
+    
     
     bridgePairing.set("user1_bridge_status",status1);
     bridgePairing.set("user2_bridge_status",status2);
     
-    bridgePairing.set("user1_profile_picture",req.user.get("profile_picture"));
-    bridgePairing.set("user2_profile_picture",user.get("profile_picture"));
+    bridgePairing.set("user1_profile_picture",user.get("profile_picture"));
+    bridgePairing.set("user2_profile_picture",req.user.get("profile_picture"));
     
     
     
     bridgePairing.set("bridge_type",bridgeType);
-    bridgePairing.set("user1_city",req.user.get("city"));
-    bridgePairing.set("user2_city",user.get("city"));
+    bridgePairing.set("user1_city",user.get("city"));
+    bridgePairing.set("user2_city",req.user.get("city"));
     
     bridgePairing.set("user_locations",[req.user.get("location"), user.get("location")]);
-    bridgePairing.set("user_objectIds",[req.user.id, user.id]);
-    bridgePairing.set("user_objectId1",req.user.id);
-    bridgePairing.set("user_objectId2",user.id);
+    bridgePairing.set("user_objectIds",[user.id, req.user.id]);
+    bridgePairing.set("user_objectId1",user.id);
+    bridgePairing.set("user_objectId2",req.user.id);
     console.log("after user_objectIds is set");
     bridgePairing.set("score", getDistanceScore(req.user.get("location"), user.get("location") ));
     console.log("after score is set");
