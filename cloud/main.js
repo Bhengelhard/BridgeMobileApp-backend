@@ -372,12 +372,12 @@ function callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatus
             maxStatuses2 = noOfFriendshipStatuses2;
             bridgeType = "Friendship";
         }
-        if (maxStatuses == 0) {
-            console.log("maxStatuses is 0");
+        if (maxStatuses == 2) {
+            console.log("maxStatuses is 2");
             createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res);
         }
-        else if (maxStatuses1 == 0) {
-            console.log("maxStatuses1 is 0");
+        else if (maxStatuses1 == 1) {
+            console.log("maxStatuses1 is 1");
             var query = new Parse.Query("BridgeStatus");
             query.descending("createdAt");
             query.limit = 1;
@@ -398,15 +398,16 @@ function callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatus
 
             
         }
-        else if (maxStatuses2 == 0) {
-            console.log("maxStatuses2 is 0");
+        else if (maxStatuses2 == 1) {
+            console.log("maxStatuses2 is 1");
+            var query = new Parse.Query("BridgeStatus");
             query.descending("createdAt");
             query.limit = 1;
             query.equalTo("userId",user.id);
             query.equalTo("bridge_type",bridgeType);
             query.first({
                         success: function(result) {
-                        status1     = result.get("bridge_status");
+                        status1 = result.get("bridge_status");
                         console.log("call Back success query 00");
                         createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res);
                         },
@@ -488,14 +489,14 @@ function decideBridgeStatusAndTypeAndCreatePairing(req, user, shownToForPairsNot
         query.equalTo("bridge_type","Business");
         query.count({
                     success: function(count1) {
-                    noOfBusinessStatuses1 = count1;
+                    noOfBusinessStatuses1 += count1;
                     var query2 = new Parse.Query("BridgeStatus");
                     query2.descending("createdAt");
                     query2.equalTo("userId",req.user.id);
                     query2.equalTo("bridge_type","Business");
                     query2.count({
                                 success: function(count2) {
-                                noOfBusinessStatuses2 = count2;
+                                noOfBusinessStatuses2 += count2;
                                 allDone += 1;
                                 console.log("1");
                                 callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res);
@@ -533,14 +534,14 @@ function decideBridgeStatusAndTypeAndCreatePairing(req, user, shownToForPairsNot
         query.equalTo("userId",user.id);
         query.count({
                     success: function(count1) {
-                    noOfLoveStatuses1 = count1;
+                    noOfLoveStatuses1 += count1;
                     var query2 = new Parse.Query("BridgeStatus");
                     query2.descending("createdAt");
                     query2.equalTo("userId",req.user.id);
                     query2.equalTo("bridge_type","Love");
                     query2.count({
                                  success: function(count2) {
-                                 noOfLoveStatuses2 = count2;
+                                 noOfLoveStatuses2 += count2;
                                  allDone += 1;
                                  console.log("4");
                                  console.log("No. of love statuses =" + noOfLoveStatuses1+noOfLoveStatuses2 );
@@ -578,14 +579,14 @@ function decideBridgeStatusAndTypeAndCreatePairing(req, user, shownToForPairsNot
         query.equalTo("bridge_type","Friendship");
         query.count({
                     success: function(count1) {
-                    noOfFriendshipStatuses1 = count1;
+                    noOfFriendshipStatuses1 += count1;
                     var query2 = new Parse.Query("BridgeStatus");
                     query2.descending("createdAt");
                     query2.equalTo("userId",req.user.id);
                     query2.equalTo("bridge_type","Friendship");
                     query2.count({
                                  success: function(count2) {
-                                 noOfFriendshipStatuses2 = count2;
+                                 noOfFriendshipStatuses2 += count2;
                                  allDone += 1;
                                  console.log("7 "+noOfFriendshipStatuses1+ ", "+noOfFriendshipStatuses2);
                                  callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res);
