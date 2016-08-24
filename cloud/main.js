@@ -1,6 +1,6 @@
 // Cloud co!
 
-/*Parse.Cloud.define("deleteBridgePairings", function(request, status) {
+Parse.Cloud.define("deleteBridgePairings", function(request, status) {
                 
                 var BridgePairingsClass = Parse.Object.extend("BridgePairings");
                 var query = new Parse.Query(BridgePairingsClass);
