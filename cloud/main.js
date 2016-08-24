@@ -254,7 +254,7 @@ function recreatePairings(req, usersNotToPairWith, shownToForPairsNotCheckedOut,
                noOfPairsWithCommonInterests += 1;
                }
                }
-
+               
                for (var i = 0; i < results.length; ++i) {
                if (haveCommonInterests(req, results[i] ) == true) {
                console.log(req.user.id + "  "+ results[i].id +" haveCommonInterests");
@@ -668,7 +668,7 @@ function areCompatible(user1, user2) {
     
 }
 function getDistanceScore(distance1, distance2) {
-    //console.log("getDistanceScore stepped in");
+    console.log("getDistanceScore stepped in -"+distance1 + "   "+distance2);
     if (("latitude" in distance1) && ("latitude" in distance2) && ("longitude" in distance1) && ("longitude" in distance2)) {
         console.log(distance1["latitude"]+","+distance1["longitude"]+","+distance2["latitude"]+","+distance2["longitude"]);
         var x = distance1["latitude"] - distance2["latitude"];
