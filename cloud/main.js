@@ -661,7 +661,10 @@ function decideBridgeStatusAndTypeAndCreatePairing(req, user, shownToForPairsNot
 function areCompatible(user1, user2) {
     var lovePreference1 = user1.get("interested_in");
     var lovePreference2 = user2.get("gender");
-    if (lovePreference1 == lovePreference2) {
+    var lovePreference3 = user1.get("gender");
+    var lovePreference4 = user2.get("interested_in");
+
+    if (lovePreference1 == lovePreference2 && lovePreference3 == lovePreference4) {
         return true;
     }
     else {
