@@ -283,9 +283,15 @@ function recreatePairings(req, usersNotToPairWith, shownToForPairsNotCheckedOut,
                decideBridgeStatusAndTypeAndCreatePairing(req, results[i], shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res);
                }
                }
+               if (noOfPairsWithCommonInterests == 0) {
+               console.log("None of the possible pairs have common interests");
+               res.success("None of the possible pairs have common interests");
+               
+               }
                },
                error: function() {
                console.log("Querying _User failed in recreatePairings");
+               res.error("Querying _User failed in recreatePairings");
                }
                });
 
