@@ -35,6 +35,7 @@ Parse.Cloud.define('changeBridgePairingsOnStatusUpdate', function(req, res) {
                    query.find({
                               //if success will call function with parameter of results
                              success:function(results) {
+                              console.log("length : "+results.length);
                              var incrementWhenDone = {count : 0};
                               //going through each of the results and deciding which one of the users' status should be updated
                              for (var i = 0, len = results.length; i < len; i++) {
