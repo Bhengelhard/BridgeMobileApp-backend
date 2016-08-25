@@ -488,6 +488,9 @@ function callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatus
     }
 }
 function decideBridgeStatusAndTypeAndCreatePairing(req, user, shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res) {
+    // future updates includes comparisons on the basis of recent statuses. It's for this specific reason that I'm choosing to query here instead
+    // of having a field associated with every user indicating the no. of statuses of each type. I hope this will give future developers immense
+    // flexibility to decide the bridge pairings statuses and type. Always remember the cloud code has a timeout and beware of the time your functions take.cIgAr - 08/25
     console.log(" inside getBridgeStatusAndType");
     
     var userInterestedInBusiness = user.get("interested_in_business");
