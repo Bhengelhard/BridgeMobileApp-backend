@@ -23,20 +23,27 @@
                 });*/
 Parse.Cloud.define('changeBridgePairingsOnStatusUpdate', function(req, res) {
                    console.log("changeBridgePairingsOnStatusUpdate was called");
+                   //creating a class with the name BridgePairings
                    var BridgePairingsClass = Parse.Object.extend("BridgePairings");
+                   //query passing the classname -> which is the name of the table being queried
                    var query = new Parse.Query(BridgePairingsClass);
+                   //queries the table for user_objectIds that includes req.user.id
                    query.equalTo("user_objectIds",req.user.id);
                    query.equalTo("bridge_type",req.params.bridgeType);
                    query.limit = 10000;
+                   //for query.find, everything is in background
                    query.find({
+                              //if success will call function with parameter of results
                              success:function(results) {
                              var incrementWhenDone = {count : 0};
+                              //going through each of the results and deciding which one of the users' status should be updated
                              for (var i = 0, len = results.length; i < len; i++) {
                              var result = results[i];
                              var userObjectIds = result.get("user_objectIds");
                              console.log("result = "+ result + "userObjectIds[0]="+userObjectIds[0] + " & userObjectIds[1]= "+userObjectIds[1]);
                              //if( userObjectIds.length > 0 ){
                              if (userObjectIds[0] == req.user.id) {
+                              //the status was sent from the user's phone when the cloud function was called so the cloud code does not have to request the status from Parse and save again
                               result.set("user1_bridge_status", req.params.status);
                                 console.log("1");
                              }
@@ -44,12 +51,15 @@ Parse.Cloud.define('changeBridgePairingsOnStatusUpdate', function(req, res) {
                               result.set("user2_bridge_status",req.params.status);
                                 console.log("2");
                              }
+                              //after making updates to the queried data, you need to save
                              result.save(null, {
                                                 success: function(bridgePairing){
                                                 console.log("Saved after changinging status")
                                                 incrementWhenDone.count += 1;
+                                                //once incrementWhenDone get to the length of the results, it is clear the job has completed - this is necessary due to asynchronous execution
                                                 if (incrementWhenDone.count == results.length) {
                                                 console.log(" Saved "+ results.length +" pairings");
+                                                //res.success is the return -> no code will be read after this
                                                 res.success(" Saved all pairings");
                                                 }
 
@@ -67,9 +77,10 @@ Parse.Cloud.define('changeBridgePairingsOnStatusUpdate', function(req, res) {
                              //}
                              }
                              },
+                              //if error will call function with parameter of error
                              error: function(error) {
-                             console.log("Failed!");
-                             res.error("Not saved");
+                              console.log("Failed!");
+                              res.error("Not saved");
                              }
                              });
                    
@@ -172,9 +183,6 @@ Parse.Cloud.define('revitalizeMyPairs', function(req, res) {
                               res.error("Failed");
                               }
                               });
-
-
-                   
                    });
 function createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res){
     console.log("createNewPairing stepped in with "+status1+", "+status2+", "+bridgeType);
@@ -217,6 +225,7 @@ function createNewPairing(req, user, status1, status2, bridgeType, shownToForPai
                        success: function(bridgePairing){
                        console.log(req.user.get("name") +"  "+user.get("name") +" saved a pairing");
                        incrementWhenDone.count += 1;
+                       //incrementWhenDone is not a global variable, but instead is passed in as a parameter to stay specific to different users
                        if (incrementWhenDone.count == noOfPairsWithCommonInterests) {
                        console.log("Saved "+ noOfPairsWithCommonInterests +"pairings");
                        res.success("Saved all pairings");
@@ -373,6 +382,7 @@ function callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatus
             maxStatuses2 = noOfFriendshipStatuses2;
             bridgeType = "Friendship";
         }
+        //this means that both users were interested in something, but that they have 0 statuses
         if (maxStatuses == 2) {
             console.log("maxStatuses is 2");
             createNewPairing(req, user, status1, status2, bridgeType, shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res);
@@ -479,6 +489,7 @@ function decideBridgeStatusAndTypeAndCreatePairing(req, user, shownToForPairsNot
     var noOfBusinessStatuses2 = 0;
     var noOfLoveStatuses2 = 0;
     var noOfFriendshipStatuses2 = 0;
+    //allDone keeps track of when all three interest checks have finished so as to know when the asynchronous execution has completed
     var allDone = 0;
     if (userInterestedInBusiness !== 'undefined' && meInterestedInBusiness !== 'undefined' && userInterestedInBusiness == true && meInterestedInBusiness == true) {
         noOfBusinessStatuses1 = 1;
@@ -500,6 +511,7 @@ function decideBridgeStatusAndTypeAndCreatePairing(req, user, shownToForPairsNot
                                 noOfBusinessStatuses2 += count2;
                                 allDone += 1;
                                 console.log("1");
+                                 //global variables not used so that the callbacks will be different entities for different users
                                 callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatuses1,noOfBusinessStatuses2, noOfLoveStatuses2, noOfFriendshipStatuses2, allDone, req, user, shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res);
                                 },
                                 error: function(error) {
@@ -672,6 +684,8 @@ function areCompatible(user1, user2) {
     }
     
 }
+
+//08/24/16 scoring algorithm for which pairs should be presented first
 function getDistanceScore(distance1, distance2) {
     console.log("getDistanceScore stepped in -"+distance1 + "   "+distance2);
     if (("latitude" in distance1) && ("latitude" in distance2) && ("longitude" in distance1) && ("longitude" in distance2)) {
@@ -679,6 +693,7 @@ function getDistanceScore(distance1, distance2) {
         var x = distance1["latitude"] - distance2["latitude"];
         var y = distance1["longitude"] - distance2["longitude"];
         //console.log(x+","+y);
+        //pythagorean theorem to find the distance between the two locations
         return (Math.sqrt(x*x + y*y) );
     }
     else {
