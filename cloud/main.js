@@ -79,6 +79,7 @@ Parse.Cloud.define('changeBridgePairingsOnStatusUpdate', function(req, res) {
                                          });
                               }
                               else {
+                              console.log("Randomly selected not to update this one");
                               incrementWhenDone.count += 1;
                               if (incrementWhenDone.count == results.length) {
                               console.log(" Saved "+ results.length +" pairings after some randomizations");
