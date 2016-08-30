@@ -210,9 +210,10 @@ Parse.Cloud.define('changeMessagesTableOnNameUpdate', function(req, res) {
                               //if (sender == req.user.id) {
                               //the sender's name is sent from the user's phone when the cloud function was called so the cloud code does not have to request the name from Parse and save again
                               for (var j = 0, len = namesInMessage.length; j <len; j++) {
-                              if (idsInMessage[0] == req.user.id) {
+                              console.log("when j = " + j + ", idsInMessage[j] = " + idsInMessage[j])
+                              if (idsInMessage[j] == req.user.id) {
                                 console.log("got the users name: " + req.user.id + " and changed it to " + namesInMessage[j])
-                                namesInMessage[0] = res.user.get("name")
+                                namesInMessage[j] = res.user.get("name")
                               }
                               
                               
