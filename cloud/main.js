@@ -100,9 +100,12 @@ Parse.Cloud.define('changeBridgePairingsOnStatusUpdate', function(req, res) {
                    query.find({
                               //if success will call function with parameter of results
                              success:function(results) {
+                              console.log("length : "+results.length);
                              var incrementWhenDone = {count : 0};
                               //going through each of the results and deciding which one of the users' status should be updated
                              for (var i = 0, len = results.length; i < len; i++) {
+                              // Randomly update a few statuses
+                             if (Math.floor(Math.random()*2) == 1){
                              var result = results[i];
                              var userObjectIds = result.get("user_objectIds");
                              console.log("result = "+ result + "userObjectIds[0]="+userObjectIds[0] + " & userObjectIds[1]= "+userObjectIds[1]);
@@ -139,6 +142,15 @@ Parse.Cloud.define('changeBridgePairingsOnStatusUpdate', function(req, res) {
 
                                                 }
                                          });
+                              }
+                              else {
+                              console.log("Randomly selected not to update this one");
+                              incrementWhenDone.count += 1;
+                              if (incrementWhenDone.count == results.length) {
+                              console.log(" Saved "+ results.length +" pairings after some randomizations");
+                              res.success(" Saved all pairings");
+                              }
+                              }
                              //}
                              }
                              },
@@ -336,9 +348,15 @@ function recreatePairings(req, usersNotToPairWith, shownToForPairsNotCheckedOut,
                decideBridgeStatusAndTypeAndCreatePairing(req, results[i], shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res);
                }
                }
+               if (noOfPairsWithCommonInterests == 0) {
+               console.log("None of the possible pairs have common interests");
+               res.success("None of the possible pairs have common interests");
+               
+               }
                },
                error: function() {
                console.log("Querying _User failed in recreatePairings");
+               res.error("Querying _User failed in recreatePairings");
                }
                });
 
@@ -535,6 +553,9 @@ function callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatus
     }
 }
 function decideBridgeStatusAndTypeAndCreatePairing(req, user, shownToForPairsNotCheckedOut, incrementWhenDone, noOfPairsWithCommonInterests, res) {
+    // future updates includes comparisons on the basis of recent statuses. It's for this specific reason that I'm choosing to query here instead
+    // of having a field associated with every user indicating the no. of statuses of each type. I hope this will give future developers immense
+    // flexibility to decide the bridge pairings statuses and type. Always remember the cloud code has a timeout and beware of the time your functions take.cIgAr - 08/25
     console.log(" inside getBridgeStatusAndType");
     
     var userInterestedInBusiness = user.get("interested_in_business");
@@ -799,6 +820,12 @@ Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
                               decideBridgeStatusAndTypeAndCreatePairing(req, results[i], {}, incrementWhenDone, noOfPairsWithCommonInterests, res);
                               }
                               }
+                              if (noOfPairsWithCommonInterests == 0) {
+                              console.log("None of the possible pairs have common interests");
+                              res.success("None of the possible pairs have common interests");
+                              
+                              }
+
                               },
                               error: function() {
                               count -= 1;
