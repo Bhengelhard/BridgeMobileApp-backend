@@ -21,6 +21,71 @@
                            });
                 
                 });*/
+
+Parse.Cloud.define('changeBridgePairingsOnProfilePictureUpdate', function(req, res) {
+                   console.log("changeBridgePairingsOnProfilePictureUpdate was called");
+                   //creating a class with the name BridgePairings
+                   var BridgePairingsClass = Parse.Object.extend("BridgePairings");
+                   //query passing the classname -> which is the name of the table being queried
+                   var query = new Parse.Query(BridgePairingsClass);
+                   //queries the table for user_objectIds that includes req.user.id
+                   query.equalTo("user_objectIds",req.user.id);
+                   query.limit = 10000;
+                   //for query.find, everything is in background
+                   query.find({
+                              //if success will call function with parameter of results
+                              success:function(results) {
+                              console.log("length : "+results.length);
+                              var incrementWhenDone = {count : 0};
+                              //going through each of the results and deciding which one of the users' status should be updated
+                              for (var i = 0, len = results.length; i < len; i++) {
+                              var result = results[i];
+                              var userObjectIds = result.get("user_objectIds");
+                              console.log("result = "+ result + "userObjectIds[0]="+userObjectIds[0] + " & userObjectIds[1]= "+userObjectIds[1]);
+                              //if( userObjectIds.length > 0 ){
+                              if (userObjectIds[0] == req.user.id) {
+                              //the status was sent from the user's phone when the cloud function was called so the cloud code does not have to request the status from Parse and save again
+                              result.set("user1_profile_picture", req.user.get("profile_picture"));
+                              console.log("changeBridgePairingsOnProfilePictureUpdate1");
+                              }
+                              else {
+                              result.set("user2_profile_picture",req.user.get("profile_picture"));
+                              console.log("changeBridgePairingsOnProfilePictureUpdate2");
+                              }
+                              //after making updates to the queried data, you need to save
+                              result.save(null, {
+                                          success: function(bridgePairing){
+                                          console.log("Saved after changinging status")
+                                          incrementWhenDone.count += 1;
+                                          //once incrementWhenDone get to the length of the results, it is clear the job has completed - this is necessary due to asynchronous execution
+                                          if (incrementWhenDone.count == results.length) {
+                                          console.log(" Saved "+ results.length +" pairings");
+                                          //res.success is the return -> no code will be read after this
+                                          res.success(" Saved all pairings");
+                                          }
+                                          
+                                          },
+                                          error: function(bridgePairing, error){
+                                          console.log(" Not Saved after changinging status")
+                                          incrementWhenDone.count += 1;
+                                          if (incrementWhenDone.count == results.length) {
+                                          console.log(" Not all of  "+ results.length +" pairings were saved");
+                                          res.error(" Not all the pairings were saved");
+                                          }
+                                          
+                                          }
+                                          });
+                              //}
+                              }
+                              },
+                              //if error will call function with parameter of error
+                              error: function(error) {
+                              console.log("Failed!");
+                              res.error("Not saved");
+                              }
+                              });
+                   
+                   });
 Parse.Cloud.define('changeBridgePairingsOnStatusUpdate', function(req, res) {
                    console.log("changeBridgePairingsOnStatusUpdate was called");
                    //creating a class with the name BridgePairings
