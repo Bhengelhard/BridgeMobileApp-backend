@@ -213,7 +213,7 @@ Parse.Cloud.define('changeMessagesTableOnNameUpdate', function(req, res) {
                               console.log("when j = " + j + ", idsInMessage[j] = " + idsInMessage[j]);
                               if (idsInMessage[j] == req.user.id) {
                               console.log("got the users name for id: " + req.user.id + " - it was " + namesInMessage[j]);
-                              namesInMessage[j] = res.user.get("name");
+                              namesInMessage[j] = req.user.get("name");
                               console.log("the user's name is now " + namesInMessage[j]);
                               }
                               
