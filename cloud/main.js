@@ -172,7 +172,7 @@ Parse.Cloud.define('changeBridgePairingsOnNameUpdate', function(req, res) {
                    //query passing the classname -> which is the name of the table being queried
                    var query = new Parse.Query(SingleMessagesClass);
                    //queries the table for user_objectIds that includes req.user.id
-                   query.equalTo("user_objectIds",req.user.id);
+                   query.equalTo("sender",req.user.id);
                    query.limit = 10000;
                    //for query.find, everything is in background
                    query.find({
@@ -183,7 +183,7 @@ Parse.Cloud.define('changeBridgePairingsOnNameUpdate', function(req, res) {
                               //going through each of the results and deciding which one of the users' name should be updated
                               for (var i = 0, len = results.length; i < len; i++) {
                               var result = results[i];
-                              var userObjectIds = result.get("user_objectIds");
+                              var senderName = result.get("sender_name");
                               console.log("result = "+ result + "userObjectIds[0]="+userObjectIds[0] + " & userObjectIds[1]= "+userObjectIds[1]);
                               if (userObjectIds[0] == req.user.id) {
                               //the name is sent from the user's phone when the cloud function was called so the cloud code does not have to request the name from Parse and save again
@@ -227,7 +227,7 @@ Parse.Cloud.define('changeBridgePairingsOnNameUpdate', function(req, res) {
                               }
                               });*/
                    
-                   //query and update the messages Table
+                   /*//query and update the messages Table
                    console.log("changeMessagesTableOnNameUpdate was called");
                    //creating a class with the name BridgePairings
                    var MessagesClass = Parse.Object.extend("Messages");
@@ -305,7 +305,7 @@ Parse.Cloud.define('changeBridgePairingsOnNameUpdate', function(req, res) {
                               console.log("Failed!");
                               res.error("Not saved");
                               }
-                              });
+                              });*/
                    
                    });
 Parse.Cloud.define('changeBridgePairingsOnProfilePictureUpdate', function(req, res) {
