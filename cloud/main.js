@@ -191,6 +191,7 @@ Parse.Cloud.define('changeMessagesTableOnNameUpdate', function(req, res) {
                    var query = new Parse.Query(MessagesClass);
                    //queries the table for sender that includes req.user.id
                    query.equalTo("ids_in_message", req.user.id);
+                   console.log("req.user.id = " + req.user.id)
                    query.limit = 10000;
                    //for query.find, everything is in background
                    query.find({
@@ -202,13 +203,14 @@ Parse.Cloud.define('changeMessagesTableOnNameUpdate', function(req, res) {
                               for (var i = 0, len = results.length; i < len; i++) {
                               var result = results[i];
                               var namesInMessage = result.get("names_in_message");
+                              var idsInMessage = result.get("ids_in_message");
                               console.log("result = " + result );
                               console.log("namesInMessage = " + namesInMessage)
                               console.log("req.user.name = " + req.user.name)
                               //if (sender == req.user.id) {
                               //the sender's name is sent from the user's phone when the cloud function was called so the cloud code does not have to request the name from Parse and save again
                               for (var j = 0, len = namesInMessage.length; j <len; j++) {
-                              if (namesInMessage[0] == req.user.name) {
+                              if (idsInMessage[0] == req.user.id) {
                                 console.log("got the users name: " + req.user.id + " and changed it to " + namesInMessage[j])
                                 namesInMessage[0] = res.user.get("name")
                               }
