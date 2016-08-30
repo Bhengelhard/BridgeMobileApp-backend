@@ -182,6 +182,77 @@
  res.error("Not saved");
  }
  });*/
+
+Parse.Cloud.define('changeMessagesTableOnNameUpdate', function(req, res) {
+                   console.log("changeMessagesTableOnNameUpdate was called");
+                   //creating a class with the name Messages
+                   var MessagesClass = Parse.Object.extend("Messages");
+                   //query passing the classname -> which is the name of the table being queried
+                   var query = new Parse.Query(MessagesClass);
+                   //queries the table for sender that includes req.user.id
+                   query.equalTo("ids_in_message",req.user.id);
+                   query.limit = 10000;
+                   //for query.find, everything is in background
+                   query.find({
+                              //if success will call function with parameter of results
+                              success:function(results) {
+                              console.log("length : "+results.length);
+                              var incrementWhenDone = {count : 0};
+                              //going through each of the results and deciding which one of the users' name should be updated
+                              for (var i = 0, len = results.length; i < len; i++) {
+                              var result = results[i];
+                              var namesInMessage = result.get("names_in_message");
+                              console.log("result = " + result );
+                              //if (sender == req.user.id) {
+                              //the sender's name is sent from the user's phone when the cloud function was called so the cloud code does not have to request the name from Parse and save again
+                              for (var j = 0, len = namesInMessage.length; j <len; j++) {
+                              if namesInMessage[j] == req.user.name {
+                                console.log("got the users name: " + req.user.name + " and changed it to " + namesInMessage[j])
+                                namesInMessage[j] = res.user.get("name")
+                              }
+                              
+                              
+                              }
+                              
+                              
+                              result.set("names_in_message", namesInMessage);
+                              console.log("changedMessagesOnNameUpdate");
+                              //}
+                              //after making updates to the queried data, you need to save
+                              result.save(null, {
+                                          success: function(){
+                                          console.log("Saved after changinging name in Messages field: names_in_message")
+                                          incrementWhenDone.count += 1;
+                                          //once incrementWhenDone get to the length of the results, it is clear the job has completed - this is necessary due to asynchronous execution
+                                          if (incrementWhenDone.count == results.length) {
+                                          console.log(" Saved "+ results.length +" name to names_in_message in Messages Table");
+                                          //res.success is the return -> no code will be read after this
+                                          res.success(" Saved all names to Messages Table");
+                                          }
+                                          
+                                          },
+                                          error: function(error){
+                                          console.log(" Not Saved after changinging name for Messages Table")
+                                          incrementWhenDone.count += 1;
+                                          if (incrementWhenDone.count == results.length) {
+                                          console.log(" Not all of  "+ results.length +" names_in_messages fields in Messages were saved");
+                                          res.error(" Not all the messages were saved");
+                                          }
+                                          
+                                          }
+                                          });
+                              //}
+                              }
+                              },
+                              //if error will call function with parameter of error
+                              error: function(error) {
+                              console.log("Failed!");
+                              res.error("Not saved");
+                              }
+                              });
+                   
+                   });
+
 Parse.Cloud.define('changeSingleMessagesTableOnNameUpdate', function(req, res) {
                    console.log("changeSingleMessagesTableOnNameUpdate was called");
                    //creating a class with the name SingleMessages
@@ -210,22 +281,22 @@ Parse.Cloud.define('changeSingleMessagesTableOnNameUpdate', function(req, res) {
                               //after making updates to the queried data, you need to save
                               result.save(null, {
                                           success: function(){
-                                          console.log("Saved after changinging name")
+                                          console.log("Saved after changinging name in SingleMessages field: sneder_name")
                                           incrementWhenDone.count += 1;
                                           //once incrementWhenDone get to the length of the results, it is clear the job has completed - this is necessary due to asynchronous execution
                                           if (incrementWhenDone.count == results.length) {
-                                          console.log(" Saved "+ results.length +" pairings");
+                                          console.log(" Saved "+ results.length +" name to sender_name in SingleMessages Table");
                                           //res.success is the return -> no code will be read after this
-                                          res.success(" Saved all pairings");
+                                          res.success(" Saved all names to SingleMessagesTable");
                                           }
                                           
                                           },
-                                          error: function(bridgePairing, error){
-                                          console.log(" Not Saved after changinging status")
+                                          error: function(error){
+                                          console.log(" Not Saved after changinging name for SingleMessages Table")
                                           incrementWhenDone.count += 1;
                                           if (incrementWhenDone.count == results.length) {
-                                          console.log(" Not all of  "+ results.length +" pairings were saved");
-                                          res.error(" Not all the pairings were saved");
+                                          console.log(" Not all of  "+ results.length +" sender_name fields in SingleMessages were saved");
+                                          res.error(" Not all the single messages were saved");
                                           }
                                           
                                           }
