@@ -12,7 +12,7 @@ if (!databaseUri) {
 }
 
 var api = new ParseServer({
-  databaseURI: databaseUri || 'mongodb://heroku_tl77vlq9:ds021956-a0.mlab.com:21956/mybridgeapp?replicaSet=rs-ds021956',
+  databaseURI: databaseUri || 'mongodb://heroku_tl77vlq9:ds021956-a0.mlab.com:21956/heroku_tl77vlq9?replicaSet=rs-ds021956',
   cloud: process.env.CLOUD_CODE_MAIN || __dirname + '/cloud/main.js',
   appId: process.env.APP_ID || 'mybridgeapp3498735421846jhlkjsdhf23d',
   masterKey: process.env.MASTER_KEY || 'euchnfbe73723ndn77sdkj3763', //Add your master key here. Keep it secret!
