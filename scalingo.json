@@ -18,7 +18,7 @@
     },
     "DATABASE_URI": {
       "description": "Connection string for your database.",
-      "value": "mongodb://heroku_tl77vlq9:ds021956-a0.mlab.com:21956/heroku_tl77vlq9?replicaSet=rs-ds021956"
+      "value": "mongodb://heroku_tl77vlq9:necter@123@ds021956-a0.mlab.com:21956,ds021956-a1.mlab.com:21956/heroku_tl77vlq9?replicaSet=rs-ds021956"
     }
   },
   "addons": ["scalingo-mongodb"]
