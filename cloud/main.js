@@ -182,6 +182,69 @@
  res.error("Not saved");
  }
  });*/
+Parse.Cloud.define('addIntroducedUsersToEachothersFriendLists', function(req, res) {
+    console.log("addIntroducedUsersToEachothersFriendLists");
+    //creating a class with the name _User
+    var UserClass = Parse.Object.extend("_User)");
+    //query passing the classname -> which is the name of the table being queried
+    var query = new Parse.Query(UserClass);
+    //queries the table for the id's that include the user's introduced
+    let introducedUserIds = [req.user_objectId1, req.user_objectId2]
+    query.equalTo("objectId", introducedUserIds);
+    console.log("introducedUserIds = " + introducedUserIds)
+    query.limit = 2
+    query.find({
+               //if success will call function with parameter of results
+               success:function(results) {
+               console.log("length : " + results.length)
+               var incrementWhenDone = {count : 0};
+               //going through each of the results and deciding which one of the users' name should be updated
+               for (var i = 0, len = results.length; i < len; i++) {
+               var result = results[i];
+               var friendList = result.getFriend
+               console.log("result = " + result)
+               
+               if (result.get["objectId"] == req.user_objectId1) {
+               result.addUnique("friend_list", req.user_objectId1)
+               console.log("added to friend_list" + req.user_objectId1);
+               }
+               else {
+               result.addUnique("friend_list", req.user_objectId2)
+               console.log("added to friend_list" + req.user_objectId2);
+               }
+               console.log("addIntroducedUsersToEachothersFriendLists");
+               result.save(null, {
+                           success: function(){
+                           console.log("Saved after adding Introduced Users To Eachothers Friend Lists")
+                           incrementWhenDone.count += 1;
+                           //once incrementWhenDone get to the length of the results, it is clear the job has completed - this is necessary due to asynchronous execution
+                           if (incrementWhenDone.count == results.length) {
+                           console.log(" Saved "+ results.length +" id's to friend_lists in User Table");
+                           //res.success is the return -> no code will be read after this
+                           res.success(" Saved all new friends in Messages Table");
+                           }
+                           
+                           },
+                           error: function(error){
+                           console.log(" Not Saved after adding objectId's to friend_list in User Table")
+                           incrementWhenDone.count += 1;
+                           if (incrementWhenDone.count == results.length) {
+                           console.log(" Not all of  "+ results.length +" friend_list fields in User Table were updated and saved");
+                           res.error(" Not all the friend_list were saved");
+                           }
+                           
+                           }
+                           });
+               //}
+               }
+               },
+               //if error will call function with parameter of error
+               error: function(error) {
+               console.log("Failed!");
+               res.error("Not saved");
+               }
+               });
+            });
 
 Parse.Cloud.define('changeMessagesTableOnNameUpdate', function(req, res) {
                    console.log("changeMessagesTableOnNameUpdate was called");
