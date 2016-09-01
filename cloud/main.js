@@ -185,18 +185,19 @@
 Parse.Cloud.define('addIntroducedUsersToEachothersFriendLists', function(req, res) {
     console.log("addIntroducedUsersToEachothersFriendLists");
     //creating a class with the name _User
-    var UserClass = Parse.Object.extend("_User)");
+    //var UserClass = Parse.Object.extend("_User)");
     //query passing the classname -> which is the name of the table being queried
-    var query = new Parse.Query(UserClass);
+    //var query = new Parse.Query(UserClass);
+    var query = new Parse.Query("_User");
     //queries the table for the id's that include the user's introduced
     var introducedUserIds = [req.params.userObjectId1, req.params.userObjectId2]
-    query.equalTo("objectId", req.params.userObjectId1);
-    console.log("introducedUserIds = " + introducedUserIds)
+    query.containedIn("objectId", introducedUserIds);
+    console.log("introducedUserId = " + req.params.userObjectId1)
     query.limit = 2
     query.find({
                //if success will call function with parameter of results
                success:function(results) {
-               console.log("length : " + results.length)
+               console.log("length of addIntroducedUsersToEachothersFriendLists query : " + results.length)
                var incrementWhenDone = {count : 0};
                //going through each of the results and deciding which one of the users' name should be updated
                for (var i = 0, len = results.length; i < len; i++) {
