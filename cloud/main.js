@@ -202,17 +202,18 @@ Parse.Cloud.define('addIntroducedUsersToEachothersFriendLists', function(req, re
                //going through each of the results and deciding which one of the users' name should be updated
                for (var i = 0, len = results.length; i < len; i++) {
                var result = results[i];
-               var friendList = result.getFriend
-               console.log("result = " + result)
-               var userObjectId = result.get("objectId")
-               console.log(i + " - " + userObjectId)
+               var friendList = result.get("friend_list");
+               console.log("result = " + result);
+               var userObjectId = result.get("objectId");
+               console.log(i + " userObjectId - " + userObjectId);
+               console.log(i + " ");
                if (userObjectId == req.params.userObjectId1) {
-               result.addUnique("friend_list", req.params.userObjectId1)
-               console.log("added to friend_list user1 " + req.params.userObjectId1);
+               result.addUnique("friend_list", req.params.userObjectId2);
+               console.log("added to friend_list user1 " + req.params.userObjectId2);
                }
                else {
-               result.addUnique("friend_list", req.params.userObjectId2)
-               console.log("added to friend_list user2 " + req.params.userObjectId2);
+               result.addUnique("friend_list", req.params.userObjectId1);
+               console.log("added to friend_list user2 " + req.params.userObjectId1);
                }
                console.log("addIntroducedUsersToEachothersFriendLists");
                result.save(null, {
