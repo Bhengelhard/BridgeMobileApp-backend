@@ -189,7 +189,7 @@ Parse.Cloud.define('addIntroducedUsersToEachothersFriendLists', function(req, re
     //query passing the classname -> which is the name of the table being queried
     var query = new Parse.Query(UserClass);
     //queries the table for the id's that include the user's introduced
-    let introducedUserIds = [req.user_objectId1, req.user_objectId2]
+    var introducedUserIds = [req.user_objectId1, req.user_objectId2]
     query.equalTo("objectId", introducedUserIds);
     console.log("introducedUserIds = " + introducedUserIds)
     query.limit = 2
