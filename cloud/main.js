@@ -219,12 +219,11 @@ Parse.Cloud.define('addIntroducedUsersToEachothersFriendLists', function(req, re
                userObjectIdToAdd = req.params.userObjectId2;
                console.log("adding to friend_list user1 " + userObjectIdToAdd);
                }
-               
-               result.addUnique("friendlist",[userObjectIdToAdd]);
+               result.addUnique("friendlist",userObjectIdToAdd);
                console.log("addIntroducedUsersToEachothersFriendLists");
                
                result.save(null, {
-                           success: function(result){
+                           success: function(){
                            console.log("Saved after adding Introduced Users To Eachothers Friend Lists")
                            incrementWhenDone.count += 1;
                            //once incrementWhenDone get to the length of the results, it is clear the job has completed - this is necessary due to asynchronous execution
@@ -235,7 +234,7 @@ Parse.Cloud.define('addIntroducedUsersToEachothersFriendLists', function(req, re
                            }
                            
                            },
-                           error: function(result, error){
+                           error: function(error){
                            console.log(" Not Saved after adding objectId's to friend_list in User Table")
                            incrementWhenDone.count += 1;
                            if (incrementWhenDone.count == results.length) {
