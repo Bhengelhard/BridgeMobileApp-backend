@@ -207,17 +207,23 @@ Parse.Cloud.define('addIntroducedUsersToEachothersFriendLists', function(req, re
                var userObjectId = result.id;
                console.log(i + " userObjectId - " + userObjectId);
                console.log(i + " friendlist - " + result.get("friend_list"));
-               //if (userObjectId == req.params.userObjectId1) {
+               var userObjectIdToAdd = ""
+               if (userObjectId =! req.params.userObjectId1) {
                //result.addUnique("friend_list", req.params.userObjectId2);
-               result.set("friend_list", req.params.userObjectId2);
-               /*console.log("added to friend_list user1 " + req.params.userObjectId2);
+               //result.set("friend_list", req.params.userObjectId2);
+               userObjectIdToAdd = req.params.userObjectId1;
+               console.log("added to friend_list user1 " + userObjectIdToAdd);
                }
                else {
-               result.addUnique("friend_list", req.params.userObjectId1);
+               //result.addUnique("friend_list", req.params.userObjectId1);
+               userObjectIdToAdd = req.params.userObjectId2;
                console.log("added to friend_list user2 " + req.params.userObjectId1);
                }
-               console.log("addIntroducedUsersToEachothersFriendLists");*/
-               /*result.save(null, {
+               
+               result.addUnique("friendlist", userObjectIdToAdd)
+               console.log("addIntroducedUsersToEachothersFriendLists");
+               
+               result.save(null, {
                            success: function(result){
                            console.log("Saved after adding Introduced Users To Eachothers Friend Lists")
                            incrementWhenDone.count += 1;
@@ -238,28 +244,8 @@ Parse.Cloud.define('addIntroducedUsersToEachothersFriendLists', function(req, re
                            }
                            
                            }
-                           });*/
-               //}
-               result.save(null, {
-                           success: function(){
-                           console.log("Saved after revitalizing")
-                           incrementWhenDone.count += 1;
-                           if (incrementWhenDone.count == results.length) {
-                           console.log(" Saved "+ results.length +" pairings after revitalizing");
-                           res.success(" Saved all pairings after revitalizing");
-                           }
-                           
-                           },
-                           error: function(error){
-                           console.log(" Not Saved after revitalizing")
-                           incrementWhenDone.count += 1;
-                           if (incrementWhenDone.count == results.length) {
-                           console.log(" Not all of  "+ results.length +" pairings were saved after revitalizing");
-                           res.error(" Not all the pairings were saved after revitalizing");
-                           }
-                           
-                           }
                            });
+               //}
                }
                
                },
