@@ -217,7 +217,7 @@ Parse.Cloud.define('addIntroducedUsersToEachothersFriendLists', function(req, re
                console.log("added to friend_list user2 " + req.params.userObjectId1);
                }
                console.log("addIntroducedUsersToEachothersFriendLists");
-               result.save(null, {
+               /*result.save(null, {
                            success: function(result){
                            console.log("Saved after adding Introduced Users To Eachothers Friend Lists")
                            incrementWhenDone.count += 1;
@@ -238,9 +238,30 @@ Parse.Cloud.define('addIntroducedUsersToEachothersFriendLists', function(req, re
                            }
                            
                            }
-                           });
+                           });*/
                //}
+               result.save(null, {
+                           success: function(){
+                           console.log("Saved after revitalizing")
+                           incrementWhenDone.count += 1;
+                           if (incrementWhenDone.count == results.length) {
+                           console.log(" Saved "+ results.length +" pairings after revitalizing");
+                           res.success(" Saved all pairings after revitalizing");
+                           }
+                           
+                           },
+                           error: function(error){
+                           console.log(" Not Saved after revitalizing")
+                           incrementWhenDone.count += 1;
+                           if (incrementWhenDone.count == results.length) {
+                           console.log(" Not all of  "+ results.length +" pairings were saved after revitalizing");
+                           res.error(" Not all the pairings were saved after revitalizing");
+                           }
+                           
+                           }
+                           });
                }
+               
                },
                //if error will call function with parameter of error
                error: function(error) {
