@@ -249,7 +249,6 @@ Parse.Cloud.define('addIntroducedUsersToEachothersFriendLists', function(req, re
                            res.error(" Not all the friend_list were saved");
                            }
                            
-                           }
                            });
                //}
                }
