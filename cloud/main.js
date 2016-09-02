@@ -241,7 +241,7 @@ Parse.Cloud.define('addIntroducedUsersToEachothersFriendLists', function(req, re
                            }
                            
                            },
-                           error: function(result, error){
+                           function(error){
                            console.log(" Not Saved after adding objectId's to friend_list in User Table")
                            incrementWhenDone.count += 1;
                            if (incrementWhenDone.count == results.length) {
