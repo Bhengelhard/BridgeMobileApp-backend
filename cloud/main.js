@@ -222,7 +222,9 @@ Parse.Cloud.define('addIntroducedUsersToEachothersFriendLists', function(req, re
                }
                result.addUnique("friendlist", userObjectIdToAdd);
                console.log("addIntroducedUsersToEachothersFriendLists");
-               result.save(null, { //userMasterKey: true }).then(function() {
+               //result.set("friend_list", ["test"]);
+               
+               result.save(null, {
                            success: function(result){
                            console.log("Saved after adding Introduced Users To Eachothers Friend Lists")
                            incrementWhenDone.count += 1;
@@ -234,7 +236,7 @@ Parse.Cloud.define('addIntroducedUsersToEachothersFriendLists', function(req, re
                            }
                            
                            },
-                           error: function(error){
+                           error: function(result, error){
                            console.log(" Not Saved after adding objectId's to friend_list in User Table")
                            incrementWhenDone.count += 1;
                            if (incrementWhenDone.count == results.length) {
@@ -242,6 +244,7 @@ Parse.Cloud.define('addIntroducedUsersToEachothersFriendLists', function(req, re
                            res.error(" Not all the friend_list were saved");
                            }
                            
+                           }
                            });
                //}
                }
