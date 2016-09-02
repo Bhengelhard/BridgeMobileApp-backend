@@ -183,6 +183,7 @@
  }
  });*/
 Parse.Cloud.define('addIntroducedUsersToEachothersFriendLists', function(req, res) {
+    Parse.Cloud.useMasterKey();
     console.log("addIntroducedUsersToEachothersFriendLists");
     //creating a class with the name _User
     //var UserClass = Parse.Object.extend("_User)");
