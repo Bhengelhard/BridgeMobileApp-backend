@@ -229,8 +229,8 @@ Parse.Cloud.define('addIntroducedUsersToEachothersFriendLists', function(req, re
                                                             });*/
                
                
-               result.save(null, { userMasterKey: true }).then
-                           success: function(result){
+               result.save(null, { userMasterKey: true }).then(function() {
+                           //success: function(result){
                            console.log("Saved after adding Introduced Users To Eachothers Friend Lists")
                            incrementWhenDone.count += 1;
                            //once incrementWhenDone get to the length of the results, it is clear the job has completed - this is necessary due to asynchronous execution
