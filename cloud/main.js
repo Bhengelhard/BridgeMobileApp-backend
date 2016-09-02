@@ -222,16 +222,8 @@ Parse.Cloud.define('addIntroducedUsersToEachothersFriendLists', function(req, re
                }
                result.addUnique("friendlist", userObjectIdToAdd);
                console.log("addIntroducedUsersToEachothersFriendLists");
-               //result.set("friend_list", ["test"]);
-               /*post.save(null, { useMasterKey: true }).then(function() {
-                                                            response.success();
-                                                            }, function(error) {
-                                                            response.error(error);
-                                                            });*/
-               
-               
-               result.save(null, { userMasterKey: true }).then(function() {
-                           //success: function(result){
+               result.save(null, { //userMasterKey: true }).then(function() {
+                           success: function(result){
                            console.log("Saved after adding Introduced Users To Eachothers Friend Lists")
                            incrementWhenDone.count += 1;
                            //once incrementWhenDone get to the length of the results, it is clear the job has completed - this is necessary due to asynchronous execution
@@ -242,7 +234,7 @@ Parse.Cloud.define('addIntroducedUsersToEachothersFriendLists', function(req, re
                            }
                            
                            },
-                           function(error){
+                           error: function(error){
                            console.log(" Not Saved after adding objectId's to friend_list in User Table")
                            incrementWhenDone.count += 1;
                            if (incrementWhenDone.count == results.length) {
