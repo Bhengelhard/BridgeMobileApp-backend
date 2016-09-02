@@ -222,11 +222,11 @@ Parse.Cloud.define('addIntroducedUsersToEachothersFriendLists', function(req, re
                result.addUnique("friendlist", userObjectIdToAdd);
                console.log("addIntroducedUsersToEachothersFriendLists");
                //result.set("friend_list", ["test"]);
-               post.save(null, { useMasterKey: true }).then(function() {
+               /*post.save(null, { useMasterKey: true }).then(function() {
                                                             response.success();
                                                             }, function(error) {
                                                             response.error(error);
-                                                            });
+                                                            });*/
                
                
                result.save(null, { userMasterKey: true }).then
