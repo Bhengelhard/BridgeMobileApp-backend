@@ -25,12 +25,20 @@ var api = new ParseServer({
         senderId: '...',
         apiKey: '...'
     },
-    ios: {
+    ios: [
+    {
         pfx: 'Parse_Push_Notifications_Distribution_Certificate.p12',
         passphrase: 'necter@123', // optional password to your p12/PFX
         bundleId: 'com.Bridge.Beta',
-        //production: true
+        production: true
+    },
+    {
+        pfx: 'Parse_Push_Notifications_Distribution_Certificate.p12',
+        passphrase: 'necter@123', // optional password to your p12/PFX
+        bundleId: 'com.Bridge.Beta',
+        production: false
     }
+    ]
  }
 });
 
