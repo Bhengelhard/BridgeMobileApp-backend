@@ -820,7 +820,7 @@ Parse.Cloud.define('pushNotification', function(req, res) {
                                    error: function(e) {
                                    console.log("error: Parse.Push.send code: " + e.code + " msg: " + e.message);
                                    res.error("Push failed");
-                                   }
+                                   },
                                    useMasterKey: true
                                    });
 
