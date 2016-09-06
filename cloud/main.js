@@ -801,6 +801,7 @@ Parse.Cloud.define('hello', function(req, res) {
                    res.success('helrlo');
                    });
 Parse.Cloud.define('pushNotification', function(req, res) {
+                   Parse.Cloud.useMasterKey();
                    var query = new Parse.Query(Parse.Installation);
                    query.equalTo('userObjectId', req.params.userObjectId);
                    Parse.Push.send({
@@ -819,8 +820,8 @@ Parse.Cloud.define('pushNotification', function(req, res) {
                                    error: function(e) {
                                    console.log("error: Parse.Push.send code: " + e.code + " msg: " + e.message);
                                    res.error("Push failed");
-                                   },
-                                   useMasterKey: true
+                                   }
+                                   //useMasterKey: true
                                    });
 
                    
