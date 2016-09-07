@@ -182,6 +182,7 @@
  res.error("Not saved");
  }
  });*/
+
 Parse.Cloud.define('addIntroducedUsersToEachothersFriendLists', function(req, res) {
     Parse.Cloud.useMasterKey();
     console.log("addIntroducedUsersToEachothersFriendLists");
@@ -1232,7 +1233,11 @@ Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
                    var query = new Parse.Query("_User");
                    console.log("updateBridgePairingsTable was called");
                    // get only those user who are not friends
-                   query.notContainedIn("objectId",req.user.get("friend_list"));
+                   var friendListAndSelf = req.user.get("friend_list");
+                   friendListAndSelf.addUnique(req.user.objectId);
+                   console.log(friendListAndSelf);
+                   query.notContainedIn("objectId",req.user.get(friendListAndSelf));
+                   //query.notContainedIn("objectId",req.user.get("friend_list"));
                    var count = 0;
                    query.find({
                               success: function(results){
