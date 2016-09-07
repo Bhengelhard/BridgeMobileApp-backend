@@ -1238,7 +1238,6 @@ Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
                    console.log(req.user.id);
                    console.log(friendListAndSelf);
                    query.notContainedIn("objectId",req.user.get(friendListAndSelf));
-                   //query.notContainedIn("objectId",req.user.get("friend_list"));
                    var count = 0;
                    query.find({
                               success: function(results){
