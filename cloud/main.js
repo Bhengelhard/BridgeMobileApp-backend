@@ -1234,7 +1234,7 @@ Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
                    console.log("updateBridgePairingsTable was called");
                    // get only those user who are not friends
                    var friendListAndSelf = req.user.get("friend_list");
-                   friendListAndSelf.addUnique(req.user.objectId);
+                   friendListAndSelf.push(req.user.objectId);
                    console.log(friendListAndSelf);
                    query.notContainedIn("objectId",req.user.get(friendListAndSelf));
                    //query.notContainedIn("objectId",req.user.get("friend_list"));
