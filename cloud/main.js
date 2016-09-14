@@ -721,10 +721,11 @@ function createNewPairing(req, user, status1, status2, bridgeType, shownToForPai
     bridgePairing.set("user_objectId1",user.id);
     bridgePairing.set("user_objectId2",req.user.id);
     console.log("after user_objectIds is set");
-    if (req.user.get("location") == nil || user.get("location") == nil){
+    if (req.user.get("location") == 'undefined' || user.get("location") == 'undefined'){
         bridgePairing.set("score", 0);
         console.log("at least one of the two users did not have a location, so the distance score was set to 0");
-    } else {
+    }
+    else {
         bridgePairing.set("score", getDistanceScore(req.user.get("location"), user.get("location") ));
         console.log("both users had locations, so the distance score was set");
     }
