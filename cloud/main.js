@@ -721,17 +721,14 @@ function createNewPairing(req, user, status1, status2, bridgeType, shownToForPai
     bridgePairing.set("user_objectId1",user.id);
     bridgePairing.set("user_objectId2",req.user.id);
     console.log("after user_objectIds is set");
-    if (req.user.get("location") === 'undefined'){
-        console.log("at least one of the two users did not have a location, so the distance score was set to 0");
-        bridgePairing.set("score", 0);
-    }
-    else if (user.get("location") === 'undefined'){
-        console.log("at least one of the two users did not have a location, so the distance score was set to 0");
-        bridgePairing.set("score", 0);
-    }
-    else {
+    console.log(typeof req.user.get("location"));
+    if (req.user.get("location") !== undefined && user.get("location") !== undefined){
         console.log("both users had locations, so the distance score was set");
         bridgePairing.set("score", getDistanceScore(req.user.get("location"), user.get("location") ));
+    }
+    else {
+        console.log("at least one of the two users did not have a location, so the distance score was set to 0");
+        bridgePairing.set("score", 0);
     }
     console.log("after score is set");
     bridgePairing.set("checked_out",false);
