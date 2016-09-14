@@ -701,19 +701,16 @@ function createNewPairing(req, user, status1, status2, bridgeType, shownToForPai
     console.log(user);
     var BridgePairingsClass = Parse.Object.extend("BridgePairings");
     var bridgePairing = new BridgePairingsClass();
-    console.log( "name"+req.user.get("name"));
-    console.log( "name"+user.get("name"));
+    console.log("name1: "+user.get("name"));
+    console.log("name2: "+req.user.get("name"));
     bridgePairing.set("user1_name",user.get("name"));
     bridgePairing.set("user2_name",req.user.get("name"));
-    
     
     bridgePairing.set("user1_bridge_status",status1);
     bridgePairing.set("user2_bridge_status",status2);
     
     bridgePairing.set("user1_profile_picture",user.get("profile_picture"));
     bridgePairing.set("user2_profile_picture",req.user.get("profile_picture"));
-    
-    
     
     bridgePairing.set("bridge_type",bridgeType);
     bridgePairing.set("user1_city",user.get("city"));
@@ -724,7 +721,13 @@ function createNewPairing(req, user, status1, status2, bridgeType, shownToForPai
     bridgePairing.set("user_objectId1",user.id);
     bridgePairing.set("user_objectId2",req.user.id);
     console.log("after user_objectIds is set");
-    bridgePairing.set("score", getDistanceScore(req.user.get("location"), user.get("location") ));
+    if (req.user.get("location") == nil || user.get("location") == nil){
+        bridgePairing.set("score", 0);
+        console.log("at least one of the two users did not have a location, so the distance score was set to 0");
+    } else {
+        bridgePairing.set("score", getDistanceScore(req.user.get("location"), user.get("location") ));
+        console.log("both users had locations, so the distance score was set");
+    }
     console.log("after score is set");
     bridgePairing.set("checked_out",false);
     if (user.id in shownToForPairsNotCheckedOut) {
@@ -1212,12 +1215,11 @@ function areCompatible(user1, user2) {
 
 //08/24/16 scoring algorithm for which pairs should be presented first
 function getDistanceScore(distance1, distance2) {
-    console.log("getDistanceScore stepped in -"+distance1 + "   "+distance2);
+    console.log("getDistanceScore stepped in - "+ distance1 + " " + distance2);
     if (("latitude" in distance1) && ("latitude" in distance2) && ("longitude" in distance1) && ("longitude" in distance2)) {
         console.log(distance1["latitude"]+","+distance1["longitude"]+","+distance2["latitude"]+","+distance2["longitude"]);
         var x = distance1["latitude"] - distance2["latitude"];
         var y = distance1["longitude"] - distance2["longitude"];
-        //console.log(x+","+y);
         //pythagorean theorem to find the distance between the two locations
         return (Math.sqrt(x*x + y*y) );
     }
@@ -1225,12 +1227,6 @@ function getDistanceScore(distance1, distance2) {
         console.log("Locations have no latitude and longitude");
         return 0;
     }
-//    var geoPoint1 = new GeoPoint({latitude: distance1["latitude"], longitude: distance1["longitude"]});
-//    var geoPoint2 = new GeoPoint({latitude: distance2["latitude"], longitude: distance2["longitude"]});
-//    var geoPoint1 = new GeoPoint({latitude: 30, longitude: 30});
-//    var geoPoint2 = new GeoPoint({latitude: 30, longitude: 30});
-//    return (geoPoint1.milesTo(geoPoint2));
-    
 }
 
 Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
