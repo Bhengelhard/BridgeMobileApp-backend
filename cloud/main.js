@@ -721,8 +721,8 @@ function createNewPairing(req, user, status1, status2, bridgeType, shownToForPai
     bridgePairing.set("user_objectId1",user.id);
     bridgePairing.set("user_objectId2",req.user.id);
     console.log("after user_objectIds is set");
-    console.log(typeof req.user.get("location"));
-    if (req.user.get("location") !== 'undefined' || user.get("location") !== 'undefined'){
+    console.log(typeof user.get("location"));
+    if (req.user.get("location") !== 'undefined' && user.get("location") !== 'undefined'){
         console.log("both users had locations, so the distance score was set");
         bridgePairing.set("score", getDistanceScore(req.user.get("location"), user.get("location") ));
     }
