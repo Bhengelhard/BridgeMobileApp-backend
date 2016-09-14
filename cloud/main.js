@@ -788,6 +788,10 @@ function recreatePairings(req, usersNotToPairWith, shownToForPairsNotCheckedOut,
                res.success("None of the possible pairs have common interests");
                
                }
+               else {
+               console.log("Some of the possible Pairs have common interests");
+               res.success("Some of the possible Pairs have common interests")
+               }
                },
                error: function() {
                console.log("Querying _User failed in recreatePairings");
