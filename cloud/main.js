@@ -544,7 +544,7 @@ Parse.Cloud.define('changeBridgePairingsOnStatusUpdate', function(req, res) {
                              var result = results[i];
                              var userObjectIds = result.get("user_objectIds");
                              console.log("result = "+ result + "userObjectIds[0]="+userObjectIds[0] + " & userObjectIds[1]= "+userObjectIds[1]);
-                             //if( userObjectIds.length > 0 ){
+                             if( userObjectIds.length > 0 ){
                              if (userObjectIds[0] == req.user.id) {
                               //the status was sent from the user's phone when the cloud function was called so the cloud code does not have to request the status from Parse and save again
                               result.set("user1_bridge_status", req.params.status);
@@ -577,7 +577,7 @@ Parse.Cloud.define('changeBridgePairingsOnStatusUpdate', function(req, res) {
 
                                                 }
                                          });
-                              //}
+                              }
                               else {
                               console.log("Randomly selected not to update this one");
                               incrementWhenDone.count += 1;
