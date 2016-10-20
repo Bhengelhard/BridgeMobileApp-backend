@@ -539,8 +539,8 @@ Parse.Cloud.define('changeBridgePairingsOnStatusUpdate', function(req, res) {
                              var incrementWhenDone = {count : 0};
                               //going through each of the results and deciding which one of the users' status should be updated
                              for (var i = 0, len = results.length; i < len; i++) {
-                              // Randomly update a few statuses
-                             if (Math.floor(Math.random()*2) == 1){
+                              //Randomly update a few statuses taken out so it updates all of the statuses
+                             //if (Math.floor(Math.random()*2) == 1){
                              var result = results[i];
                              var userObjectIds = result.get("user_objectIds");
                              console.log("result = "+ result + "userObjectIds[0]="+userObjectIds[0] + " & userObjectIds[1]= "+userObjectIds[1]);
@@ -577,7 +577,7 @@ Parse.Cloud.define('changeBridgePairingsOnStatusUpdate', function(req, res) {
 
                                                 }
                                          });
-                              }
+                              //}
                               else {
                               console.log("Randomly selected not to update this one");
                               incrementWhenDone.count += 1;
