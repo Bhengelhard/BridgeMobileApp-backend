@@ -640,6 +640,20 @@ Parse.Cloud.define('changeBridgePairingsOnInterestedInUpdate', function(req, res
                               });
                    });
 Parse.Cloud.define('revitalizeMyPairs', function(req, res) {
+                   //incrementing count of number of times user has revitalized pairs
+                   var UserTable = Parse.Object.extend("_User");
+                   var userTable = new UserTable()
+                   userTable.increment("revitalized_pairs_count")
+                   userTable.save(null, {
+                                  success: function(userTable) {
+                                  console.log("count of revitalized pairs has been incremented.");
+                                  },
+                                  error: function(userTable, error) {
+                                  console.log("Failed to increment count of revitalized pairs");
+                                  }
+                    });
+                   
+                   //updating and retriving previously viewed bridge pairings
                    var BridgePairingsClass = Parse.Object.extend("BridgePairings");
                    var query = new Parse.Query(BridgePairingsClass);
                    query.equalTo("shown_to",req.user.id);
