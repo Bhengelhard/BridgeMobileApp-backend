@@ -642,8 +642,8 @@ Parse.Cloud.define('changeBridgePairingsOnInterestedInUpdate', function(req, res
 Parse.Cloud.define('revitalizeMyPairs', function(req, res) {
                    //incrementing count of number of times user has revitalized pairs
                    var UserTable = Parse.Object.extend("_User");
-                   var userTable = new UserTable()
-                   userTable.increment("revitalized_pairs_count")
+                   var userTable = new UserTable();
+                   userTable.increment("revitalized_pairs_count");
                    userTable.save(null, {
                                   success: function(userTable) {
                                   console.log("count of revitalized pairs has been incremented.");
