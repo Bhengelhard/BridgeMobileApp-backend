@@ -34,9 +34,9 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                               
                               for (var j = 0; j < results.length; ++j) {
                               var result = results[j];
-                              var interestedInBusiness = result.get("interestedInBusiness");
-                              var interestedInLove = result.get("interestedInLove");
-                              var interestedInFriendship = result.get("interestedInFriendship");
+                              var interestedInBusiness = result.get("interested_in_business");
+                              var interestedInLove = result.get("interested_in_love");
+                              var interestedInFriendship = result.get("interested_in_friendship");
                               if (interestedInBusiness) {
                                 numInterestedInBusiness += 1.00;
                               }
@@ -47,7 +47,7 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                 numInterestedInFriendship += 1.00;
                               }
                               if (interestedInBusiness != true && interestedInLove != true && interestedInFriendship != true) {
-                              numInterestedInFriendship += 1.00;
+                                numInterestedInFriendship += 1.00;
                               }
                               }
                               
