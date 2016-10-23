@@ -26,9 +26,8 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                    query.limit = 10000;
                    query.find({
                               success: function(results){
-                              console.log("got inside query of User table")
                               totalNumberOfUsers = results.length;
-                              console.log("totalNumberOfUsers "+totalNumberOfUsers);
+                              console.log("totalNumberOfUsers ="+totalNumberOfUsers);
                               
                               var incrementWhenDone = {count : 0};
                               
@@ -50,12 +49,6 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                 numInterestedInFriendship += 1.00;
                               }
                               }
-                              
-                              
-                              console.log("numInterestedInBusiness = " + numInterestedInBusiness)
-                              console.log("numInterestedInLove = " + numInterestedInLove)
-                              console.log("numInterestedInFriendship = " + numInterestedInFriendship)
-                              console.log("numInterestedInNothing = " + numInterestedInNothing)
                               
                               var percentageInterestedInBusiness = (numInterestedInBusiness/totalNumberOfUsers)*100.00;
                               var percentageInterestedInLove = (numInterestedInLove/totalNumberOfUsers)*100.00;
