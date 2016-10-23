@@ -101,12 +101,12 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                               }
                               } else if (bridgeType == "Love") {
                               totalNumLovePairings += 1;
-                              if bridged {
+                              if (bridged) {
                               numBridgedLovePairings += 1;
                               }
                               } else if (bridgeType == "Friendship") {
                               totalNumFriendshipPairings += 1;
-                              if bridged {
+                              if (bridged) {
                               numBridgedFriendshipPairings += 1;
                               }
                               }
