@@ -51,6 +51,12 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                               }
                               }
                               
+                              
+                              console.log("numInterestedInBusiness = " + numInterestedInBusiness)
+                              console.log("numInterestedInLove = " + numInterestedInLove)
+                              console.log("numInterestedInFriendship = " + numInterestedInFriendship)
+                              console.log("numInterestedInNothing = " + numInterestedInNothing)
+                              
                               var percentageInterestedInBusiness = (numInterestedInBusiness/totalNumberOfUsers)*100.00;
                               var percentageInterestedInLove = (numInterestedInLove/totalNumberOfUsers)*100.00;
                               var percentageInterestedInFriendship = (numInterestedInFriendship/totalNumberOfUsers)*100.00;
