@@ -111,9 +111,13 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                               }
                               
                               }
-                              var percentageBridgedOfBusiness = (numBridgedBusinessPairings/totalNumBusinessPairings)*100.00;
-                              var percentageBridgedOfLove = (numBridgedLovePairings/totalNumLovePairings)*100.00;
-                              var percentageBridgedOfFriendship = (numBridgedFriendshipPairings/totalNumFriendshipPairings)*100.00;
+                                            
+                                            console.log("totalNumBusinessPairings"+totalNumBusinessPairings);
+                                            console.log("numBridgedBusinessPairings" + numBridgedBusinessPairings);
+                                            console.log("totalNumLovePairings" + totalNumLovePairings);
+                              var percentageBridgedOfBusiness = (numBridgedBusinessPairings/totalNumBusinessPairings)*100.0;
+                              var percentageBridgedOfLove = (numBridgedLovePairings/totalNumLovePairings)*100.0;
+                              var percentageBridgedOfFriendship = (numBridgedFriendshipPairings/totalNumFriendshipPairings)*100.0;
                               console.log("% Bridged out of Business Pairings = " + percentageBridgedOfBusiness + "%");
                               console.log("% Bridged out of Love Pairings = " + percentageBridgedOfLove + "%");
                               console.log("% Bridged out of Friendship Pairings = " + percentageBridgedOfFriendship + "%");
@@ -151,10 +155,10 @@ Parse.Cloud.define('addIntroducedUsersToEachothersFriendLists', function(req, re
     //var query = new Parse.Query(UserClass);
     var query = new Parse.Query("_User");
     //queries the table for the id's that include the user's introduced
-    var introducedUserIds = [req.params.userObjectId1, req.params.userObjectId2]
+    var introducedUserIds = [req.params.userObjectId1, req.params.userObjectId2];
     query.containedIn("objectId", introducedUserIds);
-    console.log("introducedUserId = " + req.params.userObjectId1)
-    query.limit = 2
+    console.log("introducedUserId = " + req.params.userObjectId1);
+    query.limit(2);
     query.find({
                //if success will call function with parameter of results
                success:function(results) {
@@ -225,8 +229,8 @@ Parse.Cloud.define('changeMessagesTableOnNameUpdate', function(req, res) {
                    var query = new Parse.Query(MessagesClass);
                    //queries the table for sender that includes req.user.id
                    query.equalTo("ids_in_message", req.user.id);
-                   console.log("req.user.id = " + req.user.id)
-                   query.limit = 10000;
+                   console.log("req.user.id = " + req.user.id);
+                   query.limit(10000);
                    //for query.find, everything is in background
                    query.find({
                               //if success will call function with parameter of results
@@ -301,7 +305,7 @@ Parse.Cloud.define('changeSingleMessagesTableOnNameUpdate', function(req, res) {
                    var query = new Parse.Query(SingleMessagesClass);
                    //queries the table for sender that includes req.user.id
                    query.equalTo("sender",req.user.id);
-                   query.limit = 10000;
+                   query.limit(10000);
                    //for query.find, everything is in background
                    query.find({
                               //if success will call function with parameter of results
@@ -361,7 +365,7 @@ Parse.Cloud.define('changeBridgePairingsOnNameUpdate', function(req, res) {
                    var query = new Parse.Query(BridgePairingsClass);
                    //queries the table for user_objectIds that includes req.user.id
                    query.equalTo("user_objectIds",req.user.id);
-                   query.limit = 10000;
+                   query.limit(10000);
                    //for query.find, everything is in background
                    query.find({
                               //if success will call function with parameter of results
@@ -424,7 +428,7 @@ Parse.Cloud.define('changeBridgePairingsOnProfilePictureUpdate', function(req, r
                    var query = new Parse.Query(BridgePairingsClass);
                    //queries the table for user_objectIds that includes req.user.id
                    query.equalTo("user_objectIds",req.user.id);
-                   query.limit = 10000;
+                   query.limit(10000);
                    //for query.find, everything is in background
                    query.find({
                               //if success will call function with parameter of results
@@ -489,7 +493,7 @@ Parse.Cloud.define('changeBridgePairingsOnStatusUpdate', function(req, res) {
                    //queries the table for user_objectIds that includes req.user.id
                    query.equalTo("user_objectIds",req.user.id);
                    query.equalTo("bridge_type",req.params.bridgeType);
-                   query.limit = 10000;
+                   query.limit(10000);
                    //for query.find, everything is in background
                    query.find({
                               //if success will call function with parameter of results
@@ -561,7 +565,7 @@ Parse.Cloud.define('changeBridgePairingsOnInterestedInUpdate', function(req, res
                    var BridgePairingsClass = Parse.Object.extend("BridgePairings");
                    var query = new Parse.Query(BridgePairingsClass);
                    query.equalTo("user_objectIds",req.user.id);
-                   query.limit = 10000;
+                   query.limit(10000);
                    query.find({
                               success:function(results) {
                               var usersNotToPairWith = [req.user.id];
@@ -617,7 +621,7 @@ Parse.Cloud.define('revitalizeMyPairs', function(req, res) {
                    var query = new Parse.Query(BridgePairingsClass);
                    query.equalTo("shown_to",req.user.id);
                    query.equalTo("checked_out",false);
-                   query.limit = 10000;
+                   query.limit(10000);
                    query.find({
                               success:function(results) {
                               var incrementWhenDone = {count : 0};
@@ -739,7 +743,7 @@ function recreatePairings(req, usersNotToPairWith, shownToForPairsNotCheckedOut,
     console.log("recreatePairings was called");
     var skipIds = usersNotToPairWith.concat(req.user.get("friend_list"));
     query.notContainedIn("objectId",skipIds);
-    query.limit = 10000;
+    query.limit(10000);
     var count = 0;
     query.find({
                success: function(results){
@@ -891,7 +895,7 @@ function callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatus
             console.log("maxStatuses1 is 1");
             var query = new Parse.Query("BridgeStatus");
             query.descending("createdAt");
-            query.limit = 1;
+            query.limit(1);
             query.equalTo("userId",req.user.id);
             query.equalTo("bridge_type",bridgeType);
             query.first({
@@ -913,7 +917,7 @@ function callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatus
             console.log("maxStatuses2 is 1");
             var query = new Parse.Query("BridgeStatus");
             query.descending("createdAt");
-            query.limit = 1;
+            query.limit(1);
             query.equalTo("userId",user.id);
             query.equalTo("bridge_type",bridgeType);
             query.first({
@@ -934,7 +938,7 @@ function callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatus
         else {
         var query = new Parse.Query("BridgeStatus");
         query.descending("createdAt");
-        query.limit = 1;
+        query.limit(1);
         query.equalTo("userId",user.id);
         query.equalTo("bridge_type",bridgeType);
         query.first({
@@ -942,7 +946,7 @@ function callBack(noOfBusinessStatuses1, noOfLoveStatuses1, noOfFriendshipStatus
                     status1 = result1.get("bridge_status");
                     var query2 = new Parse.Query("BridgeStatus");
                     query2.descending("createdAt");
-                    query2.limit = 1;
+                    query2.limit(1);
                     query2.equalTo("userId",req.user.id);
                     query2.equalTo("bridge_type",bridgeType);
                     query2.first({
@@ -1256,7 +1260,7 @@ Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
  var BridgePairingsClass = Parse.Object.extend("BridgePairings");
  var query = new Parse.Query(BridgePairingsClass);
  query.notEqualTo("user1_name","Blake Takita");
- query.limit = 10000
+ query.limit(10000)
  query.find({
  success:function(results) {
  for (var i = 0, len = results.length; i < len; i++) {
@@ -1280,7 +1284,7 @@ Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
  var query = new Parse.Query(MessagesClass);
  //queries the table for user_objectIds that includes req.user.id
  query.includes("ids_in_message", req.user.id)
- query.limit = 10000;
+ query.limit(10000);
  //for query.find, everything is in background
  query.find({
  //if success will call function with parameter of results
@@ -1362,7 +1366,7 @@ Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
  var query2 = new Parse.Query(MessagesClass);
  //queries the table for user_objectIds that includes req.user.id
  query2.equalTo("ids_in_message", req.user.id)
- query2.limit = 10000;
+ query2.limit(10000);
  //for query.find, everything is in background
  query2.find({
  //if success will call function with parameter of results
