@@ -83,31 +83,31 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                               
                               //finding type of bridge pairing
                               var bridgeType = result.get("bridge_type");
-                              var totalNumBusinessPairings = 0;
-                              var totalNumLovePairings = 0;
-                              var totalNumFriendshipPairings = 0;
+                              var totalNumBusinessPairings = 0.0;
+                              var totalNumLovePairings = 0.0;
+                              var totalNumFriendshipPairings = 0.0;
                               
-                              var numBridgedBusinessPairings = 0;
-                              var numBridgedLovePairings = 0;
-                              var numBridgedFriendshipPairings = 0;
+                              var numBridgedBusinessPairings = 0.0;
+                              var numBridgedLovePairings = 0.0;
+                              var numBridgedFriendshipPairings = 0.0;
                               
                               
                               var bridged = result.get("bridged");
                               
                               if (bridgeType == "Business") {
-                              totalNumBusinessPairings += 1;
+                              totalNumBusinessPairings += 1.0;
                               if (bridged) {
-                              numBridgedBusinessPairings += 1;
+                              numBridgedBusinessPairings += 1.0;
                               }
                               } else if (bridgeType == "Love") {
-                              totalNumLovePairings += 1;
+                              totalNumLovePairings += 1.0;
                               if (bridged) {
-                              numBridgedLovePairings += 1;
+                              numBridgedLovePairings += 1.0;
                               }
                               } else if (bridgeType == "Friendship") {
-                              totalNumFriendshipPairings += 1;
+                              totalNumFriendshipPairings += 1.0;
                               if (bridged) {
-                              numBridgedFriendshipPairings += 1;
+                              numBridgedFriendshipPairings += 1.0;
                               }
                               }
                               
