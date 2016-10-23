@@ -16,7 +16,7 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                    //% Interested in Business = # of users interested_in_business/Total # of users
                    //% Interested in Love = # of users interested in Love/Total # of users
                    //% Interested in Friendship = # of users interested in Friendship/Total # of users
-                   
+                   var totalNumberOfUsers;
                    var userQuery = new Parse.Query("_User");
                    userQuery.limit(10000);
                    userQuery.find({
@@ -25,7 +25,7 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                               var numInterestedInLove = 0.00;
                               var numInterestedInFriendship = 0.00;
                               var numInterestedInNothing = 0.00;
-                              var totalNumberOfUsers = results.length;
+                              totalNumberOfUsers = results.length;
                               console.log("totalNumberOfUsers ="+totalNumberOfUsers);
                               
                               var incrementWhenDone = {count : 0};
@@ -76,7 +76,9 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                               console.log("totalNumberofBridgePairings = "+totalNumberofBridgePairings);
                               
                               var incrementWhenDone = {count : 0};
-                                
+                            
+                            var totalNumSwipes = 0.0;
+                                            
                             var totalNumBusinessPairings = 0.0;
                             var totalNumLovePairings = 0.0;
                             var totalNumFriendshipPairings = 0.0;
@@ -108,6 +110,14 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                               }
                               }
                               
+                                            
+                               // calculating the total number of swipes performed
+                                            var shownTo = result.get("shown_to");
+                                            totalNumSwipes += shownTo.length;
+                                            var checkedOut = result.get("checked_out");
+                                            if (checkedOut) {
+                                            totalNumSwipes -= 1;
+                                            }
                               }
                                             
                                             /*console.log("totalNumBusinessPairings = "+totalNumBusinessPairings);
@@ -122,6 +132,9 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                               console.log("% Bridged out of Business Pairings = " + percentageBridgedOfBusiness + "%");
                               console.log("% Bridged out of Love Pairings = " + percentageBridgedOfLove + "%");
                               console.log("% Bridged out of Friendship Pairings = " + percentageBridgedOfFriendship + "%");
+                                            
+                                            var numSwipesPerUser = totalNumSwipes/totalNumberOfUsers;
+                                            console.log("# swipes per user = "+numSwipesPerUser);
                               
                               },
                               error: function() {
@@ -243,7 +256,9 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                       }
                                       });
     //User Introduction Interaction
-    //5. # swipes per user
+    //5. # swipes per user = total # of swipes / total number of users -> This is performed in the userQuery and in the bridgePairingQuery
+                   
+                   
     //6. % of swipes leading to introductions
     //7. % of users that clicked revisit or ran out of potential matches
     //User Post Interaction
