@@ -18,7 +18,7 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                    //% Interested in Friendship = # of users interested in Friendship/Total # of users
                    
                    var query = new Parse.Query("_User");
-                   query.limit = 10000;
+                   query.limit = 1000;
                    query.find({
                               success: function(results){
                               var numInterestedInBusiness = 0.00;
@@ -69,11 +69,11 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                    //% Bridged out of Love Pairings = # love pairings bridged / total # love pairings
                    //% Bridged out of Friendship Pairings = # frienship pairings bridged / total # friendship pairings
                    var query = new Parse.Query("BridgePairings");
-                   query.limit = 10000;
+                   query.limit = 1000;
                    query.find({
                               success: function(results){
                               var totalNumberofBridgePairings = results.length;
-                              console.log("totalNumberofBridgePairings ="+totalNumberofBridgePairings);
+                              console.log("totalNumberofBridgePairings = "+totalNumberofBridgePairings);
                               
                               var incrementWhenDone = {count : 0};
                               
