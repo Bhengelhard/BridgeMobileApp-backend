@@ -92,7 +92,7 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                               var numBridgedFriendshipPairings = 0;
                               
                               
-                              var bridged = resul.get("bridged");
+                              var bridged = result.get("bridged");
                               
                               if (bridgeType == "Business") {
                               totalNumBusinessPairings += 1;
