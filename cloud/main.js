@@ -130,7 +130,6 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                               }
                               });
                    
-                   // The app's Info.plist must contain an NSPhotoLibraryUsageDescription key with a string value explaining to the user how the app uses this data.
     //3. % introductions conversed per category
                    //% Business messages responded to = # messages with message_type Business and last_single_message undefined / total Business messages
                    //% Love messages responded to = # messages with message_type Love and last_single_message undefined / total Love messages
@@ -177,12 +176,12 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                             
                                             }
                                             
-                                            console.log("numRespondedBusinessMessages = "+numRespondedBusinessMessages);
+                                            /*console.log("numRespondedBusinessMessages = "+numRespondedBusinessMessages);
                                             console.log("totalNumBusinessMessages = " + totalNumBusinessMessages);
                                             console.log("numRespondedLoveMessages = " + numRespondedLoveMessages);
                                             console.log("totalNumLoveMessages = " + totalNumLoveMessages);
                                             console.log("numRespondedFriendshipMessages = " + numRespondedFriendshipMessages);
-                                            console.log("totalNumFriendshipMessages = " + totalNumFriendshipMessages);
+                                            console.log("totalNumFriendshipMessages = " + totalNumFriendshipMessages);*/
                                             var percentageRespondedBusiness = (numRespondedBusinessMessages/totalNumBusinessMessages)*100.0;
                                             var percentageRespondedLove = (numRespondedLoveMessages/totalNumLoveMessages)*100.0;
                                             var percentageRespondedFriendship = (numRespondedFriendshipMessages/totalNumFriendshipMessages)*100.0;
@@ -198,7 +197,51 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                             });
                    
                    
-    //4. % posts in each category
+    //4. % statuses in each category
+                   //% statuses with bridge_type of Business
+                   //% statuses with bridge_type of Love
+                   //% statuses with bridge_type of Friendship
+                   var bridgeStatusQuery = new Parse.Query("BridgeStatus");
+                   bridgeStatusQuery.limit(10000);
+                   bridgeStatusQuery.find({
+                                      success: function(results){
+                                      var totalNumberofStatuses = results.length;
+                                      console.log("totalNumberofStatuses = "+totalNumberofStatuses);
+                                      
+                                      var incrementWhenDone = {count : 0};
+                                      
+                                      var numBusinessStatuses = 0.0;
+                                      var numLoveStatuses = 0.0;
+                                      var numFriendshipStatuses = 0.0;
+                                      
+                                      for (var j = 0; j < results.length; ++j) {
+                                      var result = results[j];
+                                      
+                                      var bridgeType = result.get("bridge_type");
+                                          
+                                      if (bridgeType == "Business") {
+                                      numBusinessStatuses += 1.0;
+                                      } else if (bridgeType == "Love") {
+                                      numLoveStatuses += 1.0;
+                                      } else if (bridgeType == "Friendship") {
+                                      numFriendshipStatuses += 1.0;
+                                      }
+                                      
+                                      }
+  
+                                      var percentageBusinessStatuses = (numBusinessStatuses/totalNumberofStatuses)*100.0;
+                                      var percentageLoveStatuses = (numLoveStatuses/totalNumberofStatuses)*100.0;
+                                      var percentageFriendshipStatuses = (numFriendshipStatuses/totalNumberofStatuses)*100.0;
+                                      console.log("% of statuses with bridge_type of Business = " + percentageBusinessStatuses + "%");
+                                      console.log("% of statuses with bridge_type of Love = " + percentageLoveStatuses + "%");
+                                      console.log("% of statuses with bridge_type of Friendship = " + percentageFriendshipStatuses + "%");
+                                      
+                                      },
+                                      error: function() {
+                                      console.log("Querying BridgeStatus failed in getMainAppMetrics");
+                                      res.error("Querying BridgeStatus failed in getMainAppMetrics");
+                                      }
+                                      });
     //User Introduction Interaction
     //5. # swipes per user
     //6. % of swipes leading to introductions
