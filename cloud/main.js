@@ -72,8 +72,7 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                    query.limit = 10000;
                    query.find({
                               success: function(results){
-                              
-                              var totalNumberofBridgePairings = results.length
+                              var totalNumberofBridgePairings = results.length;
                               console.log("totalNumberofBridgePairings ="+totalNumberofBridgePairings);
                               
                               var incrementWhenDone = {count : 0};
