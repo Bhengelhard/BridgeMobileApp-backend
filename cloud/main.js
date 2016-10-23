@@ -131,7 +131,7 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                               });
                    
                    
-    //3. % single message last message not equal to “Your connection awaits!” per category
+    //3. % introductions conversed per category
                    //% Business messages responded to = # messages with message_type Business and last_single_message undefined / total Business messages
                    //% Love messages responded to = # messages with message_type Love and last_single_message undefined / total Love messages
                    //% Friendship messages responded to = # messages with message_type Love and last_single_message undefined / total Friendship messages
@@ -177,15 +177,15 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                             
                                             }
                                             
-                                            /*console.log("totalNumBusinessPairings = "+totalNumBusinessPairings);
-                                             console.log("numBridgedBusinessPairings = " + numBridgedBusinessPairings);
-                                             console.log("totalNumLovePairings = " + totalNumLovePairings);
-                                             console.log("numBridgedLovePairings = " + totalNumLovePairings);
-                                             console.log("totalNumFriendshipPairings = " + totalNumLovePairings);
-                                             console.log("numBridgedFriendshipPairings = " + totalNumLovePairings);*/
+                                            console.log("numRespondedBusinessMessages = "+numRespondedBusinessMessages);
+                                            console.log("totalNumBusinessMessages = " + totalNumBusinessMessages);
+                                            console.log("numRespondedLoveMessages = " + numRespondedLoveMessages);
+                                            console.log("totalNumLoveMessages = " + totalNumLoveMessages);
+                                            console.log("numRespondedFriendshipMessages = " + numRespondedFriendshipMessages);
+                                            console.log("totalNumFriendshipMessages = " + totalNumFriendshipMessages);
                                             var percentageRespondedBusiness = (numRespondedBusinessMessages/totalNumBusinessMessages)*100.0;
                                             var percentageRespondedLove = (numRespondedLoveMessages/totalNumLoveMessages)*100.0;
-                                            var percentageRespondedFriendship = (totalNumFriendshipMessages/numRespondedFriendshipMessages)*100.0;
+                                            var percentageRespondedFriendship = (numRespondedFriendshipMessages/totalNumFriendshipMessages)*100.0;
                                             console.log("% of Business messages that had conversations = " + percentageRespondedBusiness + "%");
                                             console.log("% of Love messages that had conversations = " + percentageRespondedLove + "%");
                                             console.log("% of Friendship messages that had conversations = " + percentageRespondedFriendship + "%");
