@@ -16,11 +16,11 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                    //% Interested in Business = # of users interested_in_business/Total # of users
                    //% Interested in Love = # of users interested in Love/Total # of users
                    //% Interested in Friendship = # of users interested in Friendship/Total # of users
-                   var totalNumberOfUsers = 0;
-                   var numInterestedInBusiness = 0;
-                   var numInterestedInLove = 0;
-                   var numInterestedInFriendship = 0;
-                   var numInterestedInNothing = 0;
+                   var totalNumberOfUsers = 0.00;
+                   var numInterestedInBusiness = 0.00;
+                   var numInterestedInLove = 0.00;
+                   var numInterestedInFriendship = 0.00;
+                   var numInterestedInNothing = 0.00;
                    
                    var query = new Parse.Query("_User");
                    query.limit = 10000;
@@ -31,7 +31,6 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                               console.log("totalNumberOfUsers "+totalNumberOfUsers);
                               
                               var incrementWhenDone = {count : 0};
-                              var noOfPairsWithCommonInterests = 0;
                               
                               for (var j = 0; j < results.length; ++j) {
                               var result = results[j];
@@ -39,23 +38,23 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                               var interestedInLove = result.get("interestedInLove");
                               var interestedInFriendship = result.get("interestedInFriendship");
                               if (interestedInBusiness) {
-                                numInterestedInBusiness += 1;
+                                numInterestedInBusiness += 1.00;
                               }
                               if (interestedInLove) {
-                                numInterestedInLove += 1;
+                                numInterestedInLove += 1.00;
                               }
                               if (interestedInFriendship) {
-                                numInterestedInFriendship += 1;
+                                numInterestedInFriendship += 1.00;
                               }
                               if (interestedInBusiness != true && interestedInLove != true && interestedInFriendship != true) {
-                              numInterestedInFriendship += 1;
+                              numInterestedInFriendship += 1.00;
                               }
                               }
                               
-                              var percentageInterestedInBusiness = (numInterestedInBusiness/totalNumberOfUsers)*100;
-                              var percentageInterestedInLove = (numInterestedInLove/totalNumberOfUsers)*100;
-                              var percentageInterestedInFriendship = (numInterestedInFriendship/totalNumberOfUsers)*100;
-                              var percentageInterestedInNothing = (numInterestedInNothing/totalNumberOfUsers)*100;
+                              var percentageInterestedInBusiness = (numInterestedInBusiness/totalNumberOfUsers)*100.00;
+                              var percentageInterestedInLove = (numInterestedInLove/totalNumberOfUsers)*100.00;
+                              var percentageInterestedInFriendship = (numInterestedInFriendship/totalNumberOfUsers)*100.00;
+                              var percentageInterestedInNothing = (numInterestedInNothing/totalNumberOfUsers)*100.00;
                               console.log("% interested in Business = " + percentageInterestedInBusiness + "%");
                               console.log("% interested in Love = " + percentageInterestedInLove + "%");
                               console.log("% interested in Friendship = " + percentageInterestedInFriendship + "%");
