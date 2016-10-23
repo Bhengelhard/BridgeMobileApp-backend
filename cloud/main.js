@@ -25,7 +25,7 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                               var numInterestedInLove = 0.00;
                               var numInterestedInFriendship = 0.00;
                               var numInterestedInNothing = 0.00;
-                              vartotalNumberOfUsers = results.length;
+                              var totalNumberOfUsers = results.length;
                               console.log("totalNumberOfUsers ="+totalNumberOfUsers);
                               
                               var incrementWhenDone = {count : 0};
@@ -111,6 +111,7 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                               }
                               }
                               
+                              }
                               var percentageBridgedOfBusiness = (numBridgedBusinessPairings/totalNumBusinessPairings)*100.00;
                               var percentageBridgedOfLove = (numBridgedLovePairings/totalNumLovePairings)*100.00;
                               var percentageBridgedOfFriendship = (numBridgedFriendshipPairings/totalNumFriendshipPairings)*100.00;
@@ -118,7 +119,6 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                               console.log("% Bridged out of Love Pairings = " + percentageBridgedOfLove + "%");
                               console.log("% Bridged out of Friendship Pairings = " + percentageBridgedOfFriendship + "%");
                               
-                              }
                               },
                               error: function() {
                               console.log("Querying BridgePairings failed in getMainAppMetrics");
