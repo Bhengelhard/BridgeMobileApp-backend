@@ -16,17 +16,16 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                    //% Interested in Business = # of users interested_in_business/Total # of users
                    //% Interested in Love = # of users interested in Love/Total # of users
                    //% Interested in Friendship = # of users interested in Friendship/Total # of users
-                   var totalNumberOfUsers = 0.00;
-                   var numInterestedInBusiness = 0.00;
-                   var numInterestedInLove = 0.00;
-                   var numInterestedInFriendship = 0.00;
-                   var numInterestedInNothing = 0.00;
                    
                    var query = new Parse.Query("_User");
                    query.limit = 10000;
                    query.find({
                               success: function(results){
-                              totalNumberOfUsers = results.length;
+                              var numInterestedInBusiness = 0.00;
+                              var numInterestedInLove = 0.00;
+                              var numInterestedInFriendship = 0.00;
+                              var numInterestedInNothing = 0.00;
+                              vartotalNumberOfUsers = results.length;
                               console.log("totalNumberOfUsers ="+totalNumberOfUsers);
                               
                               var incrementWhenDone = {count : 0};
@@ -66,6 +65,67 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                               }
                               });
     //2. % Bridged per category (e.g. if shown 10 business connections and bridged 2 then 20% for business)
+                   //% Bridged out of Business Pairings = # business pairings bridged / total # business pairings
+                   //% Bridged out of Love Pairings = # love pairings bridged / total # love pairings
+                   //% Bridged out of Friendship Pairings = # frienship pairings bridged / total # friendship pairings
+                   var query = new Parse.Query("BridgePairings");
+                   query.limit = 10000;
+                   query.find({
+                              success: function(results){
+                              
+                              var totalNumberofBridgePairings = results.length
+                              console.log("totalNumberofBridgePairings ="+totalNumberofBridgePairings);
+                              
+                              var incrementWhenDone = {count : 0};
+                              
+                              for (var j = 0; j < results.length; ++j) {
+                              var result = results[j];
+                              
+                              //finding type of bridge pairing
+                              var bridgeType = result.get("bridge_type");
+                              var totalNumBusinessPairings = 0;
+                              var totalNumLovePairings = 0;
+                              var totalNumFriendshipPairings = 0;
+                              
+                              var numBridgedBusinessPairings = 0;
+                              var numBridgedLovePairings = 0;
+                              var numBridgedFriendshipPairings = 0;
+                              
+                              
+                              var bridged = resul.get("bridged");
+                              
+                              if (bridgeType == "Business") {
+                              totalNumBusinessPairings += 1;
+                              if bridged {
+                              numBridgedBusinessPairings += 1;
+                              }
+                              } else if (bridgeType == "Love") {
+                              totalNumLovePairings += 1;
+                              if bridged {
+                              numBridgedLovePairings += 1;
+                              }
+                              } else if (bridgeType == "Friendship") {
+                              totalNumFriendshipPairings += 1;
+                              if bridged {
+                              numBridgedFriendshipPairings += 1;
+                              }
+                              }
+                              
+                              var percentageBridgedOfBusiness = (numBridgedBusinessPairings/totalNumBusinessPairings)*100.00;
+                              var percentageBridgedOfLove = (numBridgedLovePairings/totalNumLovePairings)*100.00;
+                              var percentageBridgedOfFriendship = (numBridgedFriendshipPairings/totalNumFriendshipPairings)*100.00;
+                              console.log("% Bridged out of Business Pairings = " + percentageBridgedOfBusiness + "%");
+                              console.log("% Bridged out of Love Pairings = " + percentageBridgedOfLove + "%");
+                              console.log("% Bridged out of Friendship Pairings = " + percentageBridgedOfFriendship + "%");
+                              },
+                              error: function() {
+                              console.log("Querying BridgePairings failed in getMainAppMetrics");
+                              res.error("Querying BridgePairings failed in getMainAppMetrics");
+                              }
+                              });
+                   
+                   
+                   
     //3. % single message last message not equal to “Your connection awaits!” per category
     //4. % posts in each category
     //User Introduction Interaction
