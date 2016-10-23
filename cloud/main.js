@@ -1,187 +1,79 @@
-// Cloud co!
+//
+//  main.js
+//  Parse Cloud Code
+//
+//
+//  Created by Sagar Sinha on 8/14/16.
+//  Copyright © 2016 BHE Ventures. All rights reserved.
+//
+//  This class stores the server-side functions that can be called from the users device and run over the cloud
 
-/*Parse.Cloud.define("deleteBridgePairings", function(request, status) {
-                
-                var BridgePairingsClass = Parse.Object.extend("BridgePairings");
-                var query = new Parse.Query(BridgePairingsClass);
-                query.notEqualTo("user1_name","Blake Takita");
-                query.limit = 10000
-                query.find({
-                           success:function(results) {
-                           for (var i = 0, len = results.length; i < len; i++) {
-                           var result = results[i];
-                           result.destroy({});
-                           console.log("Destroy: "+result);
-                           
-                           }
-                           },
-                           error: function(error) {
-                           console.log("Failed!");         
-                           }
-                           });
-                
-                });*/
-/*Parse.Cloud.define('changeMessagesTableOnNameUpdate', function(req, res) {
-                   console.log("changeBridgePairingsOnNameUpdate was called");
-                   //creating a class with the name BridgePairings
-                   var MessagesClass = Parse.Object.extend("Messages");
-                   //query passing the classname -> which is the name of the table being queried
-                   var query = new Parse.Query(MessagesClass);
-                   //queries the table for user_objectIds that includes req.user.id
-                   query.includes("ids_in_message", req.user.id)
+
+Parse.Cloud.define('getMainAppMetrics', function(req, res) {
+    console.log("getMainAppMetrics");
+    //User Content Interests
+    //1. % Interested in each category - which categories do users turn on
+                   //% Interested in Business = # of users interested_in_business/Total # of users
+                   //% Interested in Love = # of users interested in Love/Total # of users
+                   //% Interested in Friendship = # of users interested in Friendship/Total # of users
+                   var query = new Parse.Query("_User");
                    query.limit = 10000;
-                   //for query.find, everything is in background
+                   var numInterestedInBusiness = 0;
+                   var numInterestedInLove = 0;
+                   var numInterestedInFriendship = 0;
                    query.find({
-                              //if success will call function with parameter of results
-                              success:function(results) {
-                              console.log("length : "+results.length);
+                              success: function(results){
+                              var totalNumberOfUsers = results.length;
+                              console.log("totalNumberOfUsers "+count);
+                              
                               var incrementWhenDone = {count : 0};
-                              //going through each of the results and deciding which one of the users' name should be updated
-                              for (var i = 0, len = results.length; i < len; i++) {
-                                var result = results[i];
-                                var userObjectIds = result.get("user_objectIds");
-                                console.log("result = "+ result + "userObjectIds[0]="+userObjectIds[0] + " & userObjectIds[1]= "+userObjectIds[1]);
-                                if (userObjectIds[0] == req.user.id) {
-                                //the name is sent from the user's phone when the cloud function was called so the cloud code does not have to request the name from Parse and save again
-                                    var namesInMessage = result.get("names_in_message");
-                                    //checks through namesInMessage to find the user's name and replaces it with the new name
-                                    for (var j = 0, len = namesInMessage.length; j < len; j++) {
-                                        if (namesInMessage[j] == req.user.name) {
-                                            namesInMessage[j] = req.user.user1_name
-                                            break
-                                        }
-                                    }
+                              var noOfPairsWithCommonInterests = 0;
                               
-                                    result.set(namesInMessage, result.get("names_in_message"));
-                                    console.log("changeBridgePairingsOnNameUpdate1");
-                                }
-                                else {
-                                    var namesInMessage = result.get("names_in_message");
-                                    for (var j = 0, len = namesInMessage.length; j < len; j++) {
-                                        //var newNamesInMessage = namesInMessage
-                                        if (namesInMessage[j] == req.user.name) {
-                                            namesInMessage[j] = req.user.user2_name
-                                            break
-                                        }
-                                    }
-                              
-                                    result.set(namesInMessage, result.get("names_in_message"));
-                                    console.log("changeBridgePairingsOnNameUpdate2");
-                                }
-                                //after making updates to the queried data, you need to save
-                                result.save(null, {
-                                          success: function(bridgePairing){
-                                          console.log("Saved after changinging name")
-                                          incrementWhenDone.count += 1;
-                                          //once incrementWhenDone get to the length of the results, it is clear the job has completed - this is necessary due to asynchronous execution
-                                          if (incrementWhenDone.count == results.length) {
-                                          console.log(" Saved "+ results.length +" messages");
-                                          //res.success is the return -> no code will be read after this
-                                          res.success(" Saved all pairings");
-                                          }
-                                          
-                                          },
-                                          error: function(bridgePairing, error){
-                                          console.log(" Not Saved after changinging status")
-                                          incrementWhenDone.count += 1;
-                                          if (incrementWhenDone.count == results.length) {
-                                          console.log(" Not all of  "+ results.length +" messages were saved");
-                                          res.error(" Not all the messages were saved");
-                                          }
-                                          
-                                          }
-                                          });
-                              //}
+                              for (var j = 0; j < results.length; ++j) {
+                              var result = results[j];
+                              var interestedInBusiness = result.get("interestedInBusiness");
+                              var interestedInLove = result.get("interestedInLove");
+                              var interestedInFriendship = result.get("interestedInFriendship");
+                              if (interestedInBusiness) {
+                                numInterestedInBusiness += 1;
                               }
+                              if (interestedInLove) {
+                                numInterestedInLove += 1;
+                              }
+                              if (interestedInFriendship) {
+                                numInterestedInFriendship += 1;
+                              }
+                              }
+                              
+                              var percentageInterestedInBusiness = (numInterestedInBusiness/totalNumberOfUsers)*100
+                              var percentageInterestedInLove = (numInterestedInLove/totalNumberOfUsers)*100
+                              var percentageInterestedInFriendship = (numInterestedInFriendship/totalNumberOfUsers)*100
+                              console.log("% interested in Business = " + percentageInterestedInBusiness + "%")
+                              console.log("% interested in Love = " + percentageInterestedInLove + "%")
+                              console.log("% interested in Friendship = " + percentageInterestedInFriendship + "%")
+                              
                               },
-                              //if error will call function with parameter of error
-                              error: function(error) {
-                              console.log("Failed!");
-                              res.error("Not saved");
+                              error: function() {
+                              console.log("Querying _User failed in getMainAppMetrics");
+                              res.error("Querying _User failed in getMainAppMetrics");
                               }
                               });
-                   
-                   });*/
+    //2. % Bridged per category (e.g. if shown 10 business connections and bridged 2 then 20% for business)
+    //3. % single message last message not equal to “Your connection awaits!” per category
+    //4. % posts in each category
+    //User Introduction Interaction
+    //5. # swipes per user
+    //6. % of swipes leading to introductions
+    //7. % of users that clicked revisit or ran out of potential matches
+    //User Post Interaction
+    //8. % of users that have posted
+    //9. # of posts per posting user
+    //10. % of pairings pairings introduced from pairings with one status vs. % of pairings introduced from pairings that had two statuses vs % of pairings introduced from  introductions with no statuses
+    //User Chat Interaction
+    //11. % introductions responded to
+    //12. Avg # of messages sent per responded introduction
+});
 
-/*//query and update the messages Table
- console.log("changeMessagesTableOnNameUpdate was called");
- //creating a class with the name BridgePairings
- var MessagesClass = Parse.Object.extend("Messages");
- //query passing the classname -> which is the name of the table being queried
- var query2 = new Parse.Query(MessagesClass);
- //queries the table for user_objectIds that includes req.user.id
- query2.equalTo("ids_in_message", req.user.id)
- query2.limit = 10000;
- //for query.find, everything is in background
- query2.find({
- //if success will call function with parameter of results
- success:function(results) {
- console.log("messages table query length : "+results.length);
- var incrementWhenDone = {count : 0};
- //going through each of the results and deciding which one of the users' name should be updated
- for (var i = 0, len = results.length; i < len; i++) {
- var result = results[i];
- var userObjectIds = result.get("user_objectIds");
- console.log("result = "+ result + "userObjectIds[0]="+userObjectIds[0] + " & userObjectIds[1]= "+userObjectIds[1]);
- if (userObjectIds[0] == req.user.id) {
- //the name is sent from the user's phone when the cloud function was called so the cloud code does not have to request the name from Parse and save again
- var namesInMessage = result.get("names_in_message");
- //checks through namesInMessage to find the user's name and replaces it with the new name
- for (var j = 0, len = namesInMessage.length; j < len; j++) {
- if (namesInMessage[j] == req.user.name) {
- namesInMessage[j] = req.user.user1_name
- break
- }
- }
- 
- result.set(namesInMessage, result.get("names_in_message"));
- console.log("changeBridgePairingsOnNameUpdate1");
- }
- else {
- var namesInMessage = result.get("names_in_message");
- for (var j = 0, len = namesInMessage.length; j < len; j++) {
- //var newNamesInMessage = namesInMessage
- if (namesInMessage[j] == req.user.name) {
- namesInMessage[j] = req.user.user2_name
- break
- }
- }
- 
- result.set(namesInMessage, result.get("names_in_message"));
- console.log("changeBridgePairingsOnNameUpdate2");
- }
- //after making updates to the queried data, you need to save
- result.save(null, {
- success: function(bridgePairing){
- console.log("Saved after changinging name")
- incrementWhenDone.count += 1;
- //once incrementWhenDone get to the length of the results, it is clear the job has completed - this is necessary due to asynchronous execution
- if (incrementWhenDone.count == results.length) {
- console.log(" Saved "+ results.length +" messages");
- //res.success is the return -> no code will be read after this
- res.success(" Saved all pairings");
- }
- 
- },
- error: function(bridgePairing, error){
- console.log(" Not Saved after changinging status")
- incrementWhenDone.count += 1;
- if (incrementWhenDone.count == results.length) {
- console.log(" Not all of  "+ results.length +" messages were saved");
- res.error(" Not all the messages were saved");
- }
- 
- }
- });
- //}
- }
- },
- //if error will call function with parameter of error
- error: function(error) {
- console.log("Failed!");
- res.error("Not saved");
- }
- });*/
 
 Parse.Cloud.define('addIntroducedUsersToEachothersFriendLists', function(req, res) {
     Parse.Cloud.useMasterKey();
@@ -1289,3 +1181,188 @@ Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
                               });
                    
                    });
+
+
+
+/*Parse.Cloud.define("deleteBridgePairings", function(request, status) {
+ 
+ var BridgePairingsClass = Parse.Object.extend("BridgePairings");
+ var query = new Parse.Query(BridgePairingsClass);
+ query.notEqualTo("user1_name","Blake Takita");
+ query.limit = 10000
+ query.find({
+ success:function(results) {
+ for (var i = 0, len = results.length; i < len; i++) {
+ var result = results[i];
+ result.destroy({});
+ console.log("Destroy: "+result);
+ 
+ }
+ },
+ error: function(error) {
+ console.log("Failed!");
+ }
+ });
+ 
+ });*/
+/*Parse.Cloud.define('changeMessagesTableOnNameUpdate', function(req, res) {
+ console.log("changeBridgePairingsOnNameUpdate was called");
+ //creating a class with the name BridgePairings
+ var MessagesClass = Parse.Object.extend("Messages");
+ //query passing the classname -> which is the name of the table being queried
+ var query = new Parse.Query(MessagesClass);
+ //queries the table for user_objectIds that includes req.user.id
+ query.includes("ids_in_message", req.user.id)
+ query.limit = 10000;
+ //for query.find, everything is in background
+ query.find({
+ //if success will call function with parameter of results
+ success:function(results) {
+ console.log("length : "+results.length);
+ var incrementWhenDone = {count : 0};
+ //going through each of the results and deciding which one of the users' name should be updated
+ for (var i = 0, len = results.length; i < len; i++) {
+ var result = results[i];
+ var userObjectIds = result.get("user_objectIds");
+ console.log("result = "+ result + "userObjectIds[0]="+userObjectIds[0] + " & userObjectIds[1]= "+userObjectIds[1]);
+ if (userObjectIds[0] == req.user.id) {
+ //the name is sent from the user's phone when the cloud function was called so the cloud code does not have to request the name from Parse and save again
+ var namesInMessage = result.get("names_in_message");
+ //checks through namesInMessage to find the user's name and replaces it with the new name
+ for (var j = 0, len = namesInMessage.length; j < len; j++) {
+ if (namesInMessage[j] == req.user.name) {
+ namesInMessage[j] = req.user.user1_name
+ break
+ }
+ }
+ 
+ result.set(namesInMessage, result.get("names_in_message"));
+ console.log("changeBridgePairingsOnNameUpdate1");
+ }
+ else {
+ var namesInMessage = result.get("names_in_message");
+ for (var j = 0, len = namesInMessage.length; j < len; j++) {
+ //var newNamesInMessage = namesInMessage
+ if (namesInMessage[j] == req.user.name) {
+ namesInMessage[j] = req.user.user2_name
+ break
+ }
+ }
+ 
+ result.set(namesInMessage, result.get("names_in_message"));
+ console.log("changeBridgePairingsOnNameUpdate2");
+ }
+ //after making updates to the queried data, you need to save
+ result.save(null, {
+ success: function(bridgePairing){
+ console.log("Saved after changinging name")
+ incrementWhenDone.count += 1;
+ //once incrementWhenDone get to the length of the results, it is clear the job has completed - this is necessary due to asynchronous execution
+ if (incrementWhenDone.count == results.length) {
+ console.log(" Saved "+ results.length +" messages");
+ //res.success is the return -> no code will be read after this
+ res.success(" Saved all pairings");
+ }
+ 
+ },
+ error: function(bridgePairing, error){
+ console.log(" Not Saved after changinging status")
+ incrementWhenDone.count += 1;
+ if (incrementWhenDone.count == results.length) {
+ console.log(" Not all of  "+ results.length +" messages were saved");
+ res.error(" Not all the messages were saved");
+ }
+ 
+ }
+ });
+ //}
+ }
+ },
+ //if error will call function with parameter of error
+ error: function(error) {
+ console.log("Failed!");
+ res.error("Not saved");
+ }
+ });
+ 
+ });*/
+
+/*//query and update the messages Table
+ console.log("changeMessagesTableOnNameUpdate was called");
+ //creating a class with the name BridgePairings
+ var MessagesClass = Parse.Object.extend("Messages");
+ //query passing the classname -> which is the name of the table being queried
+ var query2 = new Parse.Query(MessagesClass);
+ //queries the table for user_objectIds that includes req.user.id
+ query2.equalTo("ids_in_message", req.user.id)
+ query2.limit = 10000;
+ //for query.find, everything is in background
+ query2.find({
+ //if success will call function with parameter of results
+ success:function(results) {
+ console.log("messages table query length : "+results.length);
+ var incrementWhenDone = {count : 0};
+ //going through each of the results and deciding which one of the users' name should be updated
+ for (var i = 0, len = results.length; i < len; i++) {
+ var result = results[i];
+ var userObjectIds = result.get("user_objectIds");
+ console.log("result = "+ result + "userObjectIds[0]="+userObjectIds[0] + " & userObjectIds[1]= "+userObjectIds[1]);
+ if (userObjectIds[0] == req.user.id) {
+ //the name is sent from the user's phone when the cloud function was called so the cloud code does not have to request the name from Parse and save again
+ var namesInMessage = result.get("names_in_message");
+ //checks through namesInMessage to find the user's name and replaces it with the new name
+ for (var j = 0, len = namesInMessage.length; j < len; j++) {
+ if (namesInMessage[j] == req.user.name) {
+ namesInMessage[j] = req.user.user1_name
+ break
+ }
+ }
+ 
+ result.set(namesInMessage, result.get("names_in_message"));
+ console.log("changeBridgePairingsOnNameUpdate1");
+ }
+ else {
+ var namesInMessage = result.get("names_in_message");
+ for (var j = 0, len = namesInMessage.length; j < len; j++) {
+ //var newNamesInMessage = namesInMessage
+ if (namesInMessage[j] == req.user.name) {
+ namesInMessage[j] = req.user.user2_name
+ break
+ }
+ }
+ 
+ result.set(namesInMessage, result.get("names_in_message"));
+ console.log("changeBridgePairingsOnNameUpdate2");
+ }
+ //after making updates to the queried data, you need to save
+ result.save(null, {
+ success: function(bridgePairing){
+ console.log("Saved after changinging name")
+ incrementWhenDone.count += 1;
+ //once incrementWhenDone get to the length of the results, it is clear the job has completed - this is necessary due to asynchronous execution
+ if (incrementWhenDone.count == results.length) {
+ console.log(" Saved "+ results.length +" messages");
+ //res.success is the return -> no code will be read after this
+ res.success(" Saved all pairings");
+ }
+ 
+ },
+ error: function(bridgePairing, error){
+ console.log(" Not Saved after changinging status")
+ incrementWhenDone.count += 1;
+ if (incrementWhenDone.count == results.length) {
+ console.log(" Not all of  "+ results.length +" messages were saved");
+ res.error(" Not all the messages were saved");
+ }
+ 
+ }
+ });
+ //}
+ }
+ },
+ //if error will call function with parameter of error
+ error: function(error) {
+ console.log("Failed!");
+ res.error("Not saved");
+ }
+ });*/
