@@ -96,7 +96,7 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                               
                               if (bridgeType == "Business") {
                               totalNumBusinessPairings += 1;
-                              if bridged {
+                              if (bridged) {
                               numBridgedBusinessPairings += 1;
                               }
                               } else if (bridgeType == "Love") {
