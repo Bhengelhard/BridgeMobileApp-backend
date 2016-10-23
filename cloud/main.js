@@ -85,14 +85,10 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                             var numBridgedLovePairings = 0.0;
                             var numBridgedFriendshipPairings = 0.0;
 
-                              
                               for (var j = 0; j < results.length; ++j) {
                               var result = results[j];
                               
-                              //finding type of bridge pairing
                               var bridgeType = result.get("bridge_type");
-                                            
-                              
                               var bridged = result.get("bridged");
                               
                               if (bridgeType == "Business") {
@@ -114,9 +110,12 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                               
                               }
                                             
-                                            console.log("totalNumBusinessPairings"+totalNumBusinessPairings);
-                                            console.log("numBridgedBusinessPairings" + numBridgedBusinessPairings);
-                                            console.log("totalNumLovePairings" + totalNumLovePairings);
+                                            /*console.log("totalNumBusinessPairings = "+totalNumBusinessPairings);
+                                            console.log("numBridgedBusinessPairings = " + numBridgedBusinessPairings);
+                                            console.log("totalNumLovePairings = " + totalNumLovePairings);
+                                            console.log("numBridgedLovePairings = " + totalNumLovePairings);
+                                            console.log("totalNumFriendshipPairings = " + totalNumLovePairings);
+                                            console.log("numBridgedFriendshipPairings = " + totalNumLovePairings);*/
                               var percentageBridgedOfBusiness = (numBridgedBusinessPairings/totalNumBusinessPairings)*100.0;
                               var percentageBridgedOfLove = (numBridgedLovePairings/totalNumLovePairings)*100.0;
                               var percentageBridgedOfFriendship = (numBridgedFriendshipPairings/totalNumFriendshipPairings)*100.0;
@@ -133,6 +132,72 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                    
                    
     //3. % single message last message not equal to “Your connection awaits!” per category
+                   //% Business messages responded to = # messages with message_type Business and last_single_message undefined / total Business messages
+                   //% Love messages responded to = # messages with message_type Love and last_single_message undefined / total Love messages
+                   //% Friendship messages responded to = # messages with message_type Love and last_single_message undefined / total Friendship messages
+                   var messagesQuery = new Parse.Query("Messages");
+                   messagesQuery.limit(10000);
+                   messagesQuery.find({
+                                            success: function(results){
+                                            var totalNumberofMessages = results.length;
+                                            console.log("totalNumberofMessages = "+totalNumberofMessages);
+                                            
+                                            var incrementWhenDone = {count : 0};
+                                            
+                                            var totalNumBusinessMessages = 0.0;
+                                            var totalNumLoveMessages = 0.0;
+                                            var totalNumFriendshipMessages = 0.0;
+                                            
+                                            var numRespondedBusinessMessages = 0.0;
+                                            var numRespondedLoveMessages = 0.0;
+                                            var numRespondedFriendshipMessages = 0.0;
+                                            
+                                            for (var j = 0; j < results.length; ++j) {
+                                            var result = results[j];
+                                            
+                                            var bridgeType = result.get("bridge_type");
+                                            var lastSingleMessage = result.get("last_single_message");
+                                            
+                                            if (bridgeType == "Business") {
+                                            totalNumBusinessMessages += 1.0;
+                                            if (lastSingleMessage != null) {
+                                            numRespondedBusinessMessages += 1.0;
+                                            }
+                                            } else if (bridgeType == "Love") {
+                                            totalNumLoveMessages += 1.0;
+                                            if (lastSingleMessage != null) {
+                                            numRespondedLoveMessages += 1.0;
+                                            }
+                                            } else if (bridgeType == "Friendship") {
+                                            totalNumFriendshipMessages += 1.0;
+                                            if (lastSingleMessage != null) {
+                                            numRespondedFriendshipMessages += 1.0;
+                                            }
+                                            }
+                                            
+                                            }
+                                            
+                                            /*console.log("totalNumBusinessPairings = "+totalNumBusinessPairings);
+                                             console.log("numBridgedBusinessPairings = " + numBridgedBusinessPairings);
+                                             console.log("totalNumLovePairings = " + totalNumLovePairings);
+                                             console.log("numBridgedLovePairings = " + totalNumLovePairings);
+                                             console.log("totalNumFriendshipPairings = " + totalNumLovePairings);
+                                             console.log("numBridgedFriendshipPairings = " + totalNumLovePairings);*/
+                                            var percentageRespondedBusiness = (numRespondedBusinessMessages/totalNumBusinessMessages)*100.0;
+                                            var percentageRespondedLove = (numRespondedLoveMessages/totalNumLoveMessages)*100.0;
+                                            var percentageRespondedFriendship = (totalNumFriendshipMessages/numRespondedFriendshipMessages)*100.0;
+                                            console.log("% of Business messages that had conversations = " + percentageRespondedBusiness + "%");
+                                            console.log("% of Love messages that had conversations = " + percentageRespondedLove + "%");
+                                            console.log("% of Friendship messages that had conversations = " + percentageRespondedFriendship + "%");
+                                            
+                                            },
+                                            error: function() {
+                                            console.log("Querying BridgePairings failed in getMainAppMetrics");
+                                            res.error("Querying BridgePairings failed in getMainAppMetrics");
+                                            }
+                                            });
+                   
+                   
     //4. % posts in each category
     //User Introduction Interaction
     //5. # swipes per user
