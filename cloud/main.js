@@ -118,13 +118,13 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                               console.log("% Bridged out of Love Pairings = " + percentageBridgedOfLove + "%");
                               console.log("% Bridged out of Friendship Pairings = " + percentageBridgedOfFriendship + "%");
                               
+                              }
                               },
                               error: function() {
                               console.log("Querying BridgePairings failed in getMainAppMetrics");
                               res.error("Querying BridgePairings failed in getMainAppMetrics");
                               }
                               });
-                   
                    
                    
     //3. % single message last message not equal to “Your connection awaits!” per category
@@ -140,7 +140,7 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
     //User Chat Interaction
     //11. % introductions responded to
     //12. Avg # of messages sent per responded introduction
-});
+                   });
 
 
 Parse.Cloud.define('addIntroducedUsersToEachothersFriendLists', function(req, res) {
