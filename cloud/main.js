@@ -76,20 +76,22 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                               console.log("totalNumberofBridgePairings = "+totalNumberofBridgePairings);
                               
                               var incrementWhenDone = {count : 0};
+                                
+                            var totalNumBusinessPairings = 0.0;
+                            var totalNumLovePairings = 0.0;
+                            var totalNumFriendshipPairings = 0.0;
+                                            
+                            var numBridgedBusinessPairings = 0.0;
+                            var numBridgedLovePairings = 0.0;
+                            var numBridgedFriendshipPairings = 0.0;
+
                               
                               for (var j = 0; j < results.length; ++j) {
                               var result = results[j];
                               
                               //finding type of bridge pairing
                               var bridgeType = result.get("bridge_type");
-                              var totalNumBusinessPairings = 0.0;
-                              var totalNumLovePairings = 0.0;
-                              var totalNumFriendshipPairings = 0.0;
-                              
-                              var numBridgedBusinessPairings = 0.0;
-                              var numBridgedLovePairings = 0.0;
-                              var numBridgedFriendshipPairings = 0.0;
-                              
+                                            
                               
                               var bridged = result.get("bridged");
                               
