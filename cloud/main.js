@@ -130,7 +130,7 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                               }
                               });
                    
-                   
+                   // The app's Info.plist must contain an NSPhotoLibraryUsageDescription key with a string value explaining to the user how the app uses this data.
     //3. % introductions conversed per category
                    //% Business messages responded to = # messages with message_type Business and last_single_message undefined / total Business messages
                    //% Love messages responded to = # messages with message_type Love and last_single_message undefined / total Love messages
@@ -155,7 +155,7 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                             for (var j = 0; j < results.length; ++j) {
                                             var result = results[j];
                                             
-                                            var bridgeType = result.get("bridge_type");
+                                            var bridgeType = result.get("message_type");
                                             var lastSingleMessage = result.get("last_single_message");
                                             
                                             if (bridgeType == "Business") {
