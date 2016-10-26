@@ -48,6 +48,41 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                               if (interestedInBusiness != true && interestedInLove != true && interestedInFriendship != true) {
                                 numInterestedInFriendship += 1.0;
                               }
+                                  
+                                  //% of users that clicked revisit or ran out of potential matches = # users that have no more bridge pairings to view or clicked revisit / total number of users
+                                  var friendList = result.get("friend_list");
+                                  console.log("got to below friendList");
+                                  var combinationsOfFriends;
+                                  for (var friend1 = 0; friend1 < friendList.length; ++friend1) {
+                                  for (var friend2 = 0; friend2 < friendList.length; ++friend2) {
+                                  combinationsOfFriends.append([friendList[friend1], friendList[friend2]]);
+                                  combinationsOfFriends.append([friendList[friend2], friendList[friend1]]);
+                                  }
+                                  }
+                                  console.log("got to below combinationsOfFriends");
+                                  var noMoreBridgePairings = true;
+                                  var userObjectID = result.get("objectId");
+                                  var userToBridgePairingsQuery = new Parse.Query("BridgePairings");
+                                  userToBridgePairingsQuery.limit(10000);
+                                  userToBridgePairingsQuery.containedIn("user_objectIds", combinationsOfFriends);
+                                  userToBridgePairingsQuery.find({
+                                                                 success: function(Pairings) {
+                                                                 //console.log("got into the userToBridgePairingQuery");
+                                                                 for (pair in pairings) {
+                                                                 var shownTo = pair.get("shown_to");
+                                                                 if ($.inArray(userObjectID, shownTo) < 0) {
+                                                                 noMoreBridgePairings = false;
+                                                                 }
+                                                                 }
+                                                                 if (noMoreBridgePairings) {
+                                                                 numUsersWithNoMorePairings += 1.0;
+                                                                 }
+                                                                 
+                                                                 
+                                                                 }, error: function() {
+                                                                 print("userToBridgePairingsQuery failed in userQuery of getMainAppMetrics");
+                                                                 }
+                                                                 });
                               }
                               
                               var percentageInterestedInBusiness = (numInterestedInBusiness/totalNumberOfUsers)*100.0;
@@ -58,42 +93,9 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                               console.log("% interested in Love = " + percentageInterestedInLove + "%");
                               console.log("% interested in Friendship = " + percentageInterestedInFriendship + "%");
                               console.log("% interested in Nothing = " + percentageInterestedInNothing + "%");
-                                  
-                                  //% of users that clicked revisit or ran out of potential matches = # users that have no more bridge pairings to view or clicked revisit / total number of users
-                                  var friendList = result.get("friend_list");
-                                  var combinationsOfFriends = [[String, String]]();
-                                  for (friend1 in friendList) {
-                                  for (friend2 in friendList) {
-                                    combinationsOfFriends.append([friend1, friend2]);
-                                    combinationsOfFriends.append([friend2, friend1]);
-                                  }
-                                  }
-                                  var noMoreBridgePairings = true;
-                                  var userObjectID = result.get("objectId");
-                                  console.log("got to before the userToBridgePairingQuery");
-                                  var userToBridgePairingsQuery = new Parse.Query("BridgePairings");
-                                  userToBridgePairingsQuery.limit(10000);
-                                  userToBridgePairingsQuery.containedIn("user_objectIds", combinationsOfFriends);
-                                  userToBridgePairingsQuery.find({
-                                                                 success: function(Pairings) {
-                                                                 //console.log("got into the userToBridgePairingQuery");
-                                                                 for (pair in pairings) {
-                                                                 var shownTo = pair.get("shown_to");
-                                                                    if ($.inArray(userObjectID, shownTo) < 0) {
-                                                                        noMoreBridgePairings = false;
-                                                                    }
-                                                                 }
-                                                                 if (noMoreBridgePairings) {
-                                                                    numUsersWithNoMorePairings += 1.0;
-                                                                 }
-                                                                 }, error: function() {
-                                                                    print("userToBridgePairingsQuery failed in userQuery of getMainAppMetrics");
-                                                                 }
-                                                                 });
                                   console.log("numUsersWithNoMorePairings = "+numUsersWithNoMorePairings);
                                   var percentageUsersWithNoMorePairings = (numUsersWithNoMorePairings / totalNumberOfUsers)*100.0;
                                   console.log("% of users that ran out of potential matches = " +percentageUsersWithNoMorePairings+ "%");
-                                  
                               },
                               error: function() {
                               console.log("Querying _User failed in getMainAppMetrics");
