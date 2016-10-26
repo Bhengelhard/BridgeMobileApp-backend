@@ -75,7 +75,7 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                   userToBridgePairingsQuery.containedIn("user_objectIds", combinationsOfFriends);
                                   userToBridgePairingsQuery.find({
                                                                  success: function(Pairings) {
-                                                                 for pair in pairings {
+                                                                 for (pair in pairings) {
                                                                     var shownTo = pair.get("shown_to")
                                                                     if ($.inArray(userObjectID, shownTo) < 0) {
                                                                         noMoreBridgePairings = false;
