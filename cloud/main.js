@@ -75,8 +75,9 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                   userToBridgePairingsQuery.containedIn("user_objectIds", combinationsOfFriends);
                                   userToBridgePairingsQuery.find({
                                                                  success: function(Pairings) {
+                                                                 console.log("got into the userToBridgePairingQuery");
                                                                  for (pair in pairings) {
-                                                                    var shownTo = pair.get("shown_to")
+                                                                 var shownTo = pair.get("shown_to");
                                                                     if ($.inArray(userObjectID, shownTo) < 0) {
                                                                         noMoreBridgePairings = false;
                                                                     }
@@ -89,8 +90,8 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                                                  }
                                                                  });
                                   console.log("numUsersWithNoMorePairings = "+numUsersWithNoMorePairings);
-                                  var percentageUsersWithNoMorePairings = (numUsersWithNoMorePairings / totalNumberOfUsers)*100.0
-                                  console.log("% of users that ran out of potential matches = " +percentageUsersWithNoMorePairings+ "%")
+                                  var percentageUsersWithNoMorePairings = (numUsersWithNoMorePairings / totalNumberOfUsers)*100.0;
+                                  console.log("% of users that ran out of potential matches = " +percentageUsersWithNoMorePairings+ "%");
                                   
                               },
                               error: function() {
