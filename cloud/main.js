@@ -133,8 +133,13 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                               console.log("% Bridged out of Love Pairings = " + percentageBridgedOfLove + "%");
                               console.log("% Bridged out of Friendship Pairings = " + percentageBridgedOfFriendship + "%");
                                             
-                                            var numSwipesPerUser = totalNumSwipes/totalNumberOfUsers;
-                                            console.log("# swipes per user = "+numSwipesPerUser);
+                            var numSwipesPerUser = totalNumSwipes/totalNumberOfUsers;
+                            console.log("# swipes per user = "+numSwipesPerUser);
+                                            
+                                            //% of swipes leading to introductions = # of users connected / total number of swipes
+                            var percentageSwipesLeadingToIntros = 100.0*((numBridgedFriendshipPairings + numBridgedFriendshipPairings + numBridgedLovePairings)/totalNumSwipes;
+                            console.log("% of swipes leading to introductions = " + percentageSwipesLeadingToIntros + "%");
+                                                                        
                               
                               },
                               error: function() {
@@ -256,10 +261,13 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                       }
                                       });
     //User Introduction Interaction
-    //5. # swipes per user = total # of swipes / total number of users -> This is performed in the userQuery and in the bridgePairingQuery
+    //5. # swipes per user = total # of swipes / total number of users
+                   //This is performed in the userQuery and printed in the bridgePairingQuery -> this DOES NOT consider when users have revisited
                    
                    
-    //6. % of swipes leading to introductions
+    //6. % of swipes leading to introductions = # of users connected / total number of swipes
+                   //This is performed in the
+                   
     //7. % of users that clicked revisit or ran out of potential matches
     //User Post Interaction
     //8. % of users that have posted
