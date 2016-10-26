@@ -62,8 +62,8 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                   //% of users that clicked revisit or ran out of potential matches = # users that have no more bridge pairings to view or clicked revisit / total number of users
                                   var friendList = result.get("friend_list");
                                   var combinationsOfFriends = [[String, String]]();
-                                  for friend1 in friendList {
-                                  for friend2 in friendList {
+                                  for (friend1 in friendList) {
+                                  for (friend2 in friendList) {
                                     combinationsOfFriends.append([friend1, friend2]);
                                     combinationsOfFriends.append([friend2, friend1]);
                                   }
