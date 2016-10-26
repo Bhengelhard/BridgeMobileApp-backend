@@ -136,8 +136,8 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                             var numSwipesPerUser = totalNumSwipes/totalNumberOfUsers;
                             console.log("# swipes per user = "+numSwipesPerUser);
                                             
-                                            //% of swipes leading to introductions = # of users connected / total number of swipes
-                            var percentageSwipesLeadingToIntros = 100.0*((numBridgedFriendshipPairings + numBridgedFriendshipPairings + numBridgedLovePairings)/totalNumSwipes;
+                            //% of swipes leading to introductions = # of users connected / total number of swipes
+                            var percentageSwipesLeadingToIntros = 100.0*(numBridgedFriendshipPairings + numBridgedFriendshipPairings + numBridgedLovePairings)/totalNumSwipes;
                             console.log("% of swipes leading to introductions = " + percentageSwipesLeadingToIntros + "%");
                                                                         
                               
