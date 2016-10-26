@@ -17,14 +17,15 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                    //% Interested in Love = # of users interested in Love/Total # of users
                    //% Interested in Friendship = # of users interested in Friendship/Total # of users
                    var totalNumberOfUsers;
+                   var numUsersWithNoMorePairings = 0.0;
                    var userQuery = new Parse.Query("_User");
                    userQuery.limit(10000);
                    userQuery.find({
                               success: function(results){
-                              var numInterestedInBusiness = 0.00;
-                              var numInterestedInLove = 0.00;
-                              var numInterestedInFriendship = 0.00;
-                              var numInterestedInNothing = 0.00;
+                              var numInterestedInBusiness = 0.0;
+                              var numInterestedInLove = 0.0;
+                              var numInterestedInFriendship = 0.0;
+                              var numInterestedInNothing = 0.0;
                               totalNumberOfUsers = results.length;
                               console.log("totalNumberOfUsers ="+totalNumberOfUsers);
                               
@@ -36,28 +37,61 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                               var interestedInLove = result.get("interested_in_love");
                               var interestedInFriendship = result.get("interested_in_friendship");
                               if (interestedInBusiness) {
-                                numInterestedInBusiness += 1.00;
+                                numInterestedInBusiness += 1.0;
                               }
                               if (interestedInLove) {
-                                numInterestedInLove += 1.00;
+                                numInterestedInLove += 1.0;
                               }
                               if (interestedInFriendship) {
-                                numInterestedInFriendship += 1.00;
+                                numInterestedInFriendship += 1.0;
                               }
                               if (interestedInBusiness != true && interestedInLove != true && interestedInFriendship != true) {
-                                numInterestedInFriendship += 1.00;
+                                numInterestedInFriendship += 1.0;
                               }
                               }
                               
-                              var percentageInterestedInBusiness = (numInterestedInBusiness/totalNumberOfUsers)*100.00;
-                              var percentageInterestedInLove = (numInterestedInLove/totalNumberOfUsers)*100.00;
-                              var percentageInterestedInFriendship = (numInterestedInFriendship/totalNumberOfUsers)*100.00;
-                              var percentageInterestedInNothing = (numInterestedInNothing/totalNumberOfUsers)*100.00;
+                              var percentageInterestedInBusiness = (numInterestedInBusiness/totalNumberOfUsers)*100.0;
+                              var percentageInterestedInLove = (numInterestedInLove/totalNumberOfUsers)*100.0;
+                              var percentageInterestedInFriendship = (numInterestedInFriendship/totalNumberOfUsers)*100.0;
+                              var percentageInterestedInNothing = (numInterestedInNothing/totalNumberOfUsers)*100.0;
                               console.log("% interested in Business = " + percentageInterestedInBusiness + "%");
                               console.log("% interested in Love = " + percentageInterestedInLove + "%");
                               console.log("% interested in Friendship = " + percentageInterestedInFriendship + "%");
                               console.log("% interested in Nothing = " + percentageInterestedInNothing + "%");
-                              
+                                  
+                                  //% of users that clicked revisit or ran out of potential matches = # users that have no more bridge pairings to view or clicked revisit / total number of users
+                                  var friendList = result.get("friend_list");
+                                  var combinationsOfFriends = [[String, String]]();
+                                  for friend1 in friendList {
+                                  for friend2 in friendList {
+                                    combinationsOfFriends.append([friend1, friend2]);
+                                    combinationsOfFriends.append([friend2, friend1]);
+                                  }
+                                  }
+                                  var noMoreBridgePairings = true;
+                                  var userObjectID = result.get("objectId");
+                                  var userToBridgePairingsQuery = new Parse.Query("BridgePairings");
+                                  userToBridgePairingsQuery.limit(10000);
+                                  userToBridgePairingsQuery.whereKey("user_objectIds", containedIn: combinationsOfFriends)
+                                  userToBridgePairingsQuery.find({
+                                                                 success: function(Pairings) {
+                                                                 for pair in pairings {
+                                                                    var shownTo = pair.get("shown_to")
+                                                                    if ($.inArray(userObjectID, shownTo) < 0) {
+                                                                        noMoreBridgePairings = false;
+                                                                    }
+                                                                 }
+                                                                 if (noMoreBridgePairings) {
+                                                                    numUsersWithNoMorePairings += 1.0;
+                                                                 }
+                                                                 }, error: function() {
+                                                                    print("userToBridgePairingsQuery failed in userQuery of getMainAppMetrics");
+                                                                 }
+                                                                 });
+                                  console.log("numUsersWithNoMorePairings = "+numUsersWithNoMorePairings);
+                                  var percentageUsersWithNoMorePairings = (numUsersWithNoMorePairings / totalNumberOfUsers)*100.0
+                                  console.log("% of users that ran out of potential matches = " +percentageUsersWithNoMorePairings+ "%")
+                                  
                               },
                               error: function() {
                               console.log("Querying _User failed in getMainAppMetrics");
@@ -266,9 +300,12 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                    
                    
     //6. % of swipes leading to introductions = # of users connected / total number of swipes
-                   //This is performed in the
+                   //This is performed and printed in the bridgePairingQuery
                    
-    //7. % of users that clicked revisit or ran out of potential matches
+    //7. % of users that clicked revisit or ran out of potential matches = # users that have no more bridge pairings to view or clicked revisit / total number of users
+                   //users that have no more bridge pairings = users who's friendlist of pairings all have shown to...
+                   
+                   
     //User Post Interaction
     //8. % of users that have posted
     //9. # of posts per posting user
