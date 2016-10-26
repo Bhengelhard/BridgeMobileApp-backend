@@ -66,6 +66,7 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                   console.log("got to below userToBridgePairing Beginning");
                                   userToBridgePairingsQuery.limit(10000);
                                   userToBridgePairingsQuery.containedIn("user_objectIds", combinationsOfFriends);
+                                  console.log("got to below userToBridgePairing containdIn");
                                   userToBridgePairingsQuery.find({
                                                                  success: function(Pairings) {
                                                                  //console.log("got into the userToBridgePairingQuery");
