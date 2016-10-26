@@ -70,12 +70,13 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                   }
                                   var noMoreBridgePairings = true;
                                   var userObjectID = result.get("objectId");
+                                  console.log("got to before the userToBridgePairingQuery");
                                   var userToBridgePairingsQuery = new Parse.Query("BridgePairings");
                                   userToBridgePairingsQuery.limit(10000);
                                   userToBridgePairingsQuery.containedIn("user_objectIds", combinationsOfFriends);
                                   userToBridgePairingsQuery.find({
                                                                  success: function(Pairings) {
-                                                                 console.log("got into the userToBridgePairingQuery");
+                                                                 //console.log("got into the userToBridgePairingQuery");
                                                                  for (pair in pairings) {
                                                                  var shownTo = pair.get("shown_to");
                                                                     if ($.inArray(userObjectID, shownTo) < 0) {
