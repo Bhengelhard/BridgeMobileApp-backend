@@ -69,7 +69,7 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                   console.log("got to below userToBridgePairing containdIn");
                                   userToBridgePairingsQuery.find({
                                                                  success: function(Pairings) {
-                                                                 //console.log("got into the userToBridgePairingQuery");
+                                                                 console.log("got into the userToBridgePairingQuery");
                                                                  for (pair in pairings) {
                                                                  var shownTo = pair.get("shown_to");
                                                                  if ($.inArray(userObjectID, shownTo) < 0) {
