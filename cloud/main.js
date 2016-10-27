@@ -272,15 +272,15 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                       var numLoveStatuses = 0.0;
                                       var numFriendshipStatuses = 0.0;
                                           
-                                      var usersThatHavePosted;
+                                      var usersThatHavePosted = [];
                                     
                                       for (var j = 0; j < results.length; ++j) {
                                       var result = results[j];
                                           
-                                      var userId = result.get("userId");
+                                      /*var userId = result.get("userId");
                                       if ($.inArray(userId, usersThatHavePosted) == -1) {
                                           usersThatHavePosted.push(userId);
-                                      }
+                                      }*/
                                           
                                       var bridgeType = result.get("bridge_type");
                                           
