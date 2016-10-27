@@ -49,7 +49,7 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                 numInterestedInFriendship += 1.0;
                               }
                                   
-                                  //% of users that clicked revisit or ran out of potential matches = # users that have no more bridge pairings to view or clicked revisit / total number of users
+                                  /*//% of users that clicked revisit or ran out of potential matches = # users that have no more bridge pairings to view or clicked revisit / total number of users
                                   var friendList = result.get("friend_list");
                                   console.log("got to below friendList");
                                   var combinationsOfFriends;
@@ -84,19 +84,19 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                                                  }, error: function() {
                                                                  print("userToBridgePairingsQuery failed in userQuery of getMainAppMetrics");
                                                                  }
-                                                                 });
+                                                                 });*/
                               }
                               
-                              var percentageInterestedInBusiness = (numInterestedInBusiness/totalNumberOfUsers)*100.0;
-                              var percentageInterestedInLove = (numInterestedInLove/totalNumberOfUsers)*100.0;
-                              var percentageInterestedInFriendship = (numInterestedInFriendship/totalNumberOfUsers)*100.0;
-                              var percentageInterestedInNothing = (numInterestedInNothing/totalNumberOfUsers)*100.0;
+                              var percentageInterestedInBusiness = ((numInterestedInBusiness/totalNumberOfUsers)*100.0).toFixed(2);
+                              var percentageInterestedInLove = ((numInterestedInLove/totalNumberOfUsers)*100.0).toFixed(2);
+                              var percentageInterestedInFriendship = ((numInterestedInFriendship/totalNumberOfUsers)*100.0).toFixed(2);
+                              var percentageInterestedInNothing = ((numInterestedInNothing/totalNumberOfUsers)*100.0).toFixed(2);
                               console.log("% interested in Business = " + percentageInterestedInBusiness + "%");
                               console.log("% interested in Love = " + percentageInterestedInLove + "%");
                               console.log("% interested in Friendship = " + percentageInterestedInFriendship + "%");
                               console.log("% interested in Nothing = " + percentageInterestedInNothing + "%");
                                   console.log("numUsersWithNoMorePairings = "+numUsersWithNoMorePairings);
-                                  var percentageUsersWithNoMorePairings = (numUsersWithNoMorePairings / totalNumberOfUsers)*100.0;
+                                  var percentageUsersWithNoMorePairings = ((numUsersWithNoMorePairings/totalNumberOfUsers)*100.0).toFixed(2);
                                   console.log("% of users that ran out of potential matches = " +percentageUsersWithNoMorePairings+ "%");
                               },
                               error: function() {
@@ -166,9 +166,9 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                             console.log("numBridgedLovePairings = " + totalNumLovePairings);
                                             console.log("totalNumFriendshipPairings = " + totalNumLovePairings);
                                             console.log("numBridgedFriendshipPairings = " + totalNumLovePairings);*/
-                              var percentageBridgedOfBusiness = (numBridgedBusinessPairings/totalNumBusinessPairings)*100.0;
-                              var percentageBridgedOfLove = (numBridgedLovePairings/totalNumLovePairings)*100.0;
-                              var percentageBridgedOfFriendship = (numBridgedFriendshipPairings/totalNumFriendshipPairings)*100.0;
+                              var percentageBridgedOfBusiness = ((numBridgedBusinessPairings/totalNumBusinessPairings)*100.0).toFixed(2);
+                              var percentageBridgedOfLove = ((numBridgedLovePairings/totalNumLovePairings)*100.0).toFixed(2);
+                              var percentageBridgedOfFriendship = ((numBridgedFriendshipPairings/totalNumFriendshipPairings)*100.0).toFixed(2);
                               console.log("% Bridged out of Business Pairings = " + percentageBridgedOfBusiness + "%");
                               console.log("% Bridged out of Love Pairings = " + percentageBridgedOfLove + "%");
                               console.log("% Bridged out of Friendship Pairings = " + percentageBridgedOfFriendship + "%");
@@ -240,9 +240,9 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                             console.log("totalNumLoveMessages = " + totalNumLoveMessages);
                                             console.log("numRespondedFriendshipMessages = " + numRespondedFriendshipMessages);
                                             console.log("totalNumFriendshipMessages = " + totalNumFriendshipMessages);*/
-                                            var percentageRespondedBusiness = (numRespondedBusinessMessages/totalNumBusinessMessages)*100.0;
-                                            var percentageRespondedLove = (numRespondedLoveMessages/totalNumLoveMessages)*100.0;
-                                            var percentageRespondedFriendship = (numRespondedFriendshipMessages/totalNumFriendshipMessages)*100.0;
+                                            var percentageRespondedBusiness = ((numRespondedBusinessMessages/totalNumBusinessMessages)*100.0).toFixed(2);
+                                            var percentageRespondedLove = ((numRespondedLoveMessages/totalNumLoveMessages)*100.0).toFixed(2);
+                                            var percentageRespondedFriendship = ((numRespondedFriendshipMessages/totalNumFriendshipMessages)*100.0).toFixed(2);
                                             console.log("% of Business messages that had conversations = " + percentageRespondedBusiness + "%");
                                             console.log("% of Love messages that had conversations = " + percentageRespondedLove + "%");
                                             console.log("% of Friendship messages that had conversations = " + percentageRespondedFriendship + "%");
@@ -271,10 +271,16 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                       var numBusinessStatuses = 0.0;
                                       var numLoveStatuses = 0.0;
                                       var numFriendshipStatuses = 0.0;
-                                      
+                                          
+                                      var usersThatHavePosted = [];
+                                    
                                       for (var j = 0; j < results.length; ++j) {
                                       var result = results[j];
-                                      
+                                          
+                                      var userId = result.get("userId");
+                                          if ($.inArray(userId, usersThatHavePosted) == -1) {
+                                          usersThatHavePosted.push(userId);
+                                          }
                                       var bridgeType = result.get("bridge_type");
                                           
                                       if (bridgeType == "Business") {
@@ -286,13 +292,18 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                       }
                                       
                                       }
+                                          
+                                    console.log("usersThatHavePosted - " + usersThatHavePosted);
   
-                                      var percentageBusinessStatuses = (numBusinessStatuses/totalNumberofStatuses)*100.0;
-                                      var percentageLoveStatuses = (numLoveStatuses/totalNumberofStatuses)*100.0;
-                                      var percentageFriendshipStatuses = (numFriendshipStatuses/totalNumberofStatuses)*100.0;
+                                      var percentageBusinessStatuses = ((numBusinessStatuses/totalNumberofStatuses)*100.0).toFixed(2);
+                                      var percentageLoveStatuses = ((numLoveStatuses/totalNumberofStatuses)*100.0).toFixed(2);
+                                      var percentageFriendshipStatuses = ((numFriendshipStatuses/totalNumberofStatuses)*100.0).toFixed(2);
                                       console.log("% of statuses with bridge_type of Business = " + percentageBusinessStatuses + "%");
                                       console.log("% of statuses with bridge_type of Love = " + percentageLoveStatuses + "%");
                                       console.log("% of statuses with bridge_type of Friendship = " + percentageFriendshipStatuses + "%");
+                                      
+                                      var percentageUsersThatHavePosted = (100.0*(usersThatHavePosted.length/totalNumberOfUsers)).toFixed(2)
+                                      console.log("% of users that have posted statuses = " + percentageUsersThatHavePosted + "%")
                                       
                                       },
                                       error: function() {
@@ -310,10 +321,14 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                    
     //7. % of users that clicked revisit or ran out of potential matches = # users that have no more bridge pairings to view or clicked revisit / total number of users
                    //users that have no more bridge pairings = users who's friendlist of pairings all have shown to...
-                   
+                   //The programming for this begain in the userQuery
                    
     //User Post Interaction
     //8. % of users that have posted
+                   //This is performed in the BridgeStatusQuery
+                   
+                   
+                   
     //9. # of posts per posting user
     //10. % of pairings pairings introduced from pairings with one status vs. % of pairings introduced from pairings that had two statuses vs % of pairings introduced from  introductions with no statuses
     //User Chat Interaction
