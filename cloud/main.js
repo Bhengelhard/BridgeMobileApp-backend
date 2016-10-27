@@ -173,11 +173,11 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                               console.log("% Bridged out of Love Pairings = " + percentageBridgedOfLove + "%");
                               console.log("% Bridged out of Friendship Pairings = " + percentageBridgedOfFriendship + "%");
                             
-                            var numSwipesPerUser = totalNumSwipes/totalNumberOfUsers;
+                            var numSwipesPerUser = (totalNumSwipes/totalNumberOfUsers).toFixed(2);
                             console.log("# swipes per user = "+numSwipesPerUser);
                                             
                             //% of swipes leading to introductions = # of users connected / total number of swipes
-                            var percentageSwipesLeadingToIntros = 100.0*(numBridgedFriendshipPairings + numBridgedFriendshipPairings + numBridgedLovePairings)/totalNumSwipes;
+                            var percentageSwipesLeadingToIntros = (100.0*(numBridgedFriendshipPairings + numBridgedFriendshipPairings + numBridgedLovePairings)/totalNumSwipes).toFixed(2);
                             console.log("% of swipes leading to introductions = " + percentageSwipesLeadingToIntros + "%");
                                                                         
                               
@@ -272,15 +272,15 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                       var numLoveStatuses = 0.0;
                                       var numFriendshipStatuses = 0.0;
                                           
-                                      var usersThatHavePosted = [];
+                                      var usersThatHavePosted;
                                     
                                       for (var j = 0; j < results.length; ++j) {
                                       var result = results[j];
                                           
                                       var userId = result.get("userId");
-                                          if ($.inArray(userId, usersThatHavePosted) == -1) {
+                                      if ($.inArray(userId, usersThatHavePosted) == -1) {
                                           usersThatHavePosted.push(userId);
-                                          }
+                                      }
                                           
                                       var bridgeType = result.get("bridge_type");
                                           
@@ -302,12 +302,13 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                       console.log("% of statuses with bridge_type of Business = " + percentageBusinessStatuses + "%");
                                       console.log("% of statuses with bridge_type of Love = " + percentageLoveStatuses + "%");
                                       console.log("% of statuses with bridge_type of Friendship = " + percentageFriendshipStatuses + "%");
-                                          var numUsersThatHavePosted = usersThatHavePosted.length;
-                                          var percentageUsersThatHavePosted = (100.0*(numUsersThatHavePosted/totalNumberOfUsers)).toFixed(2);
-                                          console.log("% of users that have posted statuses = " + percentageUsersThatHavePosted + "%");
-                                          // # of posts per posting user
-                                          var numPostsPerPostingUser = (totalNumberofStatuses/numUsersThatHavePosted).toFixed(2);
-                                          console.log("# of posts per posting user = "+ numPostsPerPostingUser);
+                                      // % of users that have posted
+                                      var numUsersThatHavePosted = usersThatHavePosted.length;
+                                      var percentageUsersThatHavePosted = (100.0*(numUsersThatHavePosted/totalNumberOfUsers)).toFixed(2);
+                                      console.log("% of users that have posted statuses = " + percentageUsersThatHavePosted + "%");
+                                      // # of posts per posting user
+                                      var numPostsPerPostingUser = (totalNumberofStatuses/numUsersThatHavePosted).toFixed(2);
+                                      console.log("# of posts per posting user = "+ numPostsPerPostingUser);
                                       },
                                       error: function() {
                                       console.log("Querying BridgeStatus failed in getMainAppMetrics");
