@@ -278,9 +278,9 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                       var result = results[j];
                                           
                                       var userId = result.get("userId");
-                                      /*if ($.inArray(userId, usersThatHavePosted) == -1) {
-                                          usersThatHavePosted.push(userId);
-                                      }*/
+                                      if ($.inArray(userId, usersThatHavePosted) == -1) {
+                                          //usersThatHavePosted.push(userId);
+                                      }
                                           
                                       var bridgeType = result.get("bridge_type");
                                           
