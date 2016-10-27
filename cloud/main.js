@@ -277,8 +277,8 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                       for (var j = 0; j < results.length; ++j) {
                                       var result = results[j];
                                           
-                                      /*var userId = result.get("userId");
-                                      if ($.inArray(userId, usersThatHavePosted) == -1) {
+                                      var userId = result.get("userId");
+                                      /*if ($.inArray(userId, usersThatHavePosted) == -1) {
                                           usersThatHavePosted.push(userId);
                                       }*/
                                           
