@@ -172,7 +172,7 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                               console.log("% Bridged out of Business Pairings = " + percentageBridgedOfBusiness + "%");
                               console.log("% Bridged out of Love Pairings = " + percentageBridgedOfLove + "%");
                               console.log("% Bridged out of Friendship Pairings = " + percentageBridgedOfFriendship + "%");
-                                            
+                            
                             var numSwipesPerUser = totalNumSwipes/totalNumberOfUsers;
                             console.log("# swipes per user = "+numSwipesPerUser);
                                             
@@ -305,8 +305,9 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                           var numUsersThatHavePosted = usersThatHavePosted.length;
                                           var percentageUsersThatHavePosted = (100.0*(numUsersThatHavePosted/totalNumberOfUsers)).toFixed(2);
                                           console.log("% of users that have posted statuses = " + percentageUsersThatHavePosted + "%");
-                                      
-                                          var numPostsPerPostingUser = (100.0*(totalNumberofStatuses/numUsersThatHavePosted));
+                                          // # of posts per posting user
+                                          var numPostsPerPostingUser = (totalNumberofStatuses/numUsersThatHavePosted)).toFixed(2);
+                                          console.log("# of posts per posting user = "+ numPostsPerPostingUser);
                                       },
                                       error: function() {
                                       console.log("Querying BridgeStatus failed in getMainAppMetrics");
