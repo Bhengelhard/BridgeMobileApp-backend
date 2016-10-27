@@ -306,7 +306,7 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                           var percentageUsersThatHavePosted = (100.0*(numUsersThatHavePosted/totalNumberOfUsers)).toFixed(2);
                                           console.log("% of users that have posted statuses = " + percentageUsersThatHavePosted + "%");
                                           // # of posts per posting user
-                                          var numPostsPerPostingUser = (totalNumberofStatuses/numUsersThatHavePosted)).toFixed(2);
+                                          var numPostsPerPostingUser = (totalNumberofStatuses/numUsersThatHavePosted).toFixed(2);
                                           console.log("# of posts per posting user = "+ numPostsPerPostingUser);
                                       },
                                       error: function() {
