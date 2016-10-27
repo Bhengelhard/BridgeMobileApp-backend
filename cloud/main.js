@@ -294,7 +294,7 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                       
                                       }
                                           
-                                    console.log("usersThatHavePosted - " + usersThatHavePosted);
+                                    //console.log("usersThatHavePosted - " + usersThatHavePosted);
   
                                       var percentageBusinessStatuses = ((numBusinessStatuses/totalNumberofStatuses)*100.0).toFixed(2);
                                       var percentageLoveStatuses = ((numLoveStatuses/totalNumberofStatuses)*100.0).toFixed(2);
