@@ -281,6 +281,7 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                           if ($.inArray(userId, usersThatHavePosted) == -1) {
                                           usersThatHavePosted.push(userId);
                                           }
+                                          
                                       var bridgeType = result.get("bridge_type");
                                           
                                       if (bridgeType == "Business") {
@@ -301,10 +302,11 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                       console.log("% of statuses with bridge_type of Business = " + percentageBusinessStatuses + "%");
                                       console.log("% of statuses with bridge_type of Love = " + percentageLoveStatuses + "%");
                                       console.log("% of statuses with bridge_type of Friendship = " + percentageFriendshipStatuses + "%");
+                                          var numUsersThatHavePosted = usersThatHavePosted.length;
+                                          var percentageUsersThatHavePosted = (100.0*(numUsersThatHavePosted/totalNumberOfUsers)).toFixed(2);
+                                          console.log("% of users that have posted statuses = " + percentageUsersThatHavePosted + "%");
                                       
-                                      var percentageUsersThatHavePosted = (100.0*(usersThatHavePosted.length/totalNumberOfUsers)).toFixed(2)
-                                      console.log("% of users that have posted statuses = " + percentageUsersThatHavePosted + "%")
-                                      
+                                          var numPostsPerPostingUser = (100.0*(totalNumberofStatuses/numUsersThatHavePosted));
                                       },
                                       error: function() {
                                       console.log("Querying BridgeStatus failed in getMainAppMetrics");
@@ -321,16 +323,21 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                    
     //7. % of users that clicked revisit or ran out of potential matches = # users that have no more bridge pairings to view or clicked revisit / total number of users
                    //users that have no more bridge pairings = users who's friendlist of pairings all have shown to...
-                   //The programming for this begain in the userQuery
+                   //The programming for this began in the userQuery
                    
     //User Post Interaction
     //8. % of users that have posted
                    //This is performed in the BridgeStatusQuery
                    
-                   
-                   
     //9. # of posts per posting user
-    //10. % of pairings pairings introduced from pairings with one status vs. % of pairings introduced from pairings that had two statuses vs % of pairings introduced from  introductions with no statuses
+                   //This is performed in the BridgeStatusQuery
+                   
+    //10. % of pairings introduced from pairings with one status vs. % of pairings introduced from pairings that had two statuses vs % of pairings introduced from  introductions with no statuses
+                //% of pairings introduced from pairings with one status
+                //% of pairings introduced from pairings that had two statuses
+                //% of pairings introduced from  introductions with no statuses
+
+                   
     //User Chat Interaction
     //11. % introductions responded to
     //12. Avg # of messages sent per responded introduction
@@ -353,7 +360,7 @@ Parse.Cloud.define('addIntroducedUsersToEachothersFriendLists', function(req, re
     query.find({
                //if success will call function with parameter of results
                success:function(results) {
-               console.log("length of addIntroducedUsersToEachothersFriendLists query : " + results.length)
+               console.log("length of addIntroducedUsersToEachothersFriendLists query : " + results.length);
                var incrementWhenDone = {count : 0};
                //going through each of the results and deciding which one of the users' name should be updated
                for (var i = 0, len = results.length; i < len; i++) {
