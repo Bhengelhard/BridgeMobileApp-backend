@@ -414,9 +414,9 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                           for (var j = 0; j < results.length; ++j) {
                                           var result = results[j];
                                           var messageId = result.get("message_id");
-                                          if (arrayOfUniqueMessageIds.inlcudes(messageId) == false) {
+                                          /*if (arrayOfUniqueMessageIds.inlcudes(messageId) == false) {
                                             arrayOfUniqueMessageIds.push(messageId);
-                                          }
+                                          }*/
                                           }
                                           console.log("got past singleMessage loop");
                                           //Avg # of messages sent per responded introduction
