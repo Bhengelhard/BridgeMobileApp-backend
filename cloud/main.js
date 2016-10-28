@@ -417,6 +417,10 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                             arrayOfUniqueMessageIds.push(messageId);
                                           }
                                           }
+                                          //Avg # of messages sent per responded introduction
+                                          var numMessagesSentPerRespondedIntro = ((totalSingleMessages / numMessagesWithSingleMessages).toFixed(2));
+                                          console.log("Avg # of messages sent per responded introduction = " + numMessagesSentPerRespondedIntro);
+
                     },
                     error: function() {
                                           console.log("Querying SingleMessages failed in getMainAppMetrics");
@@ -425,10 +429,7 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                     });
 
                    
-                   //Avg # of messages sent per responded introduction
-                   var numMessagesSentPerRespondedIntro = ((totalSingleMessages / numMessagesWithSingleMessages).toFixed(2));
-                   console.log("Avg # of messages sent per responded introduction = " + numMessagesSentPerRespondedIntro);
-                   });
+                    });
 
 
 Parse.Cloud.define('addIntroducedUsersToEachothersFriendLists', function(req, res) {
