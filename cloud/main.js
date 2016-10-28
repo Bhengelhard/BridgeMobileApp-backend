@@ -409,6 +409,7 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                    bridgeStatusQuery.find({
                     success: function(results){
                                           var totalSingleMessages = results.length;
+                                          console.log("totalSingleMessages = " +totalSingleMessages);
                                           var arrayOfUniqueMessageIds = [];
                                           for (var j = 0; j < results.length; ++j) {
                                           var result = results[j];
@@ -417,8 +418,10 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                             arrayOfUniqueMessageIds.push(messageId);
                                           }
                                           }
+                                          console.log("got past singleMessage loop");
                                           //Avg # of messages sent per responded introduction
                                           var numMessagesWithSingleMessages = arrayOfUniqueMessageIds.length;
+                                          console.log("numMessagesWithSingleMessages = " + numMessagesWithSingleMessages);
                                           var numMessagesSentPerRespondedIntro = ((totalSingleMessages / numMessagesWithSingleMessages).toFixed(2));
                                           console.log("Avg # of messages sent per responded introduction = " + numMessagesSentPerRespondedIntro);
 
