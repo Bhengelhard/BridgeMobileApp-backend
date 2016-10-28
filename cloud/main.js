@@ -219,9 +219,9 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                             var percentageOneStatusPairingsBridged = ((numPairingsBridgedWithOneStatus/TotalNumPairingsWithOneStatus)*100.0).toFixed(2);
                             console.log("% of pairings introduced from pairings with one status = "+percentageOneStatusPairingsBridged+"%");
                             var percentageTwoStatusPairingsBridged = ((numPairingsBridgedWithTwoStatuses/TotalNumPairingsWithTwoStatuses)*100.0).toFixed(2);
-                            console.log("% of pairings introduced from pairings with one status = "+percentageTwoStatusPairingsBridged+"%");
+                            console.log("% of pairings introduced from pairings with Two status = "+percentageTwoStatusPairingsBridged+"%");
                             var percentageNoStatusPairingsBridged = ((numPairingsBridgedWithNoStatuses/TotalNumPairingsWithNoStatuses)*100.0).toFixed(2);
-                            console.log("% of pairings introduced from pairings with one status = "+percentageNoStatusPairingsBridged+"%");
+                            console.log("% of pairings introduced from pairings with No status = "+percentageNoStatusPairingsBridged+"%");
                                             
                             
                                                                         
