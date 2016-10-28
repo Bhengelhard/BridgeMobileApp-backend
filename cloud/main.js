@@ -253,6 +253,10 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                             var numRespondedBusinessMessages = 0.0;
                                             var numRespondedLoveMessages = 0.0;
                                             var numRespondedFriendshipMessages = 0.0;
+                                      
+                                            var numMessagesWithResponse = 0.0
+                                      
+                                      
                                             
                                             for (var j = 0; j < results.length; ++j) {
                                             var result = results[j];
@@ -264,16 +268,19 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                             totalNumBusinessMessages += 1.0;
                                             if (lastSingleMessage != null) {
                                             numRespondedBusinessMessages += 1.0;
+                                            numMessagesWithResponse += 1.0;
                                             }
                                             } else if (bridgeType == "Love") {
                                             totalNumLoveMessages += 1.0;
                                             if (lastSingleMessage != null) {
                                             numRespondedLoveMessages += 1.0;
+                                            numMessagesWithResponse += 1.0;
                                             }
                                             } else if (bridgeType == "Friendship") {
                                             totalNumFriendshipMessages += 1.0;
                                             if (lastSingleMessage != null) {
                                             numRespondedFriendshipMessages += 1.0;
+                                            numMessagesWithResponse += 1.0;
                                             }
                                             }
                                             
@@ -291,7 +298,12 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                             console.log("% of Business messages that had conversations = " + percentageRespondedBusiness + "%");
                                             console.log("% of Love messages that had conversations = " + percentageRespondedLove + "%");
                                             console.log("% of Friendship messages that had conversations = " + percentageRespondedFriendship + "%");
-                                            
+                                      
+                                      
+                                            //% introductions responded to = # of messages with last_single_message responded to / total # of messages
+                                            var percentageIntrosConversed = ((numMessagesWithResponse / totalNumberofMessages)*100.0).toFixed(2);
+                                            console.log("% introductions responded to = " + percentageIntrosConversed + "%");
+                                      
                                             },
                                             error: function() {
                                             console.log("Querying BridgePairings failed in getMainAppMetrics");
@@ -389,7 +401,8 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
 
                    
     //User Chat Interaction
-    //11. % introductions responded to
+    //11. % introductions responded to = # of messages with last_single_message responded to
+                   //This is performed in the messages Table
     //12. Avg # of messages sent per responded introduction
                    });
 
