@@ -404,6 +404,30 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
     //11. % introductions responded to = # of messages with last_single_message responded to
                    //This is performed in the messages Table
     //12. Avg # of messages sent per responded introduction
+                   var bridgeStatusQuery = new Parse.Query("SingleMessages");
+                   bridgeStatusQuery.limit(10000);
+                   bridgeStatusQuery.find({
+                    success: function(results){
+                                          var totalSingleMessages = results.length;
+                                          var arrayOfUniqueMessageIds = [];
+                                          for (var j = 0; j < results.length; ++j) {
+                                          var result = results[j];
+                                          var messageId = result.get("message_id");
+                                          if (arrayOfUniqueMessageIds.inlcudes(messageId) == false) {
+                                            arrayOfUniqueMessageIds.push(messageId);
+                                          }
+                                          }
+                    },
+                    error: function() {
+                                          console.log("Querying SingleMessages failed in getMainAppMetrics");
+                                          res.error("Querying SingleMessages failed in getMainAppMetrics");
+                    }
+                    });
+
+                   
+                   //Avg # of messages sent per responded introduction
+                   var numMessagesSentPerRespondedIntro = ((totalSingleMessages / numMessagesWithSingleMessages).toFixed(2));
+                   console.log("Avg # of messages sent per responded introduction = " + numMessagesSentPerRespondedIntro);
                    });
 
 
