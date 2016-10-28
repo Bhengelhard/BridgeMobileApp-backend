@@ -418,6 +418,7 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                           }
                                           }
                                           //Avg # of messages sent per responded introduction
+                                          var numMessagesWithSingleMessages = arrayOfUniqueMessageIds.length;
                                           var numMessagesSentPerRespondedIntro = ((totalSingleMessages / numMessagesWithSingleMessages).toFixed(2));
                                           console.log("Avg # of messages sent per responded introduction = " + numMessagesSentPerRespondedIntro);
 
