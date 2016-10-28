@@ -22,14 +22,15 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                    userQuery.limit(10000);
                    userQuery.find({
                               success: function(results){
-                              var numInterestedInBusiness = 0.0;
-                              var numInterestedInLove = 0.0;
-                              var numInterestedInFriendship = 0.0;
-                              var numInterestedInNothing = 0.0;
+                              
                               totalNumberOfUsers = results.length;
                               console.log("totalNumberOfUsers ="+totalNumberOfUsers);
-                              
-                              var incrementWhenDone = {count : 0};
+                                  var numInterestedInBusiness = 0.0;
+                                  var numInterestedInLove = 0.0;
+                                  var numInterestedInFriendship = 0.0;
+                                  var numInterestedInNothing = 0.0;
+                                  
+                                  var numRanOutOfPairs = 0.0;
                               
                               for (var j = 0; j < results.length; ++j) {
                               var result = results[j];
@@ -48,7 +49,11 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                               if (interestedInBusiness != true && interestedInLove != true && interestedInFriendship != true) {
                                 numInterestedInFriendship += 1.0;
                               }
-                                  
+                                  var ranOutOfPairs = result.get("ran_out_of_pairs");
+                                  if (ranOutOfPairs > 0) {
+                                  numRanOutOfPairs += 1;
+                                  }
+                                
                                   /*//% of users that clicked revisit or ran out of potential matches = # users that have no more bridge pairings to view or clicked revisit / total number of users
                                   var friendList = result.get("friend_list");
                                   console.log("got to below friendList");
@@ -98,6 +103,11 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                   console.log("numUsersWithNoMorePairings = "+numUsersWithNoMorePairings);
                                   var percentageUsersWithNoMorePairings = ((numUsersWithNoMorePairings/totalNumberOfUsers)*100.0).toFixed(2);
                                   console.log("% of users that ran out of potential matches = " +percentageUsersWithNoMorePairings+ "%");
+                                  
+                                  //% of users that clicked revisit or ran out of potential matches
+                                  var percentageRanOutOfPairs = ((numRanOutOfPairs/totalNumberOfUsers)*100.0).toFixed(2);
+                                  console.log("% of users that ran out of potential matches = "+percentageRanOutOfPairs+"%");
+                                  
                               },
                               error: function() {
                               console.log("Querying _User failed in getMainAppMetrics");
@@ -223,7 +233,6 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                             var percentageNoStatusPairingsBridged = ((numPairingsBridgedWithNoStatuses/TotalNumPairingsWithNoStatuses)*100.0).toFixed(2);
                             console.log("% of pairings introduced from pairings with No status = "+percentageNoStatusPairingsBridged+"%");
                                             
-                            
                                                                         
                               
                               },
