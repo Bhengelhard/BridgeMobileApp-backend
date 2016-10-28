@@ -278,7 +278,7 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                       var result = results[j];
                                           
                                       var userId = result.get("userId");
-                                      if (usersThatHavePosted.includes(userId)) {
+                                      if (usersThatHavePosted.includes(userId) == false) {
                                           usersThatHavePosted.push(userId);
                                       }
                                           
