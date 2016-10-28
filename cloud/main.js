@@ -127,6 +127,18 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                             var numBridgedLovePairings = 0.0;
                             var numBridgedFriendshipPairings = 0.0;
 
+                                            
+                            //% of pairings introduced from pairings with one status = # of pairings with one status introduced / # of pairings with one status
+                            //% of pairings introduced from pairings that had two statuses
+                            //% of pairings introduced from  introductions with no statuses
+                            var TotalNumPairingsWithOneStatus = 0.0;
+                            var numPairingsBridgedWithOneStatus = 0.0;
+                            var TotalNumPairingsWithTwoStatuses = 0.0;
+                            var numPairingsBridgedWithTwoStatuses = 0.0;
+                            var TotalNumPairingsWithNoStatuses = 0.0;
+                            var numPairingsBridgedWithNoStatuses = 0.0;
+                                            
+                                            
                               for (var j = 0; j < results.length; ++j) {
                               var result = results[j];
                               
@@ -158,6 +170,31 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                                             if (checkedOut) {
                                             totalNumSwipes -= 1;
                                             }
+                                            
+                                            
+                                            //calculating percentages of successful introduction from matches with 0, 1, and 2 pairings for statuses that have been shown to at least one person
+                                            if (shownTo != null) {
+                                                var user1BridgeStatus = result.get("user1_bridge_status");
+                                                var user2BridgeStatus = result.get("user2_bridge_status");
+                                            
+                                                if (user1BridgeStatus == null && user2BridgeStatus == null) {
+                                                TotalNumPairingsWithNoStatuses += 1.0;
+                                                    if (bridged) {
+                                                        numPairingsBridgedWithNoStatuses += 1.0;
+                                                    }
+                                                } else if (user1BridgeStatus != null && user2BridgeStatus != null) {
+                                                    TotalNumPairingsWithTwoStatuses += 1.0;
+                                                    if (bridged) {
+                                                        numPairingsBridgedWithTwoStatuses += 1.0;
+                                                    }
+                                                } else {
+                                                TotalNumPairingsWithOneStatus += 1.0;
+                                                    if (bridged) {
+                                                        numPairingsBridgedWithOneStatus += 1.0;
+                                                    }
+                                                }
+                                            }
+                                            
                               }
                                             
                                             /*console.log("totalNumBusinessPairings = "+totalNumBusinessPairings);
@@ -175,10 +212,18 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                             
                             var numSwipesPerUser = (totalNumSwipes/totalNumberOfUsers).toFixed(2);
                             console.log("# swipes per user = "+numSwipesPerUser);
-                                            
                             //% of swipes leading to introductions = # of users connected / total number of swipes
                             var percentageSwipesLeadingToIntros = (100.0*(numBridgedFriendshipPairings + numBridgedFriendshipPairings + numBridgedLovePairings)/totalNumSwipes).toFixed(2);
                             console.log("% of swipes leading to introductions = " + percentageSwipesLeadingToIntros + "%");
+                                            
+                            var percentageOneStatusPairingsBridged = ((numPairingsBridgedWithOneStatus/TotalNumPairingsWithOneStatus)*100.0).toFixed(2);
+                            console.log("% of pairings introduced from pairings with one status = "+percentageOneStatusPairingsBridged+"%");
+                            var percentageTwoStatusPairingsBridged = ((numPairingsBridgedWithTwoStatuses/TotalNumPairingsWithTwoStatuses)*100.0).toFixed(2);
+                            console.log("% of pairings introduced from pairings with one status = "+percentageTwoStatusPairingsBridged+"%");
+                            var percentageNoStatusPairingsBridged = ((numPairingsBridgedWithNoStatuses/TotalNumPairingsWithNoStatuses)*100.0).toFixed(2);
+                            console.log("% of pairings introduced from pairings with one status = "+percentageNoStatusPairingsBridged+"%");
+                                            
+                            
                                                                         
                               
                               },
@@ -333,11 +378,14 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                    
     //9. # of posts per posting user
                    //This is performed in the BridgeStatusQuery
+           
                    
-    //10. % of pairings introduced from pairings with one status vs. % of pairings introduced from pairings that had two statuses vs % of pairings introduced from  introductions with no statuses
-                //% of pairings introduced from pairings with one status
+                   
+    //10. calculating percentages of successful introduction from matches with 0, 1, and 2 pairings for statuses that have been shown to at least one person
+                //% of pairings introduced from pairings with one status = # of pairings with one status introduced / # of pairings with one status
                 //% of pairings introduced from pairings that had two statuses
                 //% of pairings introduced from  introductions with no statuses
+                //These functions are performed in the BridgePairingsQuery
 
                    
     //User Chat Interaction
