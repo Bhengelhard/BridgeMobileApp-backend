@@ -903,11 +903,11 @@ Parse.Cloud.define('revitalizeMyPairs', function(req, res) {
                                           }
                                           });
                               }
-                                if (incrementWhenDone == 0 && results.length == 0) {
+                                /*if (incrementWhenDone == 0 && results.length == 0) {
                                   incrementWhenDone.count += 1;
                                   console.log("There were no potential matches to revitalize");
                                   res.success("There were no potential matches to revitalize");
-                                }
+                                }*/
                               },
                               error: function(error) {
                               console.log("Failed!");
