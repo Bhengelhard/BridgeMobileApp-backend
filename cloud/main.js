@@ -881,6 +881,12 @@ Parse.Cloud.define('revitalizeMyPairs', function(req, res) {
                                     shownToWithoutCurrentUser.push(x);
                                 }
                               }
+//                              var i = shownTo.indexOf(req.user.id);
+//                              if (i > -1) {
+//                                console.log("before splice");
+//                                shownTo.splice(i,1);
+//                                console.log("after splice");
+//                              }
                               result.set("shown_to", shownToWithoutCurrentUser);
                               result.save(null, {
                                           success: function(bridgePairing){
@@ -903,11 +909,11 @@ Parse.Cloud.define('revitalizeMyPairs', function(req, res) {
                                           }
                                           });
                               }
-                                /*if (incrementWhenDone == 0 && results.length == 0) {
-                                  incrementWhenDone.count += 1;
-                                  console.log("There were no potential matches to revitalize");
-                                  res.success("There were no potential matches to revitalize");
-                                }*/
+                              /*if results.length == 0 {
+                              incrementWhenDone.count += 1;
+                              res.success("There were no potential matches to revitalize")
+                              console.log("There were no potential matches to revitalize")
+                              }*/
                               },
                               error: function(error) {
                               console.log("Failed!");
