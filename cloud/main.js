@@ -881,12 +881,6 @@ Parse.Cloud.define('revitalizeMyPairs', function(req, res) {
                                     shownToWithoutCurrentUser.push(x);
                                 }
                               }
-//                              var i = shownTo.indexOf(req.user.id);
-//                              if (i > -1) {
-//                                console.log("before splice");
-//                                shownTo.splice(i,1);
-//                                console.log("after splice");
-//                              }
                               result.set("shown_to", shownToWithoutCurrentUser);
                               result.save(null, {
                                           success: function(bridgePairing){
