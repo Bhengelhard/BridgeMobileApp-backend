@@ -909,7 +909,11 @@ Parse.Cloud.define('revitalizeMyPairs', function(req, res) {
                                           }
                                           });
                               }
-
+                              if results.length == 0 {
+                              incrementWhenDone.count += 1;
+                              res.success("There were no potential matches to revitalize");
+                              console.log("There were no potential matches to revitalize");
+                              }
                               },
                               error: function(error) {
                               console.log("Failed!");
