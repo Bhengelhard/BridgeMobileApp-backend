@@ -13,7 +13,7 @@ Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
                    Parse.Cloud.useMasterKey();
                    console.log("updateUserTableToHaveURLS");
                    var userQuery = new Parse.Query("_User");
-                   userQuery.limit(10000);
+                   userQuery.limit(53);
                    userQuery.find({
                                   success: function(results) {
                                   console.log("length of updateUserTableToHaveURLS -> " + results.length);
