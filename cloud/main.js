@@ -52,25 +52,6 @@ Parse.cloud.define('updateUserTableToHaveURLS', function(req, res) {
                                   }
                    })
                    
-                   userQuery.findObjectsInBackground { (objects, error) in
-                   if error == nil {
-                   if let objects = objects {
-                   for object in objects {
-                   if let photo = object["profile_picture"] as? PFFile {
-                   if let url = photo.url {
-                   object["profile_picture_url"] = url
-                   object.saveInBackground()
-                   }
-                   }
-                   
-                   
-                   }
-                   }
-                   } else {
-                   print("error is not nil - \(error)")
-                   }
-                   }
-                   
                    
                    })
 
