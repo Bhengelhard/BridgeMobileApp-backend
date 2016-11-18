@@ -9,11 +9,12 @@
 //  This class stores the server-side functions that can be called from the users device and run over the cloud
 
 //Converting photo's to urls and adding them to the users table
-Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
+/*Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
                    Parse.Cloud.useMasterKey();
                    console.log("updateUserTableToHaveURLS");
                    var userQuery = new Parse.Query("_User");
                    userQuery.limit(53);
+                   userQuery.equalTo("profile_picture_url", nil);
                    userQuery.exists("profile_picture");
                    userQuery.doesNotExist("profile_picture_url");
                    userQuery.find({
@@ -38,30 +39,30 @@ Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
                                   }
                                   });
                    
-                   });
+                   });*/
 
 
-/*Parse.Cloud.define('updateBridgePairingsTableToHaveURLS', function(req, res) {
+Parse.Cloud.define('updateBridgePairingsTableToHaveURLS', function(req, res) {
                    Parse.Cloud.useMasterKey();
                    console.log("updateUserTableToHaveURLS");
                    var userQuery = new Parse.Query("BridgePairings");
                    userQuery.limit(1200);
-                   userQuery.exists("user1_profile_picture");
-                   userQuery.doesNotExist("user1_profile_picture_url");
+                   userQuery.exists("user2_profile_picture");
+                   userQuery.doesNotExist("user2_profile_picture_url");
                    userQuery.find({
                                   success: function(results) {
                                   console.log("length of updateUserTableToHaveURLS -> " + results.length);
                                   for (var j = 0; j < results.length; ++j) {
                                   var result = results[j];
-                                  var photo1 = result.get("user1_profile_picture");
-                                  var url1 = photo1.url();
-                                  console.log("This is the url1 ->" + url1);
-                                  result.set("user1_profile_picture_url", url1);
+                                  //var photo1 = result.get("user1_profile_picture");
+                                  //var url1 = photo1.url();
+                                  //console.log("This is the url1 ->" + url1);
+                                  //result.set("user1_profile_picture_url", url1);
                                   
                                   var photo2 = result.get("user2_profile_picture");
                                   var url2 = photo2.url();
                                   console.log("This is the url1 ->" + url2);
-                                  result.set("user2_profile_picture_ur2", url2);
+                                  result.set("user2_profile_picture_url", url2);
                                   
                                   result.save();
                                   
@@ -76,7 +77,7 @@ Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
                                   }
                                   });
                    
-                   });*/
+                   });
 
 
 
