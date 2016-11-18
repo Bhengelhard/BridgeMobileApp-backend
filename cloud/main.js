@@ -8,7 +8,74 @@
 //
 //  This class stores the server-side functions that can be called from the users device and run over the cloud
 
+//Converting photo's to urls and adding them to the users table
+Parse.cloud.define('updateUserTableToHaveURLS', function(req, res) {
+                   console.log("updateUserTableToHaveURLS");
+                   
+                   var userQuery = new Parse.Query("_User");
+                   userQuery.limit(10000);
+                   userQuery.find({
+                                  success: function(results) {
+                                  for (var j = 0; j < results.length; ++j) {
+                                  var result = results[j];
+                                  var photo = result.get("profile_picture");
+                                  var url = photo.url;
+                                  console.log(url);
+                                  result.set("profile_picture_url", url);
+                                  result.save(null, {
+                                              success: function(user){
+                                              console.log("Saved after revitalizing")
+                                              incrementWhenDone.count += 1;
+                                              if (incrementWhenDone.count == results.length) {
+                                              console.log(" Saved "+ results.length +" users after updating url");
+                                              res.success("Saved users urls to profile_picture_url");
+                                              }
+                                              
+                                              },
+                                              error: function(user, error){
+                                              console.log(" Not Saved after revitalizing")
+                                              incrementWhenDone.count += 1;
+                                              if (incrementWhenDone.count == results.length) {
+                                              console.log(" Not all of  "+ results.length +" users urls were saved after revitalizing");
+                                              res.error(" Not all the users urls were saved after revitalizing");
+                                              }
+                                              
+                                              }
+                                              });
+                                  
+                                  }
+                                  
+                                  },
+                                  error: function() {
+                                  console.log("Querying _User failed in getMainAppMetrics");
+                                  res.error("Querying _User failed in getMainAppMetrics");
+                                  }
+                   })
+                   
+                   userQuery.findObjectsInBackground { (objects, error) in
+                   if error == nil {
+                   if let objects = objects {
+                   for object in objects {
+                   if let photo = object["profile_picture"] as? PFFile {
+                   if let url = photo.url {
+                   object["profile_picture_url"] = url
+                   object.saveInBackground()
+                   }
+                   }
+                   
+                   
+                   }
+                   }
+                   } else {
+                   print("error is not nil - \(error)")
+                   }
+                   }
+                   
+                   
+                   })
 
+
+//Main App Metrics Script
 Parse.Cloud.define('getMainAppMetrics', function(req, res) {
     console.log("getMainAppMetrics");
     //User Content Interests
