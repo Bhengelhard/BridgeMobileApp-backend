@@ -16,6 +16,7 @@ Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
                    userQuery.limit(10000);
                    userQuery.find({
                                   success: function(results) {
+                                  console.log("length of updateUserTableToHaveURLS -> " + results.length);
                                   for (var j = 0; j < results.length; ++j) {
                                   var result = results[j];
                                   var photo = result.get("profile_picture");
