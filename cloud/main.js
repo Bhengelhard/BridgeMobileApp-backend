@@ -62,6 +62,8 @@ Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
                    console.log("updateUserTableToHaveURLS");
                    var userQuery = new Parse.Query("BridgePairings");
                    userQuery.limit(2);
+                   userQuery.exists("user1_profile_picture");
+                   userQuery.doesNotExist("user1_profile_picture_url");
                    userQuery.find({
                                   success: function(results) {
                                   console.log("length of updateUserTableToHaveURLS -> " + results.length);
