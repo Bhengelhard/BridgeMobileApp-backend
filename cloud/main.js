@@ -9,11 +9,13 @@
 //  This class stores the server-side functions that can be called from the users device and run over the cloud
 
 //Converting photo's to urls and adding them to the users table
-/*Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
+Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
                    Parse.Cloud.useMasterKey();
                    console.log("updateUserTableToHaveURLS");
                    var userQuery = new Parse.Query("_User");
                    userQuery.limit(53);
+                   userQuery.exists("profile_picture");
+                   userQuery.doesNotExist("profile_picture_url");
                    userQuery.find({
                                   success: function(results) {
                                   console.log("length of updateUserTableToHaveURLS -> " + results.length);
@@ -23,26 +25,7 @@
                                     var url = photo.url();
                                     console.log("This is the url ->" + url);
                                     result.set("profile_picture_url", url);
-                                  result.save(null, {
-                                              success: function(user){
-                                              console.log("Saved after revitalizing" + result.id);
-                                              incrementWhenDone.count += 1;
-                                              if (incrementWhenDone.count == results.length) {
-                                              console.log(" Saved "+ results.length +" users after updating url");
-                                              res.success("Saved users urls to profile_picture_url");
-                                              }
-                                              
-                                              },
-                                              error: function(user, error){
-                                              console.log(" Not Saved after revitalizing");
-                                              incrementWhenDone.count += 1;
-                                              if (incrementWhenDone.count == results.length) {
-                                              console.log(" Not all of  "+ results.length +" users urls were saved after revitalizing");
-                                              res.error(" Not all the users urls were saved after revitalizing");
-                                              }
-                                              
-                                              }
-                                              });
+                                  result.save();
                                   
                                   }
                                   
@@ -55,13 +38,14 @@
                                   }
                                   });
                    
-                   });*/
+                   });
 
-Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
+
+/*Parse.Cloud.define('updateBridgePairingsTableToHaveURLS', function(req, res) {
                    Parse.Cloud.useMasterKey();
                    console.log("updateUserTableToHaveURLS");
                    var userQuery = new Parse.Query("BridgePairings");
-                   userQuery.limit(100);
+                   userQuery.limit(1200);
                    userQuery.exists("user1_profile_picture");
                    userQuery.doesNotExist("user1_profile_picture_url");
                    userQuery.find({
@@ -92,7 +76,7 @@ Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
                                   }
                                   });
                    
-                   });
+                   });*/
 
 
 
