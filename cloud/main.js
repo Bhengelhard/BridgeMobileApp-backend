@@ -19,7 +19,7 @@ Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
                                   for (var j = 0; j < results.length; ++j) {
                                   var result = results[j];
                                   var photo = result.get("profile_picture");
-                                  var url = photo.url;
+                                  var url = photo.url();
                                   console.log("This is the url ->" + url);
                                   result.set("profile_picture_url", url);
                                   result.save(null, {
