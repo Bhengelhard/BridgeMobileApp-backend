@@ -42,7 +42,7 @@
                    });*/
 
 
-Parse.Cloud.define('updateBridgePairingsTableToHaveURLS', function(req, res) {
+Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
                    Parse.Cloud.useMasterKey();
                    console.log("updateUserTableToHaveURLS");
                    var userQuery = new Parse.Query("BridgePairings");
@@ -61,7 +61,7 @@ Parse.Cloud.define('updateBridgePairingsTableToHaveURLS', function(req, res) {
                                   
                                   var photo2 = result.get("user2_profile_picture");
                                   var url2 = photo2.url();
-                                  console.log("This is the url1 ->" + url2);
+                                  console.log("This is the url2 ->" + url2);
                                   result.set("user2_profile_picture_url", url2);
                                   
                                   result.save();
