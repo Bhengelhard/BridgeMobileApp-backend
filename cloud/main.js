@@ -10,6 +10,7 @@
 
 //Converting photo's to urls and adding them to the users table
 Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
+                   Parse.Cloud.useMasterKey();
                    console.log("updateUserTableToHaveURLS");
                    
                    var userQuery = new Parse.Query("_User");
