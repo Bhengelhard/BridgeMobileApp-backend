@@ -77,26 +77,7 @@ Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
                                   console.log("This is the url1 ->" + url2);
                                   result.set("user2_profile_picture_url", url2);
                                   
-                                  result.save(null, {
-                                              success: function(bridgePairing){
-                                              console.log("Saved after revitalizing" + result.id);
-                                              incrementWhenDone.count += 1;
-                                              if (incrementWhenDone.count == results.length) {
-                                              console.log(" Saved "+ results.length +" pair after updating url");
-                                              res.success("Saved pair urls to user1/2_profile_picture_url");
-                                              }
-                                              
-                                              },
-                                              error: function(bridgePairing, error){
-                                              console.log(" Not Saved after revitalizing");
-                                              incrementWhenDone.count += 1;
-                                              if (incrementWhenDone.count == results.length) {
-                                              console.log(" Not all of  "+ results.length +" users urls were saved after revitalizing");
-                                              res.error(" Not all the users urls were saved after revitalizing");
-                                              }
-                                              
-                                              }
-                                              });
+                                  result.save();
                                   
                                   }
                                   
