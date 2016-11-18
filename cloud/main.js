@@ -8,77 +8,6 @@
 //
 //  This class stores the server-side functions that can be called from the users device and run over the cloud
 
-//Converting photo's to urls and adding them to the users table
-/*Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
-                   Parse.Cloud.useMasterKey();
-                   console.log("updateUserTableToHaveURLS");
-                   var userQuery = new Parse.Query("_User");
-                   userQuery.limit(53);
-                   userQuery.equalTo("profile_picture_url", nil);
-                   userQuery.exists("profile_picture");
-                   userQuery.doesNotExist("profile_picture_url");
-                   userQuery.find({
-                                  success: function(results) {
-                                  console.log("length of updateUserTableToHaveURLS -> " + results.length);
-                                  for (var j = 0; j < results.length; ++j) {
-                                    var result = results[j];
-                                    var photo = result.get("profile_picture");
-                                    var url = photo.url();
-                                    console.log("This is the url ->" + url);
-                                    result.set("profile_picture_url", url);
-                                  result.save();
-                                  
-                                  }
-                                  
-                                  },
-                                  error: function() {
-                                  console.log("Querying _User failed in updateUserTableToHaveURLS");
-                                  res.error("Querying _User failed in updateUserTableToHaveURLS");
-                                  
-
-                                  }
-                                  });
-                   
-                   });*/
-
-
-Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
-                   Parse.Cloud.useMasterKey();
-                   console.log("updateUserTableToHaveURLS");
-                   var userQuery = new Parse.Query("BridgePairings");
-                   userQuery.limit(1200);
-                   userQuery.exists("user2_profile_picture");
-                   userQuery.doesNotExist("user2_profile_picture_url");
-                   userQuery.find({
-                                  success: function(results) {
-                                  console.log("length of updateUserTableToHaveURLS -> " + results.length);
-                                  for (var j = 0; j < results.length; ++j) {
-                                  var result = results[j];
-                                  //var photo1 = result.get("user1_profile_picture");
-                                  //var url1 = photo1.url();
-                                  //console.log("This is the url1 ->" + url1);
-                                  //result.set("user1_profile_picture_url", url1);
-                                  
-                                  var photo2 = result.get("user2_profile_picture");
-                                  var url2 = photo2.url();
-                                  console.log("This is the url2 ->" + url2);
-                                  result.set("user2_profile_picture_url", url2);
-                                  
-                                  result.save();
-                                  
-                                  }
-                                  
-                                  },
-                                  error: function() {
-                                  console.log("Querying _User failed in updateUserTableToHaveURLS");
-                                  res.error("Querying _User failed in updateUserTableToHaveURLS");
-                                  
-                                  
-                                  }
-                                  });
-                   
-                   });
-
 
 
 //Main App Metrics Script
@@ -1752,4 +1681,75 @@ Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
  console.log("Failed!");
  res.error("Not saved");
  }
+ });*/
+
+//Converting photo's to urls and adding them to the users table
+/*Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
+ Parse.Cloud.useMasterKey();
+ console.log("updateUserTableToHaveURLS");
+ var userQuery = new Parse.Query("_User");
+ userQuery.limit(53);
+ userQuery.equalTo("profile_picture_url", nil);
+ userQuery.exists("profile_picture");
+ userQuery.doesNotExist("profile_picture_url");
+ userQuery.find({
+ success: function(results) {
+ console.log("length of updateUserTableToHaveURLS -> " + results.length);
+ for (var j = 0; j < results.length; ++j) {
+ var result = results[j];
+ var photo = result.get("profile_picture");
+ var url = photo.url();
+ console.log("This is the url ->" + url);
+ result.set("profile_picture_url", url);
+ result.save();
+ 
+ }
+ 
+ },
+ error: function() {
+ console.log("Querying _User failed in updateUserTableToHaveURLS");
+ res.error("Querying _User failed in updateUserTableToHaveURLS");
+ 
+ 
+ }
+ });
+ 
+ });*/
+
+//Converting photo's to urls and adding them to the BridgePairings table
+/*Parse.Cloud.define('updateBridgePairingsTableToHaveURLS', function(req, res) {
+ Parse.Cloud.useMasterKey();
+ console.log("updateUserTableToHaveURLS");
+ var userQuery = new Parse.Query("BridgePairings");
+ userQuery.limit(1200);
+ userQuery.exists("user2_profile_picture");
+ userQuery.doesNotExist("user2_profile_picture_url");
+ userQuery.find({
+ success: function(results) {
+ console.log("length of updateUserTableToHaveURLS -> " + results.length);
+ for (var j = 0; j < results.length; ++j) {
+ var result = results[j];
+ //var photo1 = result.get("user1_profile_picture");
+ //var url1 = photo1.url();
+ //console.log("This is the url1 ->" + url1);
+ //result.set("user1_profile_picture_url", url1);
+ 
+ var photo2 = result.get("user2_profile_picture");
+ var url2 = photo2.url();
+ console.log("This is the url2 ->" + url2);
+ result.set("user2_profile_picture_url", url2);
+ 
+ result.save();
+ 
+ }
+ 
+ },
+ error: function() {
+ console.log("Querying _User failed in updateUserTableToHaveURLS");
+ res.error("Querying _User failed in updateUserTableToHaveURLS");
+ 
+ 
+ }
+ });
+ 
  });*/
