@@ -9,7 +9,7 @@
 //  This class stores the server-side functions that can be called from the users device and run over the cloud
 
 //Converting photo's to urls and adding them to the users table
-Parse.cloud.define('updateUserTableToHaveURLS', function(req, res) {
+Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
                    console.log("updateUserTableToHaveURLS");
                    
                    var userQuery = new Parse.Query("_User");
