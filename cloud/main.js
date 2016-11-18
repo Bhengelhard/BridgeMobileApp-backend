@@ -14,7 +14,6 @@ Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
                    console.log("updateUserTableToHaveURLS");
                    var userQuery = new Parse.Query("_User");
                    userQuery.limit(10000);
-                   userQuery.equalTo("profile_picture_url", undefined);
                    userQuery.find({
                                   success: function(results) {
                                   for (var j = 0; j < results.length; ++j) {
@@ -25,7 +24,7 @@ Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
                                   result.set("profile_picture_url", url);
                                   result.save(null, {
                                               success: function(user){
-                                              console.log("Saved after revitalizing" + result.objectId)
+                                              console.log("Saved after revitalizing" + result.id);
                                               incrementWhenDone.count += 1;
                                               if (incrementWhenDone.count == results.length) {
                                               console.log(" Saved "+ results.length +" users after updating url");
@@ -34,7 +33,7 @@ Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
                                               
                                               },
                                               error: function(user, error){
-                                              console.log(" Not Saved after revitalizing")
+                                              console.log(" Not Saved after revitalizing");
                                               incrementWhenDone.count += 1;
                                               if (incrementWhenDone.count == results.length) {
                                               console.log(" Not all of  "+ results.length +" users urls were saved after revitalizing");
@@ -48,8 +47,8 @@ Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
                                   
                                   },
                                   error: function() {
-                                  console.log("Querying _User failed in getMainAppMetrics");
-                                  res.error("Querying _User failed in getMainAppMetrics");
+                                  console.log("Querying _User failed in updateUserTableToHaveURLS");
+                                  res.error("Querying _User failed in updateUserTableToHaveURLS");
                                   
 
                                   }
