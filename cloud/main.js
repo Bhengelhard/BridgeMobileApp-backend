@@ -61,7 +61,7 @@ Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
                    Parse.Cloud.useMasterKey();
                    console.log("updateUserTableToHaveURLS");
                    var userQuery = new Parse.Query("BridgePairings");
-                   userQuery.limit(1200);
+                   userQuery.limit(100);
                    userQuery.exists("user1_profile_picture");
                    userQuery.doesNotExist("user1_profile_picture_url");
                    userQuery.find({
