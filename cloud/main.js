@@ -50,11 +50,13 @@ Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
                                   error: function() {
                                   console.log("Querying _User failed in getMainAppMetrics");
                                   res.error("Querying _User failed in getMainAppMetrics");
+                                  
+
                                   }
-                   })
+                                  });
+                   useMasterKey: true;
                    
-                   
-                   })
+                   });
 
 
 //Main App Metrics Script
