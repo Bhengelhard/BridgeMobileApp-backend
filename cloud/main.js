@@ -12,7 +12,6 @@
 Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
                    Parse.Cloud.useMasterKey();
                    console.log("updateUserTableToHaveURLS");
-                   
                    var userQuery = new Parse.Query("_User");
                    userQuery.limit(10000);
                    userQuery.find({
@@ -21,11 +20,11 @@ Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
                                   var result = results[j];
                                   var photo = result.get("profile_picture");
                                   var url = photo.url;
-                                  console.log(url);
+                                  console.log("This is the url ->" + url);
                                   result.set("profile_picture_url", url);
                                   result.save(null, {
                                               success: function(user){
-                                              console.log("Saved after revitalizing")
+                                              console.log("Saved after revitalizing" + result.objectId)
                                               incrementWhenDone.count += 1;
                                               if (incrementWhenDone.count == results.length) {
                                               console.log(" Saved "+ results.length +" users after updating url");
@@ -54,7 +53,6 @@ Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
 
                                   }
                                   });
-                   useMasterKey: true;
                    
                    });
 
