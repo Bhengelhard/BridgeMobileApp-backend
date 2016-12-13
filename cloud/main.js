@@ -1761,6 +1761,7 @@ Parse.Cloud.define('addProfilePicturesBackForUser1', function(req, res) {
                                        var query = new Parse.Query("_User");
                                        query.exists("profile_picture");
                                        //query.limit(1);
+                                        query.skip(1);
                                        query.first({
                                                   success: function(result) {
                                                   //console.log(results.length);
