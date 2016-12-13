@@ -1760,24 +1760,23 @@ Parse.Cloud.define('addProfilePicturesBackForUser1', function(req, res) {
                                        Parse.Cloud.useMasterKey();
                                        var query = new Parse.Query("_User");
                                        query.exists("profile_picture");
-                                       query.exists("objectId");
                                        query.limit(70);
                                        query.find({
                                                   success: function(results) {
                                                   for (var j = 0; j < results.length; ++j) {
                                                   var result = results[j];
-                                                  var userId = result.id;
-                                                  var profilePicture = result.get("profile_picture");
-                                                  console.log(userId)
+                                                  //var profilePicture = result.get("profile_picture");
+                                                  //console.log(userId)
                                                   var bpQuery = new Parse.Query("BridgePairings");
                                                   bpQuery.doesNotExist("user1_profile_picture");
-                                                  bpQuery.equalTo("user_objectId1", userId);
+                                                  bpQuery.equalTo("user_objectId1", result.id);
                                                   bpQuery.limit(2000);
                                                   bpQuery.find({
                                                                success: function(pairings) {
                                                                for (var i = 0; i < results.length; ++i) {
                                                                pair = pairings[i];
-                                                               pair.set("user1_profile_picture", profilePicture);
+                                                               console.log(pair.id)
+                                                               pair.set("user1_profile_picture", result.get("profile_picture"));
                                                                pair.save();
                                                                }
                                                                },
