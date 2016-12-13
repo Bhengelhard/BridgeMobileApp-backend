@@ -1761,7 +1761,7 @@ Parse.Cloud.define('addProfilePicturesBackForUser1', function(req, res) {
                                        var query = new Parse.Query("_User");
                                        query.exists("profile_picture");
                                        query.exists("objectId");
-                                       query.limit(2000);
+                                       query.limit(70);
                                        query.find({
                                                   success: function(results) {
                                                   for (var j = 0; j < results.length; ++j) {
@@ -1770,8 +1770,9 @@ Parse.Cloud.define('addProfilePicturesBackForUser1', function(req, res) {
                                                   var profilePicture = result.get("profile_picture");
                                                   console.log(userId)
                                                   var bpQuery = new Parse.Query("BridgePairings");
-                                                  bpQuery.limit = 2000
+                                                  bpQuery.doesNotExist("user1_profile_picture");
                                                   bpQuery.equalTo("user_objectId1", userId);
+                                                  bpQuery.limit(2000);
                                                   bpQuery.find({
                                                                success: function(pairings) {
                                                                for (var i = 0; i < results.length; ++i) {
@@ -1799,7 +1800,7 @@ Parse.Cloud.define('addProfilePicturesBackForUser1', function(req, res) {
                                        var query = new Parse.Query("_User");
                                        query.exists("profile_picture");
                                        query.exists("objectId");
-                                       query.limit(2000);
+                                       query.limit(70);
                                        query.find({
                                                   success: function(results) {
                                                   for (var j = 0; j < results.length; ++j) {
@@ -1807,8 +1808,9 @@ Parse.Cloud.define('addProfilePicturesBackForUser1', function(req, res) {
                                                   var userId = result.id;
                                                   var profilePicture = result.get("profile_picture");
                                                   var bpQuery = new Parse.Query("BridgePairings");
-                                                  bpQuery.limit = 2000
                                                   bpQuery.equalTo("user_objectId2", userId);
+                                                  bpQuery.doesNotExist("user2_profile_picture");
+                                                  bpQuery.limit(2000);
                                                   bpQuery.find({
                                                                success: function(pairings) {
                                                                for (var i = 0; i < results.length; ++i) {
