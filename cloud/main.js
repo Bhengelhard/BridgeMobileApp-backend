@@ -1826,7 +1826,7 @@ Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
                                                   console.log("addProfielPicturesBack didn't work")
                                                   res.error("addProfielPicturesBackdidn't work");
                                                   }
-                                                  });
+                                                  }); 
                                        
                                        });
                     
