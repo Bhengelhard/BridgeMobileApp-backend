@@ -931,8 +931,10 @@ function createNewPairing(req, user, status1, status2, bridgeType, shownToForPai
     bridgePairing.set("user1_bridge_status",status1);
     bridgePairing.set("user2_bridge_status",status2);
     
-    bridgePairing.set("user1_profile_picture",user.get("profile_picture"));
-    bridgePairing.set("user2_profile_picture",req.user.get("profile_picture"));
+    //bridgePairing.set("user1_profile_picture",user.get("profile_picture"));
+    //bridgePairing.set("user2_profile_picture",req.user.get("profile_picture"));
+    bridgePairing.set("user1_profile_picture_url",user.get("profile_picture_url"));
+    bridgePairing.set("user2_profile_picture_url",req.user.get("profile_picture_url"));
     
     bridgePairing.set("bridge_type",bridgeType);
     bridgePairing.set("user1_city",user.get("city"));
