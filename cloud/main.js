@@ -1753,5 +1753,144 @@ Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
  
  }
  });
+                    
+                    
+                    Parse.Cloud.define('addProfilePicturesBackForUser1', function(req, res) {
+                                       Parse.Cloud.useMasterKey();
+                                       var query = new Parse.Query("_User");
+                                       query.exists("profile_picture");
+                                       query.exists("objectId");
+                                       query.limit(2000);
+                                       query.find({
+                                                  success: function(results) {
+                                                  for (var j = 0; j < results.length; ++j) {
+                                                  var result = results[j];
+                                                  var userId = result.get("objectId");
+                                                  var profilePicture = result.get("profile_picture");
+                                                  var bpQuery = new Parse.Query("BridgePairings");
+                                                  bpQuery.limit = 2000
+                                                  bpQuery.whereKey("user_objectId1", equalTo: userId);
+                                                  bpQuery.find({
+                                                               success: function(pairings) {
+                                                               for (var i = 0; i < results.length; ++i) {
+                                                               pair = pairings[i];
+                                                               pair.set("user1_profile_picture", profilePicture);
+                                                               pair.save();
+                                                               }
+                                                               },
+                                                               error: function() {
+                                                               console.log("bpQuery didn't work");
+                                                               res.error("bpQuery didn't work");
+                                                               }
+                                                               });
+                                                  }
+                                                  },
+                                                  error: function() {
+                                                  console.log("addProfielPicturesBack didn't work")
+                                                  res.error("addProfielPicturesBackdidn't work");
+                                                  }
+                                                  });
+                                       
+                                       });
+                    Parse.Cloud.define('addProfilePicturesBackForUser2', function(req, res) {
+                                       Parse.Cloud.useMasterKey();
+                                       var query = new Parse.Query("_User");
+                                       query.exists("profile_picture");
+                                       query.exists("objectId");
+                                       query.limit(2000);
+                                       query.find({
+                                                  success: function(results) {
+                                                  for (var j = 0; j < results.length; ++j) {
+                                                  var result = results[j];
+                                                  var userId = result.get("objectId");
+                                                  var profilePicture = result.get("profile_picture");
+                                                  var bpQuery = new Parse.Query("BridgePairings");
+                                                  bpQuery.limit = 2000
+                                                  bpQuery.whereKey("user_objectId2", equalTo: userId);
+                                                  bpQuery.find({
+                                                               success: function(pairings) {
+                                                               for (var i = 0; i < results.length; ++i) {
+                                                               pair = pairings[i];
+                                                               pair.set("user2_profile_picture", profilePicture);
+                                                               pair.save();
+                                                               }
+                                                               },
+                                                               error: function() {
+                                                               console.log("bpQuery didn't work");
+                                                               res.error("bpQuery didn't work");
+                                                               }
+                                                               });
+                                                  }
+                                                  },
+                                                  error: function() {
+                                                  console.log("addProfielPicturesBack didn't work")
+                                                  res.error("addProfielPicturesBackdidn't work");
+                                                  }
+                                                  });
+                                       
+                                       });
+                    
+                    
+                    
+//                    //user1 picture
+//                    let query: PFQuery = PFQuery(className: "_User")
+//                    query.limit = 2000
+//                    query.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+//                    if error != nil {
+//                    print(error)
+//                    } else if let objects = objects {
+//                    for object in objects {
+//                    if let userId = object["objectId"] as? String {
+//                    if let profilePicture = object["profile_picture"] as? PFFile {
+//                    let bpQuery : PFQuery = PFQuery(className: "BridgePairings")
+//                    bpQuery.whereKey("user_objectId1", equalTo: userId)
+//                    bpQuery.limit = 2000
+//                    bpQuery.findObjectsInBackground(block: { (pairings: [PFObject]?, error2: Error?) in
+//                                                    if error2 != nil {
+//                                                    
+//                                                    } else if let pairings = pairings {
+//                                                    for pair in pairings {
+//                                                    pair["user1_profile_picture"] = profilePicture
+//                                                    pair.saveInBackground()
+//                                                    print("user1 picture saved")
+//                                                    }
+//                                                    }
+//                                                    })
+//                    }
+//                    }
+//                    }
+//                    }
+//                    }
+//                    
+//                    
+//                    //user2 picture
+//                    let query2: PFQuery = PFQuery(className: "_User")
+//                    query2.limit = 2000
+//                    query2.findObjectsInBackground { (objects: [PFObject]?, error: Error?) in
+//                    if error != nil {
+//                    print(error)
+//                    } else if let objects = objects {
+//                    for object in objects {
+//                    if let userId = object["objectId"] as? String {
+//                    if let profilePicture = object["profile_picture"] as? PFFile {
+//                    let bpQuery : PFQuery = PFQuery(className: "BridgePairings")
+//                    bpQuery.whereKey("user_objectId2", equalTo: userId)
+//                    bpQuery.limit = 2000
+//                    bpQuery.findObjectsInBackground(block: { (pairings: [PFObject]?, error2: Error?) in
+//                                                    if error2 != nil {
+//                                                    
+//                                                    } else if let pairings = pairings {
+//                                                    for pair in pairings {
+//                                                    pair["user2_profile_picture"] = profilePicture
+//                                                    pair.saveInBackground()
+//                                                    print("user2 picture saved")
+//                                                    }
+//                                                    }
+//                                                    })
+//                    }
+//                    }
+//                    }
+//                    }
+//                    }
  
  });
