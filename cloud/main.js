@@ -1722,7 +1722,7 @@ Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
  console.log("updateUserTableToHaveURLS");
  var userQuery = new Parse.Query("BridgePairings");
  userQuery.limit(2000);
- userQuery.exists("user2_profile_picture");
+ userQuery.exists("user1_profile_picture");
  //userQuery.doesNotExist("user1_profile_picture_url");
  userQuery.find({
  success: function(results) {
@@ -1734,10 +1734,10 @@ Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
  //console.log("This is the url1 ->" + url1);
  //result.set("user1_profile_picture_url", url1);
  
- var photo2 = result.get("user2_profile_picture");
+ var photo2 = result.get("user1_profile_picture");
  var url2 = photo2.url();
  console.log("This is the url1 ->" + url2);
- result.set("user2_profile_picture_url", url2);
+ result.set("user1_profile_picture_url", url2);
  
  result.save();
  
