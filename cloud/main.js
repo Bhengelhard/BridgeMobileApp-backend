@@ -1753,9 +1753,10 @@ Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
  
  }
  });
+ });
                     
                     
-                    Parse.Cloud.define('addProfilePicturesBackForUser1', function(req, res) {
+Parse.Cloud.define('addProfilePicturesBackForUser1', function(req, res) {
                                        Parse.Cloud.useMasterKey();
                                        var query = new Parse.Query("_User");
                                        query.exists("profile_picture");
@@ -1768,22 +1769,22 @@ Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
                                                   var userId = result.get("objectId");
                                                   var profilePicture = result.get("profile_picture");
                                                   console.log(userId)
-//                                                  var bpQuery = new Parse.Query("BridgePairings");
-//                                                  bpQuery.limit = 2000
-//                                                  bpQuery.equalTo("user_objectId1", userId);
-//                                                  bpQuery.find({
-//                                                               success: function(pairings) {
-//                                                               for (var i = 0; i < results.length; ++i) {
-//                                                               pair = pairings[i];
-//                                                               pair.set("user1_profile_picture", profilePicture);
-//                                                               pair.save();
-//                                                               }
-//                                                               },
-//                                                               error: function() {
-//                                                               console.log("bpQuery didn't work");
-//                                                               res.error("bpQuery didn't work");
-//                                                               }
-//                                                               });
+                                                  var bpQuery = new Parse.Query("BridgePairings");
+                                                  bpQuery.limit = 2000
+                                                  bpQuery.equalTo("user_objectId1", userId);
+                                                  bpQuery.find({
+                                                               success: function(pairings) {
+                                                               for (var i = 0; i < results.length; ++i) {
+                                                               pair = pairings[i];
+                                                               pair.set("user1_profile_picture", profilePicture);
+                                                               pair.save();
+                                                               }
+                                                               },
+                                                               error: function() {
+                                                               console.log("bpQuery didn't work");
+                                                               res.error("bpQuery didn't work");
+                                                               }
+                                                               });
                                                   }
                                                   },
                                                   error: function() {
@@ -1893,5 +1894,3 @@ Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
 //                    }
 //                    }
 //                    }
- 
- });
