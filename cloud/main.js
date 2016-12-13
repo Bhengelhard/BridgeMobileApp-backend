@@ -1684,7 +1684,7 @@ Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
  });*/
 
 //Converting photo's to urls and adding them to the users table
-/*Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
+Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
  Parse.Cloud.useMasterKey();
  console.log("updateUserTableToHaveURLS");
  var userQuery = new Parse.Query("_User");
@@ -1714,10 +1714,10 @@ Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
  }
  });
  
- });*/
+ });
 
 //Converting photo's to urls and adding them to the BridgePairings table
-/*Parse.Cloud.define('updateBridgePairingsTableToHaveURLS', function(req, res) {
+ Parse.Cloud.define('updateBridgePairingsTableToHaveURLS', function(req, res) {
  Parse.Cloud.useMasterKey();
  console.log("updateUserTableToHaveURLS");
  var userQuery = new Parse.Query("BridgePairings");
@@ -1752,4 +1752,4 @@ Parse.Cloud.define('updateBridgePairingsTable', function(req, res) {
  }
  });
  
- });*/
+ });
