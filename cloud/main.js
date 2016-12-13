@@ -1757,85 +1757,96 @@ Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
                     
                     
 Parse.Cloud.define('addProfilePicturesBackForUser1', function(req, res) {
+                   for (var z = 3; z < 60; z++) {
+                   Parse.Cloud.useMasterKey();
+                   var query = new Parse.Query("_User");
+                   query.exists("profile_picture");
+                   //query.limit(1);
+                   query.skip(z);
+                   query.first({
+                               success: function(result) {
+                               //console.log(results.length);
+                               //for (var j = 0; j < results.length; ++j) {
+                               //var result = results[j];
+                               var profilePicture = result.get("profile_picture");
+                               console.log(profilePicture);
+                               console.log("-----profile picture above-------")
+                               console.log(result.id);
+                               console.log("----- user's id above ---------");
+                               var bpQuery = new Parse.Query("BridgePairings");
+                               bpQuery.doesNotExist("user1_profile_picture");
+                               bpQuery.equalTo("user_objectId1", result.id);
+                               //bpQuery.limit(1);
+                               bpQuery.find({
+                                            success: function(pairings) {
+                                            console.log(pairings.length);
+                                            for (var i = 0; i < pairings.length; ++i) {
+                                            var pair = pairings[i];
+                                            console.log(pair.id);
+                                            pair.set("user1_profile_picture", profilePicture);
+                                            pair.save();
+                                            }
+                                            },
+                                            error: function() {
+                                            console.log("bpQuery didn't work");
+                                            res.error("bpQuery didn't work");
+                                            }
+                                            });
+                               //}
+                               },
+                               error: function() {
+                               console.log("addProfielPicturesBack didn't work")
+                               res.error("addProfielPicturesBackdidn't work");
+                               }
+                               });
+                   }
+                   
+                   
+                                       });
+                    Parse.Cloud.define('addProfilePicturesBackForUser2', function(req, res) {
+                                       for (var z = 0; z < 60; z++) {
                                        Parse.Cloud.useMasterKey();
                                        var query = new Parse.Query("_User");
                                        query.exists("profile_picture");
                                        //query.limit(1);
-                                        query.skip(2);
+                                       query.skip(z);
                                        query.first({
-                                                  success: function(result) {
-                                                  //console.log(results.length);
-                                                  //for (var j = 0; j < results.length; ++j) {
-                                                  //var result = results[j];
-                                                  var profilePicture = result.get("profile_picture");
-                                                  console.log(profilePicture);
-                                                  console.log("-----profile picture above-------")
-                                                  console.log(result.id);
-                                                  console.log("----- user's id above ---------");
-                                                  var bpQuery = new Parse.Query("BridgePairings");
-                                                  bpQuery.doesNotExist("user1_profile_picture");
-                                                  bpQuery.equalTo("user_objectId1", result.id);
-                                                  //bpQuery.limit(1);
-                                                  bpQuery.find({
-                                                               success: function(pairings) {
-                                                               console.log(pairings.length);
-                                                               for (var i = 0; i < pairings.length; ++i) {
-                                                               var pair = pairings[i];
-                                                               console.log(pair.id);
-                                                               pair.set("user1_profile_picture", profilePicture);
-                                                               pair.save();
-                                                               }
-                                                               },
-                                                               error: function() {
-                                                               console.log("bpQuery didn't work");
-                                                               res.error("bpQuery didn't work");
-                                                               }
-                                                               });
-                                                  //}
-                                                  },
-                                                  error: function() {
-                                                  console.log("addProfielPicturesBack didn't work")
-                                                  res.error("addProfielPicturesBackdidn't work");
-                                                  }
-                                                  });
-                                       
-                                       });
-                    Parse.Cloud.define('addProfilePicturesBackForUser2', function(req, res) {
-                                       Parse.Cloud.useMasterKey();
-                                       var query = new Parse.Query("_User");
-                                       query.exists("profile_picture");
-                                       query.exists("objectId");
-                                       query.limit(70);
-                                       query.find({
-                                                  success: function(results) {
-                                                  for (var j = 0; j < results.length; ++j) {
-                                                  var result = results[j];
-                                                  var userId = result.id;
-                                                  var profilePicture = result.get("profile_picture");
-                                                  var bpQuery = new Parse.Query("BridgePairings");
-                                                  bpQuery.equalTo("user_objectId2", userId);
-                                                  bpQuery.doesNotExist("user2_profile_picture");
-                                                  bpQuery.limit(2000);
-                                                  bpQuery.find({
-                                                               success: function(pairings) {
-                                                               for (var i = 0; i < pairings.length; ++i) {
-                                                               pair = pairings[i];
-                                                               pair.set("user2_profile_picture", profilePicture);
-                                                               pair.save();
-                                                               }
-                                                               },
-                                                               error: function() {
-                                                               console.log("bpQuery didn't work");
-                                                               res.error("bpQuery didn't work");
-                                                               }
-                                                               });
-                                                  }
-                                                  },
-                                                  error: function() {
-                                                  console.log("addProfielPicturesBack didn't work")
-                                                  res.error("addProfielPicturesBackdidn't work");
-                                                  }
-                                                  });
+                                                   success: function(result) {
+                                                   //console.log(results.length);
+                                                   //for (var j = 0; j < results.length; ++j) {
+                                                   //var result = results[j];
+                                                   var profilePicture = result.get("profile_picture");
+                                                   console.log(profilePicture);
+                                                   console.log("-----profile picture above-------")
+                                                   console.log(result.id);
+                                                   console.log("----- user's id above ---------");
+                                                   var bpQuery = new Parse.Query("BridgePairings");
+                                                   bpQuery.doesNotExist("user2_profile_picture");
+                                                   bpQuery.equalTo("user_objectId2", result.id);
+                                                   //bpQuery.limit(1);
+                                                   bpQuery.find({
+                                                                success: function(pairings) {
+                                                                console.log(pairings.length);
+                                                                for (var i = 0; i < pairings.length; ++i) {
+                                                                var pair = pairings[i];
+                                                                console.log(pair.id);
+                                                                pair.set("user2_profile_picture", profilePicture);
+                                                                pair.save();
+                                                                }
+                                                                },
+                                                                error: function() {
+                                                                console.log("bpQuery didn't work");
+                                                                res.error("bpQuery didn't work");
+                                                                }
+                                                                });
+                                                   //}
+                                                   },
+                                                   error: function() {
+                                                   console.log("addProfielPicturesBack didn't work")
+                                                   res.error("addProfielPicturesBackdidn't work");
+                                                   }
+                                                   });
+                                       }
                                        
                                        });
                     
