@@ -1769,7 +1769,7 @@ Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
                                                   var profilePicture = result.get("profile_picture");
                                                   var bpQuery = new Parse.Query("BridgePairings");
                                                   bpQuery.limit = 2000
-                                                  bpQuery.whereKey("user_objectId1", equalTo: userId);
+                                                  bpQuery.equalTo("user_objectId1", userId);
                                                   bpQuery.find({
                                                                success: function(pairings) {
                                                                for (var i = 0; i < results.length; ++i) {
@@ -1806,7 +1806,7 @@ Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
                                                   var profilePicture = result.get("profile_picture");
                                                   var bpQuery = new Parse.Query("BridgePairings");
                                                   bpQuery.limit = 2000
-                                                  bpQuery.whereKey("user_objectId2", equalTo: userId);
+                                                  bpQuery.equalTo("user_objectId2", userId);
                                                   bpQuery.find({
                                                                success: function(pairings) {
                                                                for (var i = 0; i < results.length; ++i) {
@@ -1826,7 +1826,7 @@ Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
                                                   console.log("addProfielPicturesBack didn't work")
                                                   res.error("addProfielPicturesBackdidn't work");
                                                   }
-                                                  }); 
+                                                  });
                                        
                                        });
                     
