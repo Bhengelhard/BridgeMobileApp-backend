@@ -1766,10 +1766,11 @@ Parse.Cloud.define('addProfilePicturesBackForUser1', function(req, res) {
                                        query.limit(1);
                                        query.find({
                                                   success: function(results) {
+                                                  console.log(results.length);
                                                   for (var j = 0; j < results.length; ++j) {
                                                   var result = results[j];
                                                   var profilePicture = result.get("profile_picture");
-                                                  console.log(result.id)
+                                                  console.log(result.id);
                                                   console.log("----- user's id ---------");
                                                   var bpQuery = new Parse.Query("BridgePairings");
                                                   bpQuery.doesNotExist("user1_profile_picture");
@@ -1777,6 +1778,7 @@ Parse.Cloud.define('addProfilePicturesBackForUser1', function(req, res) {
                                                   bpQuery.limit(1);
                                                   bpQuery.find({
                                                                success: function(pairings) {
+                                                               console.log(pairings.length);
                                                                for (var i = 0; i < pairings.length; ++i) {
                                                                pair = pairings[i];
                                                                console.log(pair.id);
