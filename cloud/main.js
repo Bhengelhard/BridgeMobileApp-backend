@@ -1775,15 +1775,15 @@ Parse.Cloud.define('addProfilePicturesBackForUser1', function(req, res) {
                                                   bpQuery.doesNotExist("user1_profile_picture");
                                                   bpQuery.equalTo("user_objectId1", result.id);
                                                   //bpQuery.limit(1);
-                                                  bpQuery.first({
-                                                               success: function(pair) {
-                                                               //console.log(pairings.length);
-                                                               //for (var i = 0; i < pairings.length; ++i) {
-                                                               //pair = pairings[i];
+                                                  bpQuery.find({
+                                                               success: function(pairings) {
+                                                               console.log(pairings.length);
+                                                               for (var i = 0; i < pairings.length; ++i) {
+                                                               var pair = pairings[i];
                                                                console.log(pair.id);
                                                                pair.set("user1_profile_picture", profilePicture);
                                                                pair.save();
-                                                               //}
+                                                               }
                                                                },
                                                                error: function() {
                                                                console.log("bpQuery didn't work");
