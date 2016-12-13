@@ -1762,10 +1762,10 @@ Parse.Cloud.define('addProfilePicturesBackForUser1', function(req, res) {
                                        query.exists("profile_picture");
                                        //query.limit(1);
                                        query.first({
-                                                  success: function(results) {
-                                                  console.log(results.length);
-                                                  for (var j = 0; j < results.length; ++j) {
-                                                  var result = results[j];
+                                                  success: function(result) {
+                                                  //console.log(results.length);
+                                                  //for (var j = 0; j < results.length; ++j) {
+                                                  //var result = results[j];
                                                   var profilePicture = result.get("profile_picture");
                                                   console.log(profilePicture);
                                                   console.log("-----profile picture above-------")
@@ -1776,21 +1776,21 @@ Parse.Cloud.define('addProfilePicturesBackForUser1', function(req, res) {
                                                   bpQuery.equalTo("user_objectId1", result.id);
                                                   //bpQuery.limit(1);
                                                   bpQuery.first({
-                                                               success: function(pairings) {
-                                                               console.log(pairings.length);
-                                                               for (var i = 0; i < pairings.length; ++i) {
-                                                               pair = pairings[i];
+                                                               success: function(pair) {
+                                                               //console.log(pairings.length);
+                                                               //for (var i = 0; i < pairings.length; ++i) {
+                                                               //pair = pairings[i];
                                                                console.log(pair.id);
                                                                pair.set("user1_profile_picture", profilePicture);
                                                                pair.save();
-                                                               }
+                                                               //}
                                                                },
                                                                error: function() {
                                                                console.log("bpQuery didn't work");
                                                                res.error("bpQuery didn't work");
                                                                }
                                                                });
-                                                  }
+                                                  //}
                                                   },
                                                   error: function() {
                                                   console.log("addProfielPicturesBack didn't work")
