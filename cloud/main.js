@@ -1767,22 +1767,23 @@ Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
                                                   var result = results[j];
                                                   var userId = result.get("objectId");
                                                   var profilePicture = result.get("profile_picture");
-                                                  var bpQuery = new Parse.Query("BridgePairings");
-                                                  bpQuery.limit = 2000
-                                                  bpQuery.equalTo("user_objectId1", userId);
-                                                  bpQuery.find({
-                                                               success: function(pairings) {
-                                                               for (var i = 0; i < results.length; ++i) {
-                                                               pair = pairings[i];
-                                                               pair.set("user1_profile_picture", profilePicture);
-                                                               pair.save();
-                                                               }
-                                                               },
-                                                               error: function() {
-                                                               console.log("bpQuery didn't work");
-                                                               res.error("bpQuery didn't work");
-                                                               }
-                                                               });
+                                                  console.log(userId)
+//                                                  var bpQuery = new Parse.Query("BridgePairings");
+//                                                  bpQuery.limit = 2000
+//                                                  bpQuery.equalTo("user_objectId1", userId);
+//                                                  bpQuery.find({
+//                                                               success: function(pairings) {
+//                                                               for (var i = 0; i < results.length; ++i) {
+//                                                               pair = pairings[i];
+//                                                               pair.set("user1_profile_picture", profilePicture);
+//                                                               pair.save();
+//                                                               }
+//                                                               },
+//                                                               error: function() {
+//                                                               console.log("bpQuery didn't work");
+//                                                               res.error("bpQuery didn't work");
+//                                                               }
+//                                                               });
                                                   }
                                                   },
                                                   error: function() {
