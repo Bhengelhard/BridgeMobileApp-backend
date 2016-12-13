@@ -1778,7 +1778,7 @@ Parse.Cloud.define('addProfilePicturesBackForUser1', function(req, res) {
                                                                console.log(pair.id)
                                                                pair.set("user1_profile_picture", result.get("profile_picture"));
                                                                pair.save();
-                                                               }
+                                                               } 
                                                                },
                                                                error: function() {
                                                                console.log("bpQuery didn't work");
