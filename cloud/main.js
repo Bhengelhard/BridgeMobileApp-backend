@@ -1757,21 +1757,24 @@ Parse.Cloud.define('updateUserTableToHaveURLS', function(req, res) {
                     
                     
 Parse.Cloud.define('addProfilePicturesBackForUser1', function(req, res) {
+                   
+                   
+                   
                                        Parse.Cloud.useMasterKey();
                                        var query = new Parse.Query("_User");
                                        query.exists("profile_picture");
-                                       query.limit(2);
+                                       query.limit(1);
                                        query.find({
                                                   success: function(results) {
                                                   for (var j = 0; j < results.length; ++j) {
                                                   var result = results[j];
                                                   var profilePicture = result.get("profile_picture");
                                                   console.log(result.id)
-                                                  console.log("----- ^^^^^^^ user's name ^^^^^---------");
+                                                  console.log("----- user's id ---------");
                                                   var bpQuery = new Parse.Query("BridgePairings");
                                                   bpQuery.doesNotExist("user1_profile_picture");
                                                   bpQuery.equalTo("user_objectId1", result.id);
-                                                  bpQuery.limit(10);
+                                                  bpQuery.limit(1);
                                                   bpQuery.find({
                                                                success: function(pairings) {
                                                                for (var i = 0; i < pairings.length; ++i) {
