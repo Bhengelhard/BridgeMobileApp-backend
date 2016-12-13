@@ -1766,7 +1766,7 @@ Parse.Cloud.define('addProfilePicturesBackForUser1', function(req, res) {
                                                   success: function(results) {
                                                   for (var j = 0; j < results.length; ++j) {
                                                   var result = results[j];
-                                                  var userId = result.get("objectId");
+                                                  var userId = result.id;
                                                   var profilePicture = result.get("profile_picture");
                                                   console.log(userId)
                                                   var bpQuery = new Parse.Query("BridgePairings");
@@ -1804,7 +1804,7 @@ Parse.Cloud.define('addProfilePicturesBackForUser1', function(req, res) {
                                                   success: function(results) {
                                                   for (var j = 0; j < results.length; ++j) {
                                                   var result = results[j];
-                                                  var userId = result.get("objectId");
+                                                  var userId = result.id;
                                                   var profilePicture = result.get("profile_picture");
                                                   var bpQuery = new Parse.Query("BridgePairings");
                                                   bpQuery.limit = 2000
