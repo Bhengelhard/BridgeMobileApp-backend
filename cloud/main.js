@@ -504,6 +504,10 @@ Parse.Cloud.define('removeUsersFromEachothersFriendLists', function(req, res) {
                                 console.log("one of two users removed from others friend list");
                               }
                               }
+                              //adding the removed user to the unmatched list in the users table
+                              var unmatched = result.get("unmatched_list");
+                              unmatched.push(userObjectIdToRemove);
+                              result.set("unmatched_list", unmatched);
                               result.save(null, {
                                           success: function(result){
                                           console.log("Saved after removing users from eachothers friend lists")
