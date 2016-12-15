@@ -499,7 +499,7 @@ Parse.Cloud.define('removeUsersFromEachothersFriendLists', function(req, res) {
                               console.log("removing to friend_list user1 " + userObjectIdToRemove);
                               }
                               for (var f = 0, len = friendList.length; f < len; f++) {
-                              if friendList[f] == userObjectIdToRemove {
+                              if (friendList[f] == userObjectIdToRemove) {
                                 friendList.splice(f, 1);
                                 console.log("one of two users removed from others friend list");
                               }
