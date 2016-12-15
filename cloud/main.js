@@ -404,14 +404,10 @@ Parse.Cloud.define('getMainAppMetrics', function(req, res) {
                    
                     });
 
-
+//This function adds the users to eachother's friend lists
 Parse.Cloud.define('addIntroducedUsersToEachothersFriendLists', function(req, res) {
     Parse.Cloud.useMasterKey();
     console.log("addIntroducedUsersToEachothersFriendLists");
-    //creating a class with the name _User
-    //var UserClass = Parse.Object.extend("_User)");
-    //query passing the classname -> which is the name of the table being queried
-    //var query = new Parse.Query(UserClass);
     var query = new Parse.Query("_User");
     //queries the table for the id's that include the user's introduced
     var introducedUserIds = [req.params.userObjectId1, req.params.userObjectId2];
@@ -430,23 +426,17 @@ Parse.Cloud.define('addIntroducedUsersToEachothersFriendLists', function(req, re
                console.log("result = " + result);
                var userObjectId = result.id;
                console.log(i + " userObjectId - " + userObjectId);
-               //console.log(i + " friendlist - " + friendlist);
                var userObjectIdToAdd = "";
                if (userObjectId != req.params.userObjectId1) {
-               //result.addUnique("friend_list", req.params.userObjectId2);
-               //result.set("friend_list", req.params.userObjectId2);
                userObjectIdToAdd = req.params.userObjectId1;
                console.log("adding to friend_list user2 " + userObjectIdToAdd);
                }
                else {
-               //result.addUnique("friend_list", req.params.userObjectId1);
                userObjectIdToAdd = req.params.userObjectId2;
                console.log("adding to friend_list user1 " + userObjectIdToAdd);
                }
                result.addUnique("friend_list", userObjectIdToAdd);
                console.log("addIntroducedUsersToEachothersFriendLists");
-               //result.set("friend_list", ["test"]);
-               
                result.save(null, {
                            success: function(result){
                            console.log("Saved after adding Introduced Users To Eachothers Friend Lists")
@@ -455,7 +445,7 @@ Parse.Cloud.define('addIntroducedUsersToEachothersFriendLists', function(req, re
                            if (incrementWhenDone.count == results.length) {
                            console.log(" Saved "+ results.length +" id's to friend_lists in User Table");
                            //res.success is the return -> no code will be read after this
-                           res.success(" Saved all new friends in Messages Table");
+                           res.success(" Saved all new friends in Users Table");
                            }
                            
                            },
@@ -469,7 +459,6 @@ Parse.Cloud.define('addIntroducedUsersToEachothersFriendLists', function(req, re
                            
                            }
                            });
-               //}
                }
                },
                //if error will call function with parameter of error
@@ -479,6 +468,74 @@ Parse.Cloud.define('addIntroducedUsersToEachothersFriendLists', function(req, re
                }
                });
     });
+
+//This function removes the users from eachother's friend lists
+Parse.Cloud.define('removeUsersFromEachothersFriendLists', function(req, res) {
+                   Parse.Cloud.useMasterKey();
+                   console.log("removeUsersFromEachothersFriendLists");
+                   var query = new Parse.Query("_User");
+                   //queries the table for the id's that include the user's introduced
+                   var userIds = [req.params.userObjectId1, req.params.userObjectId2];
+                   query.containedIn("objectId", userIds);
+                   query.limit(2);
+                   query.find({
+                              //if success will call function with parameter of results
+                              success:function(results) {
+                              console.log("length of removeUsersFromEachothersFriendLists query : " + results.length);
+                              var incrementWhenDone = {count : 0};
+                              //going through each of the results and deciding which one of the users' name should be updated
+                              for (var i = 0, len = results.length; i < len; i++) {
+                              var result = results[i];
+                              var friendList = result.get("friend_list");
+                              console.log("result = " + result);
+                              var userObjectId = result.id;
+                              var userObjectIdToRemove = "";
+                              if (userObjectId != req.params.userObjectId1) {
+                              userObjectIdToRemove = req.params.userObjectId1;
+                              console.log("removing from friend_list user2 " + userObjectIdToRemove);
+                              }
+                              else {
+                              userObjectIdToRemove = req.params.userObjectId2;
+                              console.log("removing to friend_list user1 " + userObjectIdToRemove);
+                              }
+                              for (var f = 0, len = friendList.length; f < len; f++) {
+                              if friendList[f] == userObjectIdToRemove {
+                                friendList.splice(f, 1);
+                                console.log("one of two users removed from others friend list");
+                              }
+                              }
+                              result.save(null, {
+                                          success: function(result){
+                                          console.log("Saved after removing users from eachothers friend lists")
+                                          incrementWhenDone.count += 1;
+                                          //once incrementWhenDone get to the length of the results, it is clear the job has completed - this is necessary due to asynchronous execution
+                                          if (incrementWhenDone.count == results.length) {
+                                          console.log("removed "+ results.length +" id's from friend_lists in User Table");
+                                          //res.success is the return -> no code will be read after this
+                                          res.success("removed all new friends in Users Table");
+                                          }
+                                          
+                                          },
+                                          error: function(result, error){
+                                          console.log("Not Saved after removing objectId's from friend_list in User Table")
+                                          incrementWhenDone.count += 1;
+                                          if (incrementWhenDone.count == results.length) {
+                                          console.log("Not all of  "+ results.length +" friend_list fields in User Table were updated and saved");
+                                          res.error("Not all the friend_list were saved");
+                                          }
+                                          
+                                          }
+                                          });
+                              }
+                              },
+                              //if error will call function with parameter of error
+                              error: function(error) {
+                              console.log("Failed!");
+                              res.error("Not saved");
+                              }
+                              });
+                   });
+
 
 Parse.Cloud.define('changeMessagesTableOnNameUpdate', function(req, res) {
                    console.log("changeMessagesTableOnNameUpdate was called");
@@ -1849,9 +1906,52 @@ Parse.Cloud.define('addProfilePicturesBackForUser1', function(req, res) {
                                        }
                                        
                                        });
-                    
-                    
-                    
+
+////
+//Parse.Cloud.define('changeBridgePairingsOnInterestedInUpdateForUser', function(req, res) {
+//                   
+//                   var BridgePairingsClass = Parse.Object.extend("BridgePairings");
+//                   var query = new Parse.Query(BridgePairingsClass);
+//                   query.equalTo("user_objectIds",req.params.missedUserId);
+//                   query.limit(10000);
+//                   query.find({
+//                              success:function(results) {
+//                              var usersNotToPairWith = [req.params.missedUserId];
+//                              var shownToForPairsNotCheckedOut = {};
+//                              console.log(results.length + " entries have the current user as a better half");
+//                              for (var i = 0, len = results.length; i < len; i++) {
+//                              var result = results[i];
+//                              if (result.get("checked_out") == true) {
+//                              var userObjectIds = result.get("user_objectIds");
+//                              if (userObjectIds[0] == req.params.missedUserId) {
+//                              usersNotToPairWith.push(userObjectIds[1]);
+//                              }
+//                              else {
+//                              usersNotToPairWith.push(userObjectIds[0]);
+//                              }
+//                              }
+//                              else {
+//                              var userObjectIds = result.get("user_objectIds");
+//                              if (userObjectIds[0] == req.params.missedUserId) {
+//                              shownToForPairsNotCheckedOut[userObjectIds[1]] = result.get("shown_to");
+//                              }
+//                              else {
+//                              shownToForPairsNotCheckedOut[userObjectIds[0]] = result.get("shown_to");
+//                              }
+//                              result.destroy({});
+//                              }
+//                              }
+//                              console.log("Done creating usersNotToPairWith, shownToForPairsNotCheckedOut");
+//                              recreatePairings(req, usersNotToPairWith, shownToForPairsNotCheckedOut, res);
+//                              },
+//                              error: function(error) {
+//                              console.log("Failed!");
+//                              res.error("Not Saved");
+//                              }
+//                              });
+//                   });
+//
+
 //                    //user1 picture
 //                    let query: PFQuery = PFQuery(className: "_User")
 //                    query.limit = 2000
