@@ -1101,6 +1101,23 @@ Parse.Cloud.define('pushNotification', function(req, res) {
 					targetUserObjectID = req.params.userObjectId;
 
 					console.log('pushNotification: DEBUG: Calculating badge count for User with objectId: ' + targetUserObjectID);
+
+					// calculate number of unread message threads
+					messages_query = new Parse.Query('Messages');
+					messages_query
+						.contains('ids_in_message', targetUserObjectID)
+						.notContainedIn('message_viewed', targetUserObjectID);
+					messages_query.count(
+					{
+						success: function (number)
+						{
+							console.log('pushNotification: DEBUG: ' + targetUserObjectID + ' has ' + number + ' unread threads');
+						}, 
+						error: function (error)
+						{
+							// error is an instance of Parse.Error.
+						}
+					});
 				}
 
                    Parse.Push.send({
