@@ -1096,6 +1096,13 @@ Parse.Cloud.define('hello', function(req, res) {
 Parse.Cloud.define('pushNotification', function(req, res) {
                    var query = new Parse.Query(Parse.Installation);
                    query.equalTo('userObjectId', req.params.userObjectId);
+
+				{
+					targetUserObjectID = req.params.userObjectId;
+
+					console.log('pushNotification: DEBUG: Calculating badge count for User with objectId: ' + targetUserObjectID);
+				}
+
                    Parse.Push.send({
                                    where: query,
                                    data: {
