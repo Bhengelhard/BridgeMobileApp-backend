@@ -1127,6 +1127,30 @@ Parse.Cloud.define('pushNotification', function (req, res)
 		function (target, count)
 		{
 			console.log('pushNotification: DEBUG: True badge count for ' + target + ' is ' + count);
+
+			var query = new Parse.Query(Parse.Installation);
+			query.equalTo('userObjectId', req.params.userObjectId);
+
+			Parse.Push.send(
+			{
+				where: query,
+				data: {
+					alert: req.params.alert,
+					badge: req.params.badge,
+					messageType: req.params.messageType,
+					messageId: req.params.messageId
+				}
+			}, {
+				success: function() {
+					console.log("success: Parse.Push.send did send push "+ req.params.messageId + "  " + req.params.messageType );
+					res.success('Push success');
+				},
+				error: function(e) {
+					console.log("error: Parse.Push.send code: " + e.code + " msg: " + e.message);
+					res.error("Push failed");
+				},
+				useMasterKey: true
+			});
 		}
 	);
 
@@ -1192,30 +1216,6 @@ Parse.Cloud.define('pushNotification', function (req, res)
 			console.log('pushNotification: DEBUG: error while counting non-responded user2 pairings for ' + targetUserObjectID);
 			console.log('Parse error #' + error.code + ': ' + error.message);
 		}
-	});
-
-	var query = new Parse.Query(Parse.Installation);
-	query.equalTo('userObjectId', req.params.userObjectId);
-
-	Parse.Push.send(
-	{
-		where: query,
-		data: {
-			alert: req.params.alert,
-			badge: req.params.badge,
-			messageType: req.params.messageType,
-			messageId: req.params.messageId
-		}
-	}, {
-		success: function() {
-			console.log("success: Parse.Push.send did send push "+ req.params.messageId + "  " + req.params.messageType );
-			res.success('Push success');
-		},
-		error: function(e) {
-			console.log("error: Parse.Push.send code: " + e.code + " msg: " + e.message);
-			res.error("Push failed");
-		},
-		useMasterKey: true
 	});
 });
 
