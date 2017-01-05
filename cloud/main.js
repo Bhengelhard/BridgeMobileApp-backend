@@ -1097,6 +1097,27 @@ Parse.Cloud.define('hello', function(req, res) {
 Parse.Cloud.define('pushNotification', function (req, res)
 {
 	Parse.Cloud.useMasterKey();
+
+	targetUserObjectID = req.params.userObjectId;
+	console.log('pushNotification: DEBUG: Calculating badge count for User with objectId: ' + targetUserObjectID);
+
+	messages_query = new Parse.Query('Messages');
+	messages_query.equalTo('ids_in_message', targetUserObjectID);
+	messages_query.notEqualTo('message_viewed', targetUserObjectID);
+	messages_query.count(
+	{
+		success: function (number)
+		{
+			console.log('pushNotification: DEBUG: ' + targetUserObjectID + ' has ' + number + ' unread threads');
+		}, 
+		error: function (error)
+		{
+			// error is an instance of Parse.Error.
+			console.log('pushNotification: DEBUG: error while counting unread threads for ' + targetUserObjectID);
+			console.log('Parse error #' + error.code + ': ' + error.message);
+		}
+	});
+
                    var query = new Parse.Query(Parse.Installation);
                    query.equalTo('userObjectId', req.params.userObjectId);
 
