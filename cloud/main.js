@@ -1094,6 +1094,11 @@ Parse.Cloud.define('hello', function(req, res) {
                    res.success('helrlo');
                    });
 
+BadgeCountIncrementer = function ()
+{
+	
+}
+
 Parse.Cloud.define('pushNotification', function (req, res)
 {
 	Parse.Cloud.useMasterKey();
