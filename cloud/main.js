@@ -1093,7 +1093,9 @@ function recreatePairings(req, usersNotToPairWith, shownToForPairsNotCheckedOut,
 Parse.Cloud.define('hello', function(req, res) {
                    res.success('helrlo');
                    });
-Parse.Cloud.define('pushNotification', function(req, res) {
+
+Parse.Cloud.define('pushNotification', function (req, res)
+{
 	Parse.Cloud.useMasterKey();
                    var query = new Parse.Query(Parse.Installation);
                    query.equalTo('userObjectId', req.params.userObjectId);
@@ -1124,8 +1126,8 @@ Parse.Cloud.define('pushNotification', function(req, res) {
                                    useMasterKey: true
                                    });
 
-                   
-                   });
+});
+
 Parse.Cloud.define('addBridgePairing', function(req, res) {
                    var BridgePairingsClass = Parse.Object.extend("BridgePairings");
                    var bridgePairing = new BridgePairingsClass();
