@@ -1106,7 +1106,7 @@ function BadgeCountIncrementer (target, completion)
 	{
 		this._counters = this._counters + 1;
 
-		console.log('BadgeCountIncrementer has ' + this._counters + ' counters to wait for')
+		console.log('BadgeCountIncrementer[' + this._target + '] has ' + this._counters + ' counters to wait for')
 	}
 
 	this.count = function (number)
@@ -1116,13 +1116,13 @@ function BadgeCountIncrementer (target, completion)
 
 		if (this._counted >= this._counters)
 		{
-			console.log('BadgeCountIncrementer has no more counters to wait for')
+			console.log('BadgeCountIncrementer[' + this._target + '] has no more counters to wait for')
 
 			this._completion(this._target, this._count);
 		}
 		else
 		{
-			console.log('BadgeCountIncrementer has ' + (this._counters - this._counted) + ' counters to wait for')
+			console.log('BadgeCountIncrementer[' + this._target + '] has ' + (this._counters - this._counted) + ' counters to wait for')
 		}
 	}
 }
