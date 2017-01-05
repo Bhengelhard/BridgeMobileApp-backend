@@ -1168,6 +1168,9 @@ Parse.Cloud.define('pushNotification', function (req, res)
 	console.log('pushNotification: DEBUG: Calculating badge count for User with objectId: ' + targetUserObjectID);
 
 	badge.addCounter();
+	badge.addCounter();
+	badge.addCounter();
+
 	messages_query = new Parse.Query('Messages');
 	messages_query.equalTo('ids_in_message', targetUserObjectID);
 	messages_query.notEqualTo('message_viewed', targetUserObjectID);
@@ -1175,9 +1178,9 @@ Parse.Cloud.define('pushNotification', function (req, res)
 	{
 		success: function (number)
 		{
-			console.log('pushNotification: DEBUG: ' + targetUserObjectID + ' has ' + number + ' unread threads');
-
 			badge.count(number);
+
+			console.log('pushNotification: DEBUG: ' + targetUserObjectID + ' has ' + number + ' unread threads');
 		}, 
 		error: function (error)
 		{
@@ -1188,7 +1191,6 @@ Parse.Cloud.define('pushNotification', function (req, res)
 	});
 
 	// perform two separate queries for both sides of pairings
-	badge.addCounter();
 	pairings_query = new Parse.Query('BridgePairings');
 	pairings_query.equalTo('user_objectId1', targetUserObjectID);
 	pairings_query.equalTo('bridged', true);
@@ -1197,9 +1199,9 @@ Parse.Cloud.define('pushNotification', function (req, res)
 	{
 		success: function (number)
 		{
-			console.log('pushNotification: DEBUG: ' + targetUserObjectID + ' has ' + number + ' non-responded user1 pairings');
-
 			badge.count(number);
+
+			console.log('pushNotification: DEBUG: ' + targetUserObjectID + ' has ' + number + ' non-responded user1 pairings');
 		}, 
 		error: function (error)
 		{
@@ -1209,7 +1211,6 @@ Parse.Cloud.define('pushNotification', function (req, res)
 		}
 	});
 
-	badge.addCounter();
 	pairings_query = new Parse.Query('BridgePairings');
 	pairings_query.equalTo('user_objectId2', targetUserObjectID);
 	pairings_query.equalTo('bridged', true);
@@ -1218,9 +1219,9 @@ Parse.Cloud.define('pushNotification', function (req, res)
 	{
 		success: function (number)
 		{
-			console.log('pushNotification: DEBUG: ' + targetUserObjectID + ' has ' + number + ' non-responded user2 pairings');
-
 			badge.count(number);
+
+			console.log('pushNotification: DEBUG: ' + targetUserObjectID + ' has ' + number + ' non-responded user2 pairings');
 		}, 
 		error: function (error)
 		{
