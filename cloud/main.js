@@ -1094,9 +1094,26 @@ Parse.Cloud.define('hello', function(req, res) {
                    res.success('helrlo');
                    });
 
-BadgeCountIncrementer = function ()
+BadgeCountIncrementer = function (target, completion)
 {
-	
+	this._target = target;
+	this._completion = completion;
+	this._counters = 0;
+	this._counted = 0;
+	this._count = 0;
+
+	this.addCounter = function ()
+	{
+		this._counters = this._counters + 1;
+	}
+
+	this.count = function (number)
+	{
+		this._count = this._count + number;
+		this._counted = this._counted + 1;
+
+		if (this._counted >== this._counters) this._completion(this._target, this._count);
+	}
 }
 
 Parse.Cloud.define('pushNotification', function (req, res)
@@ -1104,31 +1121,18 @@ Parse.Cloud.define('pushNotification', function (req, res)
 	Parse.Cloud.useMasterKey();
 
 	targetUserObjectID = req.params.userObjectId;
-	badge = 
-	{
-		counts: 0, 
-		incrementCounts: function ()
+	badge = new BadgeCountIncrementer
+	(
+		targetUserObjectID, 
+		function (target, count)
 		{
-			this.counts = 1 + this.counts;
-		}, 
-		target: targetUserObjectID, 
-		count: 0, 
-		increment: function (number)
-		{
-			this.count = number + this.count;
-			this.counts = this.counts - 1;
-
-			if (this.counts === 0) this.counted();
-		}, 
-		counted: function ()
-		{
-			console.log('pushNotification: DEBUG: True badge count for ' + this.target + ' is ' + this.count);
+			console.log('pushNotification: DEBUG: True badge count for ' + target + ' is ' + count);
 		}
-	}
+	);
 
 	console.log('pushNotification: DEBUG: Calculating badge count for User with objectId: ' + targetUserObjectID);
 
-	badge.incrementCounts();
+	badge.addCounter();
 	messages_query = new Parse.Query('Messages');
 	messages_query.equalTo('ids_in_message', targetUserObjectID);
 	messages_query.notEqualTo('message_viewed', targetUserObjectID);
@@ -1138,7 +1142,7 @@ Parse.Cloud.define('pushNotification', function (req, res)
 		{
 			console.log('pushNotification: DEBUG: ' + targetUserObjectID + ' has ' + number + ' unread threads');
 
-			badge.increment(number);
+			badge.count(number);
 		}, 
 		error: function (error)
 		{
@@ -1149,7 +1153,7 @@ Parse.Cloud.define('pushNotification', function (req, res)
 	});
 
 	// perform two separate queries for both sides of pairings
-	badge.incrementCounts();
+	badge.addCounter();
 	pairings_query = new Parse.Query('BridgePairings');
 	pairings_query.equalTo('user_objectId1', targetUserObjectID);
 	pairings_query.equalTo('bridged', true);
@@ -1160,7 +1164,7 @@ Parse.Cloud.define('pushNotification', function (req, res)
 		{
 			console.log('pushNotification: DEBUG: ' + targetUserObjectID + ' has ' + number + ' non-responded user1 pairings');
 
-			badge.increment(number);
+			badge.count(number);
 		}, 
 		error: function (error)
 		{
@@ -1169,7 +1173,7 @@ Parse.Cloud.define('pushNotification', function (req, res)
 			console.log('Parse error #' + error.code + ': ' + error.message);
 		}
 	});
-	badge.incrementCounts();
+	badge.addCounter();
 	pairings_query = new Parse.Query('BridgePairings');
 	pairings_query.equalTo('user_objectId2', targetUserObjectID);
 	pairings_query.equalTo('bridged', true);
@@ -1180,7 +1184,7 @@ Parse.Cloud.define('pushNotification', function (req, res)
 		{
 			console.log('pushNotification: DEBUG: ' + targetUserObjectID + ' has ' + number + ' non-responded user2 pairings');
 
-			badge.increment(number);
+			badge.count(number);
 		}, 
 		error: function (error)
 		{
