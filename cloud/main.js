@@ -1221,7 +1221,64 @@ Parse.Cloud.define('pushNotification', function (req, res)
 
 Parse.Cloud.define('applicationBadgePushNotification', function(req, res)
 {
-	console.log('Received request to update the application badge for ' + req.params.userObjectID);
+	// FIXME: copypasta
+	Parse.Cloud.useMasterKey();
+
+	targetUserObjectID = req.params.userObjectID;
+	badge = new BadgeCountIncrementer
+	(
+		targetUserObjectID, 
+		function (target, count)
+		{
+			var query = new Parse.Query(Parse.Installation);
+			query.equalTo('userObjectId', target);
+
+			Parse.Push.send
+			(
+				{ where: query, data: { badge: count } }, 
+				{
+					success: function () { res.success('Set badges for ' + target + ' to ' + count); },
+					error: function (error) { res.error('Parse error #' + error.code + ': ' + error.message); }, 
+					useMasterKey: true
+				}
+			);
+		}
+	);
+
+	console.log('Updating badge count for User with objectId: ' + targetUserObjectID);
+
+	badge.addCounter();
+	messages_query = new Parse.Query('Messages');
+	messages_query.equalTo('ids_in_message', targetUserObjectID);
+	messages_query.notEqualTo('message_viewed', targetUserObjectID);
+	messages_query.count(
+	{
+		success: function (number) { badge.count(number); }, 
+		error: function (error) { console.log('Parse error #' + error.code + ': ' + error.message); }
+	});
+
+	// perform two separate queries for both sides of pairings
+	badge.addCounter();
+	pairings_query = new Parse.Query('BridgePairings');
+	pairings_query.equalTo('user_objectId1', targetUserObjectID);
+	pairings_query.equalTo('bridged', true);
+	pairings_query.equalTo('user1_response', 0);
+	pairings_query.count(
+	{
+		success: function (number) { badge.count(number); }, 
+		error: function (error) { console.log('Parse error #' + error.code + ': ' + error.message); }
+	});
+
+	badge.addCounter();
+	pairings_query = new Parse.Query('BridgePairings');
+	pairings_query.equalTo('user_objectId2', targetUserObjectID);
+	pairings_query.equalTo('bridged', true);
+	pairings_query.equalTo('user2_response', 0);
+	pairings_query.count(
+	{
+		success: function (number) { badge.count(number); }, 
+		error: function (error) { console.log('Parse error #' + error.code + ': ' + error.message); }
+	});
 });
 
 Parse.Cloud.define('addBridgePairing', function(req, res) {
