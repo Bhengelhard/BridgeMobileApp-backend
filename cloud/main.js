@@ -1099,7 +1099,20 @@ Parse.Cloud.define('pushNotification', function (req, res)
 	Parse.Cloud.useMasterKey();
 
 	targetUserObjectID = req.params.userObjectId;
-	targetBadgeCount = 0;
+	badge = 
+	{
+		target: targetUserObjectID, 
+		count: 0, 
+		increment: function (number)
+		{
+			this.count = number + this.count;
+		}, 
+		counted: function (targetUserObjectID)
+		{
+			console.log('pushNotification: DEBUG: True badge count for ' + this.target + ' is ' + this.count);
+		}
+	}
+
 	console.log('pushNotification: DEBUG: Calculating badge count for User with objectId: ' + targetUserObjectID);
 
 	messages_query = new Parse.Query('Messages');
@@ -1111,7 +1124,7 @@ Parse.Cloud.define('pushNotification', function (req, res)
 		{
 			console.log('pushNotification: DEBUG: ' + targetUserObjectID + ' has ' + number + ' unread threads');
 
-			targetBadgeCount = number + targetBadgeCount;
+			badge.increment(number);
 		}, 
 		error: function (error)
 		{
@@ -1132,7 +1145,7 @@ Parse.Cloud.define('pushNotification', function (req, res)
 		{
 			console.log('pushNotification: DEBUG: ' + targetUserObjectID + ' has ' + number + ' non-responded user1 pairings');
 
-			targetBadgeCount = number + targetBadgeCount;
+			badge.increment(number);
 		}, 
 		error: function (error)
 		{
@@ -1151,7 +1164,7 @@ Parse.Cloud.define('pushNotification', function (req, res)
 		{
 			console.log('pushNotification: DEBUG: ' + targetUserObjectID + ' has ' + number + ' non-responded user2 pairings');
 
-			targetBadgeCount = number + targetBadgeCount;
+			badge.increment(number);
 		}, 
 		error: function (error)
 		{
@@ -1161,7 +1174,7 @@ Parse.Cloud.define('pushNotification', function (req, res)
 		}
 	});
 
-	console.log('pushNotification: DEBUG: True badge count for ' + targetUserObjectID + ' is ' + targetBadgeCount);
+	badge.counted();
 
                    var query = new Parse.Query(Parse.Installation);
                    query.equalTo('userObjectId', req.params.userObjectId);
