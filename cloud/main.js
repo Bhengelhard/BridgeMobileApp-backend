@@ -1101,11 +1101,19 @@ Parse.Cloud.define('pushNotification', function (req, res)
 	targetUserObjectID = req.params.userObjectId;
 	badge = 
 	{
+		counts: 0, 
+		incrementCounts: function ()
+		{
+			this.counts = 1 + this.counts;
+		}, 
 		target: targetUserObjectID, 
 		count: 0, 
 		increment: function (number)
 		{
 			this.count = number + this.count;
+			this.counts = this.counts - 1;
+
+			if (this.counts === 0) this.counted();
 		}, 
 		counted: function ()
 		{
@@ -1115,6 +1123,7 @@ Parse.Cloud.define('pushNotification', function (req, res)
 
 	console.log('pushNotification: DEBUG: Calculating badge count for User with objectId: ' + targetUserObjectID);
 
+	badge.incrementCounts();
 	messages_query = new Parse.Query('Messages');
 	messages_query.equalTo('ids_in_message', targetUserObjectID);
 	messages_query.notEqualTo('message_viewed', targetUserObjectID);
@@ -1135,6 +1144,7 @@ Parse.Cloud.define('pushNotification', function (req, res)
 	});
 
 	// perform two separate queries for both sides of pairings
+	badge.incrementCounts();
 	pairings_query = new Parse.Query('BridgePairings');
 	pairings_query.equalTo('user_objectId1', targetUserObjectID);
 	pairings_query.equalTo('bridged', true);
@@ -1154,6 +1164,7 @@ Parse.Cloud.define('pushNotification', function (req, res)
 			console.log('Parse error #' + error.code + ': ' + error.message);
 		}
 	});
+	badge.incrementCounts();
 	pairings_query = new Parse.Query('BridgePairings');
 	pairings_query.equalTo('user_objectId2', targetUserObjectID);
 	pairings_query.equalTo('bridged', true);
@@ -1173,8 +1184,6 @@ Parse.Cloud.define('pushNotification', function (req, res)
 			console.log('Parse error #' + error.code + ': ' + error.message);
 		}
 	});
-
-	badge.counted();
 
                    var query = new Parse.Query(Parse.Installation);
                    query.equalTo('userObjectId', req.params.userObjectId);
