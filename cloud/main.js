@@ -1219,6 +1219,11 @@ Parse.Cloud.define('pushNotification', function (req, res)
 	});
 });
 
+Parse.Cloud.define('applicationBadgePushNotification', function(req, res)
+{
+	console.log('Received request to update the application badge for ' + req.params.userObjectID);
+});
+
 Parse.Cloud.define('addBridgePairing', function(req, res) {
                    var BridgePairingsClass = Parse.Object.extend("BridgePairings");
                    var bridgePairing = new BridgePairingsClass();
