@@ -1094,7 +1094,7 @@ Parse.Cloud.define('hello', function(req, res) {
                    res.success('helrlo');
                    });
 
-BadgeCountIncrementer = function (target, completion)
+function BadgeCountIncrementer (target, completion)
 {
 	this._target = target;
 	this._completion = completion;
