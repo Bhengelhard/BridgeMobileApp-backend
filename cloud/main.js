@@ -1119,6 +1119,7 @@ function BadgeCountIncrementer (target, completion)
 			console.log('BadgeCountIncrementer[' + this._target + '] has no more counters to wait for')
 
 			this._completion(this._target, this._count);
+			this._completion = null;
 		}
 		else
 		{
