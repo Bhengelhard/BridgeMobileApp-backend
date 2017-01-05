@@ -1105,6 +1105,8 @@ function BadgeCountIncrementer (target, completion)
 	this.addCounter = function ()
 	{
 		this._counters = this._counters + 1;
+
+		console.log('BadgeCountIncrementer has ' + this._counters + ' counters to wait for')
 	}
 
 	this.count = function (number)
@@ -1112,7 +1114,16 @@ function BadgeCountIncrementer (target, completion)
 		this._count = this._count + number;
 		this._counted = this._counted + 1;
 
-		if (this._counted >= this._counters) this._completion(this._target, this._count);
+		if (this._counted >= this._counters)
+		{
+			console.log('BadgeCountIncrementer has no more counters to wait for')
+
+			this._completion(this._target, this._count);
+		}
+		else
+		{
+			console.log('BadgeCountIncrementer has ' + (this._counters - this._counted) + ' counters to wait for')
+		}
 	}
 }
 
@@ -1197,6 +1208,7 @@ Parse.Cloud.define('pushNotification', function (req, res)
 			console.log('Parse error #' + error.code + ': ' + error.message);
 		}
 	});
+
 	badge.addCounter();
 	pairings_query = new Parse.Query('BridgePairings');
 	pairings_query.equalTo('user_objectId2', targetUserObjectID);
