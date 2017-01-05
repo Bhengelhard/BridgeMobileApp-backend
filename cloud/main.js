@@ -1107,7 +1107,7 @@ Parse.Cloud.define('pushNotification', function (req, res)
 		{
 			this.count = number + this.count;
 		}, 
-		counted: function (targetUserObjectID)
+		counted: function ()
 		{
 			console.log('pushNotification: DEBUG: True badge count for ' + this.target + ' is ' + this.count);
 		}
