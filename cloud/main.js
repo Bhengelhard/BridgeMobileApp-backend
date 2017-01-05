@@ -1098,8 +1098,8 @@ Parse.Cloud.define('pushNotification', function (req, res)
 {
 	Parse.Cloud.useMasterKey();
 
-	var targetUserObjectID = req.params.userObjectId;
-	var targetBadgeCount = 0;
+	targetUserObjectID = req.params.userObjectId;
+	targetBadgeCount = 0;
 	console.log('pushNotification: DEBUG: Calculating badge count for User with objectId: ' + targetUserObjectID);
 
 	messages_query = new Parse.Query('Messages');
