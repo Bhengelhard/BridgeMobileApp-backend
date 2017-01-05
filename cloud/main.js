@@ -1121,6 +1121,48 @@ Parse.Cloud.define('pushNotification', function (req, res)
 		}
 	});
 
+	// perform two separate queries for both sides of pairings
+	pairings_query = new Parse.Query('BridgePairings');
+	pairings_query.equalTo('user_objectId1', targetUserObjectID);
+	pairings_query.equalTo('bridged', true);
+	pairings_query.equalTo('user1_response', 0);
+	pairings_query.count(
+	{
+		success: function (number)
+		{
+			console.log('pushNotification: DEBUG: ' + targetUserObjectID + ' has ' + number + ' non-responded user1 pairings');
+
+			targetBadgeCount = number + targetBadgeCount;
+		}, 
+		error: function (error)
+		{
+			// error is an instance of Parse.Error.
+			console.log('pushNotification: DEBUG: error while counting non-responded user1 pairings for ' + targetUserObjectID);
+			console.log('Parse error #' + error.code + ': ' + error.message);
+		}
+	});
+	pairings_query = new Parse.Query('BridgePairings');
+	pairings_query.equalTo('user_objectId2', targetUserObjectID);
+	pairings_query.equalTo('bridged', true);
+	pairings_query.equalTo('user2_response', 0);
+	pairings_query.count(
+	{
+		success: function (number)
+		{
+			console.log('pushNotification: DEBUG: ' + targetUserObjectID + ' has ' + number + ' non-responded user2 pairings');
+
+			targetBadgeCount = number + targetBadgeCount;
+		}, 
+		error: function (error)
+		{
+			// error is an instance of Parse.Error.
+			console.log('pushNotification: DEBUG: error while counting non-responded user2 pairings for ' + targetUserObjectID);
+			console.log('Parse error #' + error.code + ': ' + error.message);
+		}
+	});
+
+	console.log('pushNotification: DEBUG: True badge count for ' + targetUserObjectID + ' is ' + targetBadgeCount);
+
                    var query = new Parse.Query(Parse.Installation);
                    query.equalTo('userObjectId', req.params.userObjectId);
 
