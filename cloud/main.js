@@ -1112,7 +1112,7 @@ function BadgeCountIncrementer (target, completion)
 		this._count = this._count + number;
 		this._counted = this._counted + 1;
 
-		if (this._counted >== this._counters) this._completion(this._target, this._count);
+		if (this._counted >= this._counters) this._completion(this._target, this._count);
 	}
 }
 
