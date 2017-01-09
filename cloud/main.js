@@ -744,8 +744,8 @@ Parse.Cloud.define('changeBridgePairingsOnProfilePictureUpdate', function(req, r
                    console.log("changeBridgePairingsOnProfilePictureUpdate was called");
                    
                    //Updating Current User's "profile_picture_url" from profilePicture uploaded
-                   var profilePicture = req.user.get("profile_picture");
-                   var profilePictureURL = profilePicture.url;
+                   var profilePictureURL = req.user.get("profile_picture").url;
+                   //var profilePictureURL = profilePicture.url;
                    console.log("-------------------- >>>>>>>> This is the profile Picture URL " + profilePictureURL)
                    req.user.set("profile_picture_url", profilePictureURL);
                    req.user.save();
@@ -767,8 +767,7 @@ Parse.Cloud.define('changeBridgePairingsOnProfilePictureUpdate', function(req, r
                               for (var i = 0, len = results.length; i < len; i++) {
                               var result = results[i];
                               var userObjectIds = result.get("user_objectIds");
-                              console.log("result = "+ result + "userObjectIds[0]="+userObjectIds[0] + " & userObjectIds[1]= "+userObjectIds[1]);
-                              //if( userObjectIds.length > 0 ){
+                              //console.log("result = "+ result + "userObjectIds[0]="+userObjectIds[0] + " & userObjectIds[1]= "+userObjectIds[1]);
                               if (userObjectIds[0] == req.user.id) {
                               //the profile picture was sent from the user's phone when the cloud function was called so the cloud code does not have to request the profile picture from Parse and save again
                               result.set("user1_profile_picture_url",profilePictureURL);
@@ -781,7 +780,7 @@ Parse.Cloud.define('changeBridgePairingsOnProfilePictureUpdate', function(req, r
                               //after making updates to the queried data, you need to save
                               result.save(null, {
                                           success: function(bridgePairing){
-                                          console.log("Saved after changinging profile picture")
+                                          //console.log("Saved after changinging profile picture")
                                           incrementWhenDone.count += 1;
                                           //once incrementWhenDone get to the length of the results, it is clear the job has completed - this is necessary due to asynchronous execution
                                           if (incrementWhenDone.count == results.length) {
