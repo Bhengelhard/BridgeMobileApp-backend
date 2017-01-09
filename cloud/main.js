@@ -744,6 +744,7 @@ Parse.Cloud.define('changeBridgePairingsOnProfilePictureUpdate', function(req, r
                    //Updating Current User's "profile_picture_url" from profilePicture uploaded
                    var profilePicture = req.user.get("profile_picture");
                    var profilePictureURL = profilePicture.url;
+                   console.log("-------------------- >>>>>>>> This is the profile Picture URL " + profilePictureURL)
                    req.user.set("profile_picture_url", profilePictureURL);
                    req.user.save();
                    
@@ -798,7 +799,6 @@ Parse.Cloud.define('changeBridgePairingsOnProfilePictureUpdate', function(req, r
                                           
                                           }
                                           });
-                              //}
                               }
                               },
                               //if error will call function with parameter of error
