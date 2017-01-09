@@ -744,7 +744,7 @@ Parse.Cloud.define('changeBridgePairingsOnProfilePictureUpdate', function(req, r
                    console.log("changeBridgePairingsOnProfilePictureUpdate was called");
                    
                    //Updating Current User's "profile_picture_url" from profilePicture uploaded
-                   var profilePictureURL = req.user.get("profile_picture").url;
+                   var profilePictureURL = req.user.get("profile_picture").url();
                    //var profilePictureURL = profilePicture.url;
                    console.log("-------------------- >>>>>>>> This is the profile Picture URL " + profilePictureURL)
                    req.user.set("profile_picture_url", profilePictureURL);
@@ -771,11 +771,11 @@ Parse.Cloud.define('changeBridgePairingsOnProfilePictureUpdate', function(req, r
                               if (userObjectIds[0] == req.user.id) {
                               //the profile picture was sent from the user's phone when the cloud function was called so the cloud code does not have to request the profile picture from Parse and save again
                               result.set("user1_profile_picture_url",req.user.get("profile_picture_url"));
-                              console.log("changeBridgePairingsOnProfilePictureUpdate1");
+                              console.log("changeBridgePairingsOnProfilePictureUpdate1 " +result.objectId);
                               }
                               else {
                               result.set("user2_profile_picture_url",req.user.get("profile_picture_url"));
-                              console.log("changeBridgePairingsOnProfilePictureUpdate2");
+                              console.log("changeBridgePairingsOnProfilePictureUpdate2 " + result.objectId);
                               }
                               //after making updates to the queried data, you need to save
                               result.save(null, {
