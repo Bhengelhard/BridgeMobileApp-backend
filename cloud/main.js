@@ -740,6 +740,13 @@ Parse.Cloud.define('changeBridgePairingsOnNameUpdate', function(req, res) {
                    });
 Parse.Cloud.define('changeBridgePairingsOnProfilePictureUpdate', function(req, res) {
                    console.log("changeBridgePairingsOnProfilePictureUpdate was called");
+                   
+                   //Updating Current User's "profile_picture_url" from profilePicture uploaded
+                   var profilePicture = req.user.get("profile_picture");
+                   var profilePictureURL = profilePicture.url;
+                   req.user.set("profile_picture_url", profilePictureURL);
+                   req.user.save();
+                   
                    //creating a class with the name BridgePairings
                    var BridgePairingsClass = Parse.Object.extend("BridgePairings");
                    //query passing the classname -> which is the name of the table being queried
@@ -761,11 +768,11 @@ Parse.Cloud.define('changeBridgePairingsOnProfilePictureUpdate', function(req, r
                               //if( userObjectIds.length > 0 ){
                               if (userObjectIds[0] == req.user.id) {
                               //the profile picture was sent from the user's phone when the cloud function was called so the cloud code does not have to request the profile picture from Parse and save again
-                              result.set("user1_profile_picture", req.user.get("profile_picture"));
+                              result.set("user1_profile_picture_url",profilePictureURL);
                               console.log("changeBridgePairingsOnProfilePictureUpdate1");
                               }
                               else {
-                              result.set("user2_profile_picture",req.user.get("profile_picture"));
+                              result.set("user2_profile_picture_url",profilePictureURL);
                               console.log("changeBridgePairingsOnProfilePictureUpdate2");
                               }
                               //after making updates to the queried data, you need to save
