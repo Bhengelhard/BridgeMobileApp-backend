@@ -739,6 +739,8 @@ Parse.Cloud.define('changeBridgePairingsOnNameUpdate', function(req, res) {
                    
                    });
 Parse.Cloud.define('changeBridgePairingsOnProfilePictureUpdate', function(req, res) {
+                   Parse.Cloud.useMasterKey();
+
                    console.log("changeBridgePairingsOnProfilePictureUpdate was called");
                    
                    //Updating Current User's "profile_picture_url" from profilePicture uploaded
