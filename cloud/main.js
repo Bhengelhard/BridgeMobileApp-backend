@@ -887,46 +887,51 @@ Parse.Cloud.define('changeBridgePairingsOnStatusUpdate', function(req, res) {
                    
                    });
 Parse.Cloud.define('changeBridgePairingsOnInterestedInUpdate', function(req, res) {
-                   
+                   //Querying the bridgePairing table for pairs that include the current user
                    var BridgePairingsClass = Parse.Object.extend("BridgePairings");
                    var query = new Parse.Query(BridgePairingsClass);
                    query.equalTo("user_objectIds",req.user.id);
+                   //Not updating bridge pairings that have already been connected
+                   query.notEqualTo("bridged", true);
                    query.limit(10000);
                    query.find({
                               success:function(results) {
-                              var usersNotToPairWith = [req.user.id];
-                              var shownToForPairsNotCheckedOut = {};
-                              console.log(results.length + " entries have the current user as a better half");
-                              for (var i = 0, len = results.length; i < len; i++) {
-                              var result = results[i];
-                              if (result.get("checked_out") == true) {
-                              var userObjectIds = result.get("user_objectIds");
-                              if (userObjectIds[0] == req.user.id) {
-                              usersNotToPairWith.push(userObjectIds[1]);
-                              }
-                              else {
-                              usersNotToPairWith.push(userObjectIds[0]);
-                              }
-                              }
-                              else {
-                              var userObjectIds = result.get("user_objectIds");
-                              if (userObjectIds[0] == req.user.id) {
-                              shownToForPairsNotCheckedOut[userObjectIds[1]] = result.get("shown_to");
-                              }
-                              else {
-                              shownToForPairsNotCheckedOut[userObjectIds[0]] = result.get("shown_to");
-                              }
-                              result.destroy({});
-                              }
-                              }
-                              console.log("Done creating usersNotToPairWith, shownToForPairsNotCheckedOut");
-                              recreatePairings(req, usersNotToPairWith, shownToForPairsNotCheckedOut, res);
+                                //Searching for users not to pair with because the bridgePairing is checked out
+                                var usersNotToPairWith = [req.user.id];
+                                //Saving the showTo's for the pairs that will be recreated
+                                var shownToForPairsNotCheckedOut = {};
+                                console.log(results.length + " entries have the current user as a better half");
+                                for (var i = 0, len = results.length; i < len; i++) {
+                                    var result = results[i];
+                                    //Not destroying where user was checked_out
+                                    if (result.get("checked_out") == true) {
+                                        var userObjectIds = result.get("user_objectIds");
+                                        if (userObjectIds[0] == req.user.id) {
+                                            usersNotToPairWith.push(userObjectIds[1]);
+                                        }
+                                        else {
+                                            usersNotToPairWith.push(userObjectIds[0]);
+                                        }
+                                    }
+                                    else {
+                                        var userObjectIds = result.get("user_objectIds");
+                                        if (userObjectIds[0] == req.user.id) {
+                                            shownToForPairsNotCheckedOut[userObjectIds[1]] = result.get("shown_to");
+                                        }
+                                        else {
+                                            shownToForPairsNotCheckedOut[userObjectIds[0]] = result.get("shown_to");
+                                        }
+                                        result.destroy({});
+                                    }
+                                }
+                                console.log("Done creating usersNotToPairWith, shownToForPairsNotCheckedOut");
+                                recreatePairings(req, usersNotToPairWith, shownToForPairsNotCheckedOut, res);
                               },
                               error: function(error) {
-                              console.log("Failed!");
-                              res.error("Not Saved");
+                                console.log("Failed!");
+                                res.error("Not Saved");
                               }
-                              });
+                            });
                    });
 Parse.Cloud.define('revitalizeMyPairs', function(req, res) {
                    //updating and retriving previously viewed bridge pairings
