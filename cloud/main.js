@@ -10,6 +10,69 @@
 
 
 
+//Get top user and numNected
+Parse.Cloud.define('getUserWithTopNumNected', function(req, res) {
+                   console.log("getUserWithTopNumNected");
+                   
+                   var topUser = "";
+                   var savedNumNected = 0;
+                   
+                   var userQuery = new Parse.Query("_User");
+                   
+                   userQuery.exists("friend_list")
+                   userQuery.find({
+                                  success: function(results){
+                                  
+                                  totalNumberOfUsers = results.length;
+                                  console.log("totalNumberOfUsers = "+totalNumberOfUsers);
+                                  
+                                  var topUser = ""
+                                  var savedNumNected = 0
+                                  
+                                  for (var j = 0; j < results.length; ++j) {
+                                  var user = results[j];
+                                  var objectId = user.objectId;
+                                  
+                                  var bridgePairingsQuery = new Parse.Query("BridgePairings");
+                                  bridgePairingsQuery.equalTo("connecter_objectId", objectId);
+                                  bridgePairingsQuery.equalTo("user1_response", 1);
+                                  bridgePairingsQuery.equalTo("user2_response", 1);
+                                  bridgePairingsQuery.equalTo("accepted_notification_viewed", true);
+                                  bridgePairingsQuery.limit(10000);
+                                  bridgePairingsQuery.find({
+                                                           
+                                                           success: function(objects) {
+                                                           numNected = objects.length;
+                                                           if savedNumNected < numNected {
+                                                           savedNumNected = numNected;
+                                                           topUser = objectId;
+                                                           } else if savedNumNected == numNected {
+                                                           }
+                                                           
+                                                           },
+                                                           error: function() {
+                                                           console.log("Querying _User failed in getUserWithTopNumNected");
+                                                           res.error("Querying _User failed in getUserWithTopNumNected");
+                                                           }
+                                                           
+                                                           })
+                                  
+                                  }
+                                  console.log("The user with the top num nects is " + topUser + " and has " + savedNumNected + " nects.")
+                                  res.success(" Saved all new friends in Users Table")
+                                  },
+                                  error: function() {
+                                  console.log("Querying _User failed in getUserWithTopNumNected");
+                                  res.error("Querying _User failed in getUserWithTopNumNected");
+                                  }
+                                  });
+                   }
+                   
+
+                   
+                   
+                   
+            
 //Main App Metrics Script
 Parse.Cloud.define('getMainAppMetrics', function(req, res) {
     console.log("getMainAppMetrics");
